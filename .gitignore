@@ -1,4 +1,4 @@
-db-config.php
-config.php
+config/db-config.php
+config/config.php
 
 .letta

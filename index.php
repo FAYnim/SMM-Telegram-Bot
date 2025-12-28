@@ -1,7 +1,7 @@
 <?php
 require_once 'TelegramBot.php';
 require_once 'db.php';
-require_once 'config.php';
+require_once 'config/config.php';
 
 // Inisialisasi bot
 $bot = new TelegramBot($bot_token);

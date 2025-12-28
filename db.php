@@ -1,6 +1,6 @@
 <?php
   // Include database configuration
-  require_once 'db-config.php';
+  require_once 'config/db-config.php';
 
   // dsn (data source name)
   $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
