@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS smm_users (
     chatid BIGINT UNIQUE NOT NULL,
     username VARCHAR(255),
     full_name VARCHAR(255),
-    role ENUM('client', 'worker', 'admin') NOT NULL,
+    role ENUM('unknown', 'client', 'worker', 'admin') NOT NULL DEFAULT 'unknown',
     status ENUM('active', 'suspended') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
