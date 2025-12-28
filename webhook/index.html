@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webhook Connection</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>Webhook Connection</h1>
+        <p>Atur koneksi API untuk Telegram Bot Anda.</p>
+
+        <label for="api-token">API Token</label>
+        <input type="text" id="api-token" placeholder="12345:ABC-DEF12345...">
+
+        <div class="button-group">
+            <button id="set-btn">Set Koneksi</button>
+            <button id="check-btn">Cek Status</button>
+            <button id="delete-btn">Hapus Koneksi</button>
+        </div>
+
+        <label for="api-response">Respon API</label>
+        <textarea id="api-response" readonly></textarea>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

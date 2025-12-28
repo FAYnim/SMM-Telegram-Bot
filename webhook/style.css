@@ -1,0 +1,84 @@
+/* Pengaturan dasar */
+body {
+    background-color: #121212; /* Warna latar belakang gelap */
+    color: #e0e0e0; /* Warna teks terang */
+    font-family: sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Kotak form utama */
+.form-container {
+    background-color: #1e1e1e;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px; /* Lebar maksimal di layar besar */
+}
+
+h1 {
+    margin-top: 0;
+    text-align: center;
+}
+
+p {
+    text-align: center;
+    color: #b0b0b0;
+    margin-bottom: 25px;
+}
+
+/* Input, Textarea, dan Label */
+label {
+    display: block;
+    margin-bottom: 5px;
+    color: #b0b0b0;
+}
+
+input, textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #444;
+    background-color: #2a2a2a;
+    color: #e0e0e0;
+    border-radius: 5px;
+    box-sizing: border-box; /* Agar padding tidak menambah lebar */
+}
+
+textarea {
+    height: 120px;
+    resize: vertical; /* User bisa mengubah tinggi textarea */
+    font-family: monospace; /* Agar teks respon lebih rapi */
+}
+
+/* Grup Tombol */
+.button-group {
+    display: flex;
+    gap: 10px; /* Jarak antar tombol */
+    margin-bottom: 20px;
+}
+
+button {
+    flex-grow: 1; /* Agar semua tombol punya lebar yang sama */
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s; /* Animasi saat kursor di atasnya */
+}
+
+/* Warna spesifik untuk setiap tombol */
+#set-btn { background-color: #007bff; }
+#set-btn:hover { background-color: #0056b3; }
+
+#check-btn { background-color: #28a745; }
+#check-btn:hover { background-color: #1e7e34; }
+
+#delete-btn { background-color: #dc3545; }
+#delete-btn:hover { background-color: #b21f2d; }
