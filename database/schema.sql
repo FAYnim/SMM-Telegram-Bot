@@ -2,7 +2,7 @@
 -- Created based on PRD.md requirements
 
 -- Users table - menyimpan data user dengan role
-CREATE TABLE smm_users (
+CREATE TABLE IF NOT EXISTS smm_users (
     id INT AUTO_INCREMENT PRIMARY KEY,
     chatid BIGINT UNIQUE NOT NULL,
     username VARCHAR(255),
@@ -14,7 +14,7 @@ CREATE TABLE smm_users (
 );
 
 -- Wallets table - dompet internal untuk setiap user
-CREATE TABLE smm_wallets (
+CREATE TABLE IF NOT EXISTS smm_wallets (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     balance DECIMAL(15,2) DEFAULT 0.00,
@@ -25,7 +25,7 @@ CREATE TABLE smm_wallets (
 );
 
 -- Wallet transactions table - semua transaksi saldo
-CREATE TABLE smm_wallet_transactions (
+CREATE TABLE IF NOT EXISTS smm_wallet_transactions (
     id INT AUTO_INCREMENT PRIMARY KEY,
     wallet_id INT NOT NULL,
     type ENUM('deposit', 'task_reward', 'withdraw', 'adjustment') NOT NULL,
@@ -40,7 +40,7 @@ CREATE TABLE smm_wallet_transactions (
 );
 
 -- Campaigns table - campaign yang dibuat oleh client
-CREATE TABLE smm_campaigns (
+CREATE TABLE IF NOT EXISTS smm_campaigns (
     id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT NOT NULL,
     type ENUM('view', 'like', 'comment', 'share', 'follow') NOT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE smm_campaigns (
 );
 
 -- Tasks table - tugas individual yang bisa diambil worker
-CREATE TABLE smm_tasks (
+CREATE TABLE IF NOT EXISTS smm_tasks (
     id INT AUTO_INCREMENT PRIMARY KEY,
     campaign_id INT NOT NULL,
     worker_id INT NULL,
@@ -69,7 +69,7 @@ CREATE TABLE smm_tasks (
 );
 
 -- Task proofs table - bukti screenshot dari worker
-CREATE TABLE smm_task_proofs (
+CREATE TABLE IF NOT EXISTS smm_task_proofs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     task_id INT NOT NULL,
     proof_image_path VARCHAR(500) NOT NULL,
@@ -79,7 +79,7 @@ CREATE TABLE smm_task_proofs (
 );
 
 -- Deposits table - permintaan top-up dari client
-CREATE TABLE smm_deposits (
+CREATE TABLE IF NOT EXISTS smm_deposits (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     amount DECIMAL(15,2) NOT NULL,
@@ -94,7 +94,7 @@ CREATE TABLE smm_deposits (
 );
 
 -- Withdrawals table - permintaan withdraw dari worker
-CREATE TABLE smm_withdrawals (
+CREATE TABLE IF NOT EXISTS smm_withdrawals (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     amount DECIMAL(15,2) NOT NULL,
@@ -110,7 +110,7 @@ CREATE TABLE smm_withdrawals (
 );
 
 -- Audit logs table - log semua tindakan admin
-CREATE TABLE smm_audit_logs (
+CREATE TABLE IF NOT EXISTS smm_audit_logs (
     id INT AUTO_INCREMENT PRIMARY KEY,
     admin_id INT NOT NULL,
     action VARCHAR(100) NOT NULL,
@@ -143,7 +143,7 @@ CREATE INDEX idx_audit_logs_admin_id ON smm_audit_logs(admin_id);
 CREATE INDEX idx_audit_logs_created_at ON smm_audit_logs(created_at);
 
 -- Social media accounts table - menyimpan akun media social milik user
-CREATE TABLE smm_social_accounts (
+CREATE TABLE IF NOT EXISTS smm_social_accounts (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     platform ENUM('instagram', 'tiktok', 'youtube', 'twitter', 'facebook') NOT NULL,

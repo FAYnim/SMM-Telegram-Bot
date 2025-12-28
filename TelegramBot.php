@@ -87,7 +87,7 @@ class TelegramBot {
             'chat_id' => $chatId,
             'text' => $text,
             'parse_mode' => $parseMode,
-//            'disable_web_page_preview' => $disableWebPreview
+            'disable_web_page_preview' => $disableWebPreview
         ];
         
         if ($replyTo) {
