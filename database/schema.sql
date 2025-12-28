@@ -4,7 +4,7 @@
 -- Users table - menyimpan data user dengan role
 CREATE TABLE smm_users (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    telegram_id BIGINT UNIQUE NOT NULL,
+    chatid BIGINT UNIQUE NOT NULL,
     username VARCHAR(255),
     full_name VARCHAR(255),
     role ENUM('client', 'worker', 'admin') NOT NULL,
@@ -141,3 +141,22 @@ CREATE INDEX idx_withdrawals_user_id ON smm_withdrawals(user_id);
 CREATE INDEX idx_withdrawals_status ON smm_withdrawals(status);
 CREATE INDEX idx_audit_logs_admin_id ON smm_audit_logs(admin_id);
 CREATE INDEX idx_audit_logs_created_at ON smm_audit_logs(created_at);
+
+-- Social media accounts table - menyimpan akun media social milik user
+CREATE TABLE smm_social_accounts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    platform ENUM('instagram', 'tiktok', 'youtube', 'twitter', 'facebook') NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    account_url TEXT,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES smm_users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_platform_username (user_id, platform, username)
+);
+
+-- Indexes for social accounts table
+CREATE INDEX idx_social_accounts_user_id ON smm_social_accounts(user_id);
+CREATE INDEX idx_social_accounts_platform ON smm_social_accounts(platform);
+CREATE INDEX idx_social_accounts_status ON smm_social_accounts(status);

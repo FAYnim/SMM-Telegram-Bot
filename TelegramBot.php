@@ -44,6 +44,42 @@ class TelegramBot {
     }
     
     /**
+     * Mendapatkan username dari pengirim
+     */
+    public function getUsername() {
+        if (isset($this->update['message']['from']['username'])) {
+            return $this->update['message']['from']['username'];
+        } elseif (isset($this->update['callback_query']['from']['username'])) {
+            return $this->update['callback_query']['from']['username'];
+        }
+        return null;
+    }
+    
+    /**
+     * Mendapatkan first name dari pengirim
+     */
+    public function getFirstName() {
+        if (isset($this->update['message']['from']['first_name'])) {
+            return $this->update['message']['from']['first_name'];
+        } elseif (isset($this->update['callback_query']['from']['first_name'])) {
+            return $this->update['callback_query']['from']['first_name'];
+        }
+        return null;
+    }
+    
+    /**
+     * Mendapatkan last name dari pengirim
+     */
+    public function getLastName() {
+        if (isset($this->update['message']['from']['last_name'])) {
+            return $this->update['message']['from']['last_name'];
+        } elseif (isset($this->update['callback_query']['from']['last_name'])) {
+            return $this->update['callback_query']['from']['last_name'];
+        }
+        return null;
+    }
+    
+    /**
      * Mengirim pesan
      */
     public function sendMessage($chatId, $text, $replyTo = null, $parseMode = 'HTML', $disableWebPreview = false) {
@@ -51,7 +87,7 @@ class TelegramBot {
             'chat_id' => $chatId,
             'text' => $text,
             'parse_mode' => $parseMode,
-            'disable_web_page_preview' => $disableWebPreview
+//            'disable_web_page_preview' => $disableWebPreview
         ];
         
         if ($replyTo) {
