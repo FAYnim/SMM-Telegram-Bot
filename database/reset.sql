@@ -25,6 +25,8 @@ CREATE TABLE IF NOT EXISTS smm_users (
     full_name VARCHAR(255),
     role ENUM('unknown', 'client', 'worker', 'admin') NOT NULL DEFAULT 'unknown',
     status ENUM('active', 'suspended') DEFAULT 'active',
+    menu VARCHAR(50) DEFAULT 'main',
+    submenu VARCHAR(50) DEFAULT '',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
