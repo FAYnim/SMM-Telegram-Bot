@@ -17,6 +17,6 @@ $keyboard = $bot->buildInlineKeyboard([
     ]
 ]);
 
-$bot->sendMessageWithKeyboard($chat_id, $reply, $keyboard);
+$bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
 
 ?>

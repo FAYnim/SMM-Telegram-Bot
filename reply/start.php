@@ -51,6 +51,11 @@
         ]);
     }
     
-    $bot->sendMessageWithKeyboard($chat_id, $reply, $keyboard);
+    $sent_message = $bot->sendMessageWithKeyboard($chat_id, $reply, $keyboard);
+
+if ($sent_message && isset($sent_message['result']['message_id'])) {
+    $msg_id = $sent_message['result']['message_id'];
+    db_update('smm_users', ['msg_id' => $msg_id], ['chatid' => $chat_id]);
+}
 
 ?>

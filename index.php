@@ -36,7 +36,6 @@ $username = $bot->getUsername();
 $first_name = $bot->getFirstName();
 $last_name = $bot->getLastName();
 $cb_data = $bot->getCallbackData();
-$msg_id = ($bot->getCallbackQueryId()) ? $bot->getCallbackQueryId() : $bot->getMessageId();
 
 // Trace log
 $log_data = [
@@ -74,6 +73,7 @@ if (empty($user)) {
 $user = db_read('smm_users', ['chatid' => $chat_id]);
 $user_id = $user[0]['id'];
 $role = $user[0]['role'];
+$msg_id = $user[0]['msg_id'] ?? null;
 
 //	FOR DEBUGGING ONLY:
 //	$reply .= "<pre>".json_encode($user)."</pre>";

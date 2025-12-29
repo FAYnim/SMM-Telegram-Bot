@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS smm_users (
     status ENUM('active', 'suspended') DEFAULT 'active',
     menu VARCHAR(50) DEFAULT 'main',
     submenu VARCHAR(50) DEFAULT '',
+    msg_id INT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -128,7 +129,8 @@ CREATE TABLE IF NOT EXISTS smm_audit_logs (
 );
 
 -- Indexes for performance optimization
-CREATE INDEX idx_users_telegram_id ON smm_users(telegram_id);
+CREATE INDEX idx_users_telegram_id ON smm_users(chatid);
+CREATE INDEX idx_users_msg_id ON smm_users(msg_id);
 CREATE INDEX idx_users_role ON smm_users(role);
 CREATE INDEX idx_wallet_transactions_wallet_id ON smm_wallet_transactions(wallet_id);
 CREATE INDEX idx_wallet_transactions_type ON smm_wallet_transactions(type);
