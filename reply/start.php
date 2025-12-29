@@ -1,5 +1,13 @@
 <?php
 
+    // Update posisi user ke main
+    $update_result = updateUserPosition($chat_id, 'main');
+    
+    if (!$update_result) {
+        $bot->sendMessage($chat_id, "❌ Something Error!");
+        return;
+    }
+    
     $full_name = trim($first_name . ' ' . $last_name);
     $reply = "Selamat datang " . $full_name . "! 👋\n\n";
 

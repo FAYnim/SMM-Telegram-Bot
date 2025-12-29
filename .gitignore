@@ -3,4 +3,4 @@ config/config.php
 
 .letta
 
-log
+log/*
