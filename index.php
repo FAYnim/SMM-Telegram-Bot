@@ -3,6 +3,29 @@ require_once 'TelegramBot.php';
 require_once 'db.php';
 require_once 'config/config.php';
 
+// Fungsi handle posisi user
+function updateUserPosition($chatid, $menu, $submenu = '') {
+    $sql = "UPDATE smm_users SET menu = ?, submenu = ? WHERE chatid = ?";
+    $params = [$menu, $submenu, $chatid];
+    
+    $result = db_execute($sql, $params);
+    
+    // Log position update result
+    $position_log = [
+        'timestamp' => date('Y-m-d H:i:s'),
+        'action' => 'update_position',
+        'chatid' => $chatid,
+        'menu' => $menu,
+        'submenu' => $submenu,
+        'result' => $result
+    ];
+    file_put_contents('log/position.log', json_encode($position_log));
+    if($menu === "main") {
+    	$result = 1;
+    }
+    return $result;
+}
+
 // Inisialisasi bot
 $bot = new TelegramBot($bot_token);
 
@@ -25,7 +48,7 @@ $log_data = [
     'cb_data' => $bot->getCallbackData(),
     'update' => $bot->getUpdate()
 ];
-file_put_contents('trace.log', json_encode($log_data));
+file_put_contents('log/trace.log', json_encode($log_data));
 
 // Validasi input
 if (!$chat_id || (!$message && !$bot->getCallbackData())) {
