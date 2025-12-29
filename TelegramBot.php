@@ -37,6 +37,20 @@ class TelegramBot {
     }
     
     /**
+     * Mendapatkan callback data dari inline keyboard
+     */
+    public function getCallbackData() {
+        return isset($this->update['callback_query']['data']) ? $this->update['callback_query']['data'] : null;
+    }
+    
+    /**
+     * Mendapatkan callback query ID
+     */
+    public function getCallbackQueryId() {
+        return isset($this->update['callback_query']['id']) ? $this->update['callback_query']['id'] : null;
+    }
+    
+    /**
      * Mendapatkan ID pesan yang diterima
      */
     public function getMessageId() {

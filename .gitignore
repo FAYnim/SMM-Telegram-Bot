@@ -2,3 +2,5 @@ config/db-config.php
 config/config.php
 
 .letta
+
+log

@@ -12,9 +12,21 @@ $message = $bot->getMessage();
 $username = $bot->getUsername();
 $first_name = $bot->getFirstName();
 $last_name = $bot->getLastName();
+$cb_data = $bot->getCallbackData();
+
+// Trace log
+$log_data = [
+    'timestamp' => date('Y-m-d H:i:s'),
+    'chat_id' => $chat_id,
+    'message' => $message,
+    'username' => $username,
+    'cb_data' => $bot->getCallbackData(),
+    'update' => $bot->getUpdate()
+];
+file_put_contents('trace.log', json_encode($log_data));
 
 // Validasi input
-if (!$chat_id || !$message) {
+if (!$chat_id || (!$message && !$bot->getCallbackData())) {
     exit();
 }
 
@@ -38,11 +50,12 @@ $user = db_read('smm_users', ['chatid' => $chat_id]);
 $user_id = $user[0]['id'];
 $role = $user[0]['role'];
 
+//	FOR DEBUGGING ONLY:
+//	$reply .= "<pre>".json_encode($user)."</pre>";
+
 // Include reply handlers
 if ($message == "/start") {
 	require_once 'reply/start.php';
 }
 
-//	FOR DEBUGGING ONLY:
-//	$welcome_message .= "<pre>".json_encode($user)."</pre>";
 ?>
