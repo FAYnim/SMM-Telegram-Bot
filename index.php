@@ -28,7 +28,7 @@ if (empty($user)) {
         'chatid' => $chat_id,
         'username' => $username,
         'full_name' => $full_name,
-        'role' => 'unknown', // default role
+        'role' => 'user', // default role
         'status' => 'active'
     ];
     $user_id = db_create('smm_users', $user_data);

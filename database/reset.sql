@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS smm_users (
     chatid BIGINT UNIQUE NOT NULL,
     username VARCHAR(255),
     full_name VARCHAR(255),
-    role ENUM('unknown', 'client', 'worker', 'admin') NOT NULL DEFAULT 'unknown',
+    role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
     status ENUM('active', 'suspended') DEFAULT 'active',
     menu VARCHAR(50) DEFAULT 'main',
     submenu VARCHAR(50) DEFAULT '',
