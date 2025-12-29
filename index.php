@@ -13,11 +13,13 @@ $username = $bot->getUsername();
 $first_name = $bot->getFirstName();
 $last_name = $bot->getLastName();
 $cb_data = $bot->getCallbackData();
+$msg_id = ($bot->getCallbackQueryId()) ? $bot->getCallbackQueryId() : $bot->getMessageId();
 
 // Trace log
 $log_data = [
     'timestamp' => date('Y-m-d H:i:s'),
     'chat_id' => $chat_id,
+    'msg_id' => $msg_id,
     'message' => $message,
     'username' => $username,
     'cb_data' => $bot->getCallbackData(),
@@ -54,8 +56,17 @@ $role = $user[0]['role'];
 //	$reply .= "<pre>".json_encode($user)."</pre>";
 
 // Include reply handlers
-if ($message == "/start") {
-	require_once 'reply/start.php';
+if(!$cb_data){
+	if ($message == "/start") {
+		require_once 'reply/start.php';
+	}
+	if ($message == "/social") {
+		require_once 'reply/social.php';
+	}
+} else {
+	if($cb_data == "/social") {
+		require_once 'reply/social.php';
+	}
 }
 
 ?>

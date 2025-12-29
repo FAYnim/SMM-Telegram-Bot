@@ -20,8 +20,7 @@
                 ['text' => '💸 Withdraw', 'callback_data' => '/withdraw']
             ],
             [
-                ['text' => '👤 Profil Saya', 'callback_data' => '/profil'],
-                ['text' => '❓ Help', 'callback_data' => '/help']
+                ['text' => '👤 Media Social', 'callback_data' => '/social'],
             ]
         ]);
     } elseif ($role == 'admin') {
