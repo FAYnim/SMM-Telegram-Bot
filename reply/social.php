@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../helpers/username-validator.php';
 
 $update_result = updateUserPosition($chat_id, 'social');
 
@@ -17,13 +18,8 @@ $social_accounts = db_query("SELECT platform, username, account_url, status "
 	."ORDER BY platform, created_at", [$user_id]);
 
 if (count($social_accounts) > 0) {
-    $platform_icons = [
-        'instagram' => '📷',
-        'tiktok' => '🎵'
-    ];
-    
     foreach ($social_accounts as $account) {
-        $icon = $platform_icons[$account['platform']] ?? '🌐';
+        $icon = getPlatformIcon($account['platform']);
         $reply .= $icon . " " . ucfirst($account['platform']) . ": @" . $account['username'] . "\n";
     }
     $reply .= "\n";
