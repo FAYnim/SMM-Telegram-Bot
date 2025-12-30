@@ -5,11 +5,12 @@ if ($cb_data == "/tambah_medsos") {
     $update_result = updateUserPosition($chat_id, 'tambah_medsos');
 
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Something Error!");
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
         return;
     }
 
-    $reply = "Pilih Medsos yang ingin ditambahkan!";
+    $reply = "<b>➕ Tambah Akun Media Sosial</b>\n\n";
+    $reply .= "Pilih platform media sosial yang ingin Anda hubungkan:";
 
     $keyboard = $bot->buildInlineKeyboard([
         [
@@ -28,11 +29,13 @@ if ($cb_data == "/add_instagram") {
     $update_result = updateUserPosition($chat_id, 'add_instagram');
 
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Something Error!");
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
         return;
     }
 
-    $reply = "📷 <b>Tambah Instagram</b>\n\nSilakan masukkan username Instagram yang ingin ditambahkan:";
+    $reply = "📷 <b>Hubungkan Instagram</b>\n\n";
+    $reply .= "Silakan kirimkan <b>username Instagram</b> Anda (tanpa @).\n";
+    $reply .= "Contoh: <code>jokowi</code>";
 
     $keyboard = $bot->buildInlineKeyboard([
         [
@@ -47,11 +50,13 @@ if ($cb_data == "/add_tiktok") {
     $update_result = updateUserPosition($chat_id, 'add_tiktok');
 
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Something Error!");
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
         return;
     }
 
-    $reply = "🎵 <b>Tambah TikTok</b>\n\nSilakan masukkan username TikTok yang ingin ditambahkan:";
+    $reply = "🎵 <b>Hubungkan TikTok</b>\n\n";
+    $reply .= "Silakan kirimkan <b>username TikTok</b> Anda (tanpa @).\n";
+    $reply .= "Contoh: <code>jokowi</code>";
 
     $keyboard = $bot->buildInlineKeyboard([
         [
@@ -102,7 +107,8 @@ if (!$cb_data && $user[0]['menu'] == 'add_instagram') {
             sleep(3);
 
             // Get social accounts for display
-            $reply = "Media sosialmu:\n\n";
+            $reply = "<b>📱 Kelola Akun Media Sosial</b>\n\n";
+            $reply .= "Berikut adalah daftar akun yang telah Anda hubungkan:\n\n";
             $social_accounts = db_query("SELECT platform, username, account_url, status "
                 ."FROM smm_social_accounts "
                 ."WHERE user_id = ? AND status = 'active' "
@@ -115,16 +121,22 @@ if (!$cb_data && $user[0]['menu'] == 'add_instagram') {
                 }
                 $reply .= "\n";
             } else {
-                $reply .= "📝 Belum ada akun media sosial yang ditambahkan\n\n";
+                $reply .= "⚠️ <i>Belum ada akun terhubung.</i>\n";
+                $reply .= "Hubungkan akun media sosial Anda untuk mulai mengambil tugas.\n\n";
             }
 
-            $reply .= "Pilih menu di bawah:";
+            $reply .= "👇 Gunakan menu di bawah ini:";
 
             $keyboard = $bot->buildInlineKeyboard([
-                [
-                    ['text' => '➕ Tambah Medsos', 'callback_data' => '/tambah_medsos'],
-                    ['text' => '🔙 Kembali', 'callback_data' => '/start']
-                ]
+			    [
+			        ['text' => '➕ Tambah Medsos', 'callback_data' => '/tambah_medsos'],
+			    ],
+			    [
+			        ['text' => '🎛️ Edit/Hapus Medsos', 'callback_data' => '/edit_medsos'],
+			    ],
+			    [
+			        ['text' => '🔙 Kembali', 'callback_data' => '/start']
+			    ]
             ]);
 
             $bot->editMessage($chat_id, $new_msg_id, $reply, 'HTML', $keyboard);
@@ -174,7 +186,8 @@ if (!$cb_data && $user[0]['menu'] == 'add_tiktok') {
             sleep(3);
 
             // Get social accounts for display
-            $reply = "Media sosialmu:\n\n";
+            $reply = "<b>📱 Kelola Akun Media Sosial</b>\n\n";
+            $reply .= "Berikut adalah daftar akun yang telah Anda hubungkan:\n\n";
             $social_accounts = db_query("SELECT platform, username, account_url, status "
                 ."FROM smm_social_accounts "
                 ."WHERE user_id = ? AND status = 'active' "
@@ -187,16 +200,22 @@ if (!$cb_data && $user[0]['menu'] == 'add_tiktok') {
                 }
                 $reply .= "\n";
             } else {
-                $reply .= "📝 Belum ada akun media sosial yang ditambahkan\n\n";
+                $reply .= "⚠️ <i>Belum ada akun terhubung.</i>\n";
+                $reply .= "Hubungkan akun media sosial Anda untuk mulai mengambil tugas.\n\n";
             }
 
-            $reply .= "Pilih menu di bawah:";
+            $reply .= "👇 Gunakan menu di bawah ini:";
 
             $keyboard = $bot->buildInlineKeyboard([
-                [
-                    ['text' => '➕ Tambah Medsos', 'callback_data' => '/tambah_medsos'],
-                    ['text' => '🔙 Kembali', 'callback_data' => '/start']
-                ]
+			    [
+			        ['text' => '➕ Tambah Medsos', 'callback_data' => '/tambah_medsos'],
+			    ],
+			    [
+			        ['text' => '🎛️ Edit/Hapus Medsos', 'callback_data' => '/edit_medsos'],
+			    ],
+			    [
+			        ['text' => '🔙 Kembali', 'callback_data' => '/start']
+			    ]
             ]);
 
             $bot->editMessage($chat_id, $new_msg_id, $reply, 'HTML', $keyboard);
