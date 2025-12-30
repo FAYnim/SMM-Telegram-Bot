@@ -86,9 +86,25 @@ if(!$cb_data){
 	if ($message == "/social") {
 		require_once 'reply/social.php';
 	}
+
+	if ($user[0]['menu'] == 'add_instagram' || $user[0]['menu'] == 'add_tiktok') {
+		require_once 'reply/tambah-medsos.php';
+	}
 } else {
+	if($cb_data == "/start") {
+		require_once 'reply/start.php';
+	}
 	if($cb_data == "/social") {
 		require_once 'reply/social.php';
+	}
+	if($cb_data == "/tambah_medsos") {
+		require_once 'reply/tambah-medsos.php';
+	}
+	if($cb_data == "/add_instagram") {
+		require_once 'reply/tambah-medsos.php';
+	}
+	if($cb_data == "/add_tiktok") {
+		require_once 'reply/tambah-medsos.php';
 	}
 }
 

@@ -51,11 +51,18 @@
         ]);
     }
     
+    // Check if this is callback or message
+if ($cb_data) {
+    // Callback: edit existing message
+    $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+} else {
+    // Message: send new message
     $sent_message = $bot->sendMessageWithKeyboard($chat_id, $reply, $keyboard);
-
-if ($sent_message && isset($sent_message['result']['message_id'])) {
-    $msg_id = $sent_message['result']['message_id'];
-    db_update('smm_users', ['msg_id' => $msg_id], ['chatid' => $chat_id]);
+    
+    if ($sent_message && isset($sent_message['result']['message_id'])) {
+        $msg_id = $sent_message['result']['message_id'];
+        db_update('smm_users', ['msg_id' => $msg_id], ['chatid' => $chat_id]);
+    }
 }
 
 ?>
