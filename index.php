@@ -93,6 +93,9 @@ if(!$cb_data){
 	if($cb_data == "/social") {
 		require_once 'reply/social.php';
 	}
+	if($cb_data == "/tambah_medsos") {
+		require_once 'reply/tambah_medsos.php';
+	}
 }
 
 ?>

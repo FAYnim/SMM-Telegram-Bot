@@ -19,10 +19,7 @@ $social_accounts = db_query("SELECT platform, username, account_url, status "
 if (count($social_accounts) > 0) {
     $platform_icons = [
         'instagram' => '📷',
-        'tiktok' => '🎵',
-        'youtube' => '📺',
-        'twitter' => '🐦',
-        'facebook' => '📘'
+        'tiktok' => '🎵'
     ];
     
     foreach ($social_accounts as $account) {
