@@ -22,8 +22,10 @@ if($cb_data && strpos($cb_data, '/edit_account_') === 0) {
         ];
         $icon = $platform_icons[$account_data['platform']] ?? '🌐';
 
-        $reply = "Pilih aksi untuk akun ini:\n\n" . 
-                $icon . " " . ucfirst($account_data['platform']) . ": @" . $account_data['username'];
+        $reply = "📋 <b>Detail Akun</b>\n\n" . 
+                "Apa yang ingin Anda lakukan dengan akun ini?\n\n" .
+                $icon . " <b>" . ucfirst($account_data['platform']) . "</b>\n" .
+                "👤 Username: <code>@" . $account_data['username'] . "</code>";
 
         $keyboard = $bot->buildInlineKeyboard([
             [
@@ -56,7 +58,7 @@ if($cb_data && strpos($cb_data, '/edit_account_') === 0) {
                 ."WHERE user_id = ? AND status = 'active' "
                 ."ORDER BY platform, created_at", [$user_id]);
 
-            $list_reply = "Media sosial mana yang mau di-edit?";
+            $list_reply = "🎛️ <b>Kelola Akun Media Sosial</b>\n\nSilakan pilih akun yang ingin Anda ubah atau hapus:";
 
             if (count($social_accounts) > 0) {
                 $platform_icons = [
@@ -68,7 +70,7 @@ if($cb_data && strpos($cb_data, '/edit_account_') === 0) {
 
                 foreach ($social_accounts as $account) {
                     $icon = $platform_icons[$account['platform']] ?? '🌐';
-                    $display_text = $icon . " " . ucfirst($account['platform']) . ": @" . $account['username'];
+                    $display_text = $icon . " " . $account['username'];
                     $callback_data = '/edit_account_' . $account['id'];
 
                     $keyboard_buttons[] = [$display_text, $callback_data];
@@ -83,8 +85,9 @@ if($cb_data && strpos($cb_data, '/edit_account_') === 0) {
                         ['text' => $button[0], 'callback_data' => $button[1]]
                     ];
                 }
+                $list_keyboard = $bot->buildInlineKeyboard($list_keyboard);
             } else {
-                $list_reply .= "\n\n📝 Belum ada akun media sosial yang ditambahkan";
+                $list_reply = "⚠️ <b>Tidak ada akun terhubung.</b>\n\nAnda belum menghubungkan akun media sosial apapun.";
 
                 $list_keyboard = $bot->buildInlineKeyboard([
                     [
@@ -103,7 +106,7 @@ if($cb_data && strpos($cb_data, '/edit_account_') === 0) {
 	    return;
 	}*/
 
-	$reply = "Media sosial mana yang mau di-edit?";
+	$reply = "🎛️ <b>Kelola Akun Media Sosial</b>\n\nSilakan pilih akun yang ingin Anda ubah atau hapus:";
 
 	// Get medsos data
 	$social_accounts = db_query("SELECT id, platform, username, account_url, status "
@@ -139,7 +142,7 @@ if($cb_data && strpos($cb_data, '/edit_account_') === 0) {
 	    }
 	    $keyboard = $bot->buildInlineKeyboard($keyboard);
 	} else {
-	    $reply .= "\n\n📝 Belum ada akun media sosial yang ditambahkan";
+	    $reply = "⚠️ <b>Tidak ada akun terhubung.</b>\n\nAnda belum menghubungkan akun media sosial apapun.";
 
 	    $keyboard = $bot->buildInlineKeyboard([
 	        [

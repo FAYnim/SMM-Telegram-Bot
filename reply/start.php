@@ -4,49 +4,48 @@
     $update_result = updateUserPosition($chat_id, 'main');
     
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Something Error!");
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
         return;
     }
     
     $full_name = trim($first_name . ' ' . $last_name);
-    $reply = "Selamat datang " . $full_name . "! 👋\n\n";
+    $reply = "👋 Halo <b>" . $full_name . "</b>!\n\n";
 
     if ($role == 'user') {
-        $reply .= "👤 Selamat datang di SMM Bot!\n\n"
-            . "Platform Paid-to-Click untuk meningkatkan engagement media sosial.\n\n"
-            . "Pilih menu di bawah:";
+        $reply .= "Selamat datang di <b>SMM Bot Marketplace</b>.\n"
+            . "Platform penghubung Advertiser dan Worker untuk boosting media sosial.\n\n"
+            . "👇 <b>Menu Utama:</b>";
             
         $keyboard = $bot->buildInlineKeyboard([
             [
-                ['text' => '📝 Buat Campaign', 'callback_data' => '/buat_campaign'],
+                ['text' => '📢 Buat Campaign', 'callback_data' => '/buat_campaign'],
+                ['text' => '💼 Cari Cuan', 'callback_data' => '/tugas']
             ],
             [
-                ['text' => '📋 Campaign Tersedia', 'callback_data' => '/tugas']
+                ['text' => '💰 Isi Saldo', 'callback_data' => '/topup'],
+                ['text' => '💸 Tarik Dana', 'callback_data' => '/withdraw']
             ],
             [
-                ['text' => '💰 Topup', 'callback_data' => '/topup'],
-                ['text' => '💸 Withdraw', 'callback_data' => '/withdraw']
-            ],
-            [
-                ['text' => '👤 Media Social', 'callback_data' => '/social'],
+                ['text' => '👤 Akun Medsos', 'callback_data' => '/social'],
+                ['text' => 'ℹ️ Bantuan', 'callback_data' => '/help']
             ]
         ]);
     } elseif ($role == 'admin') {
-        $reply .= "⚙️ Anda adalah Admin\n\n"
-            . "Pilih menu di bawah:";
+        $reply .= "⚙️ <b>Panel Admin</b>\n\n"
+            . "Silakan pilih menu manajemen di bawah ini:";
             
         $keyboard = $bot->buildInlineKeyboard([
             [
-                ['text' => '📋 Verifikasi', 'callback_data' => '/verifikasi'],
-                ['text' => '💰 Deposit', 'callback_data' => '/deposit']
+                ['text' => '✅ Verifikasi Tugas', 'callback_data' => '/verifikasi'],
+                ['text' => '💰 Cek Deposit', 'callback_data' => '/deposit']
             ],
             [
-                ['text' => '💸 Withdraw', 'callback_data' => '/withdraw_admin'],
-                ['text' => '👥 Manage User', 'callback_data' => '/manage_user']
+                ['text' => '💸 Proses Withdraw', 'callback_data' => '/withdraw_admin'],
+                ['text' => '👥 Kelola User', 'callback_data' => '/manage_user']
             ],
             [
-                ['text' => '📊 Laporan', 'callback_data' => '/laporan'],
-                ['text' => '❓ Help', 'callback_data' => '/help']
+                ['text' => '📊 Statistik', 'callback_data' => '/laporan'],
+                ['text' => '⚙️ Settings', 'callback_data' => '/settings']
             ]
         ]);
     }
