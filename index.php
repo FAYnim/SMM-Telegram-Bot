@@ -113,6 +113,13 @@ if(!$cb_data){
 	if(strpos($cb_data, '/edit_account_') === 0) {
 		require_once 'reply/edit-medsos.php';
 	}
+	// Handle delete account callback
+	if(strpos($cb_data, '/delete_account_') === 0) {
+		require_once 'reply/delete-medsos.php';
+	}
+	if(strpos($cb_data, '/confirm_delete_') === 0) {
+		require_once 'reply/delete-medsos.php';
+	}
 }
 
 // Trace keyboard structure
