@@ -90,6 +90,9 @@ if(!$cb_data){
 	if ($user[0]['menu'] == 'add_instagram' || $user[0]['menu'] == 'add_tiktok') {
 		require_once 'reply/tambah-medsos.php';
 	}
+	if ($user[0]['menu'] == 'edit_username') {
+		require_once 'reply/edit-username.php';
+	}
 } else {
 	if($cb_data == "/start") {
 		require_once 'reply/start.php';
@@ -119,6 +122,10 @@ if(!$cb_data){
 	}
 	if(strpos($cb_data, '/confirm_delete_') === 0) {
 		require_once 'reply/delete-medsos.php';
+	}
+	// Handle edit username callback
+	if(strpos($cb_data, '/edit_username_') === 0) {
+		require_once 'reply/edit-username.php';
 	}
 }
 
