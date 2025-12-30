@@ -94,7 +94,13 @@ if(!$cb_data){
 		require_once 'reply/social.php';
 	}
 	if($cb_data == "/tambah_medsos") {
-		require_once 'reply/tambah_medsos.php';
+		require_once 'reply/tambah-medsos.php';
+	}
+	if($cb_data == "/add_instagram") {
+		require_once 'reply/tambah-medsos.php';
+	}
+	if($cb_data == "/add_tiktok") {
+		require_once 'reply/tambah-medsos.php';
 	}
 }
 
