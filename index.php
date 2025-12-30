@@ -106,6 +106,24 @@ if(!$cb_data){
 	if($cb_data == "/add_tiktok") {
 		require_once 'reply/tambah-medsos.php';
 	}
+	if($cb_data == "/edit_medsos") {
+		require_once 'reply/edit-medsos.php';
+	}
 }
+
+// Trace keyboard structure
+$keyboard_trace = [
+    'timestamp' => date('Y-m-d H:i:s'),
+    'chat_id' => $chat_id,
+    'cb_data' => $cb_data,
+    'message' => $message,
+    'user_position' => [
+        'menu' => $user[0]['menu'] ?? 'unknown',
+        'submenu' => $user[0]['submenu'] ?? ''
+    ],
+    'keyboard_structure' => isset($keyboard) ? $keyboard : 'not_set'
+];
+
+file_put_contents('log/keyboard.log', json_encode($keyboard_trace, JSON_PRETTY_PRINT));
 
 ?>

@@ -32,6 +32,11 @@ $reply .= "Pilih menu di bawah:";
 $keyboard = $bot->buildInlineKeyboard([
     [
         ['text' => '➕ Tambah Medsos', 'callback_data' => '/tambah_medsos'],
+    ],
+    [
+        ['text' => '🎛️ Edit/Hapus Medsos', 'callback_data' => '/edit_medsos'],
+    ],
+    [
         ['text' => '🔙 Kembali', 'callback_data' => '/start']
     ]
 ]);
