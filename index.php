@@ -109,6 +109,10 @@ if(!$cb_data){
 	if($cb_data == "/edit_medsos") {
 		require_once 'reply/edit-medsos.php';
 	}
+	// Handle edit account callback
+	if(strpos($cb_data, '/edit_account_') === 0) {
+		require_once 'reply/edit-medsos.php';
+	}
 }
 
 // Trace keyboard structure
