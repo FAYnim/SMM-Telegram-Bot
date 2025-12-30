@@ -23,11 +23,13 @@ if($cb_data && strpos($cb_data, '/edit_username_') === 0) {
         $update_result = updateUserPosition($chat_id, 'edit_username', $account_id);
 
         if (!$update_result) {
-            $bot->sendMessage($chat_id, "❌ Something Error!");
+            $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
             return;
         }
 
-        $reply = "Tulis nama username {$platform_name} baru anda!";
+        $reply = "✏️ <b>Ubah Username {$platform_name}</b>\n\n";
+        $reply .= "Silakan kirimkan username baru untuk akun ini (tanpa @).\n";
+        $reply .= "Contoh: <code>jokowi</code>";
 
         $keyboard = $bot->buildInlineKeyboard([
             [
@@ -99,9 +101,10 @@ if(!$cb_data && $user[0]['menu'] == 'edit_username') {
     if ($update_result) {
         $icon = getPlatformIcon($platform);
 
-        $reply = "✅ <b>Username berhasil diperbarui!</b>\n\n" .
-                $icon . " " . ucfirst($platform) . ": @{$username_input}\n\n" .
-                "Username {$platform} Anda telah diperbarui.";
+        $reply = "✅ <b>Username Berhasil Diperbarui!</b>\n\n" .
+                $icon . " <b>" . ucfirst($platform) . "</b>\n" .
+                "👤 Username baru: <code>@" . $username_input . "</code>\n\n" .
+                "Data akun Anda telah berhasil disimpan.";
 
         $keyboard = $bot->buildInlineKeyboard([
             [
@@ -120,7 +123,8 @@ if(!$cb_data && $user[0]['menu'] == 'edit_username') {
             sleep(3);
 
             // Show updated social menu
-            $social_reply = "Media sosialmu:\n\n";
+            $social_reply = "<b>📱 Kelola Akun Media Sosial</b>\n\n";
+            $social_reply .= "Berikut adalah daftar akun yang telah Anda hubungkan:\n\n";
             $social_accounts = db_query("SELECT platform, username, account_url, status "
                 ."FROM smm_social_accounts "
                 ."WHERE user_id = ? AND status = 'active' "
@@ -138,14 +142,17 @@ if(!$cb_data && $user[0]['menu'] == 'edit_username') {
                 }
                 $social_reply .= "\n";
             } else {
-                $social_reply .= "📝 Belum ada akun media sosial yang ditambahkan\n\n";
+                $social_reply .= "⚠️ <i>Belum ada akun terhubung.</i>\n";
+                $social_reply .= "Hubungkan akun media sosial Anda untuk mulai mengambil tugas.\n\n";
             }
 
-            $social_reply .= "Pilih menu di bawah:";
+            $social_reply .= "👇 Gunakan menu di bawah ini:";
 
             $social_keyboard = $bot->buildInlineKeyboard([
                 [
                     ['text' => '➕ Tambah Medsos', 'callback_data' => '/tambah_medsos'],
+                ],
+                [
                     ['text' => '🎛️ Edit/Hapus Medsos', 'callback_data' => '/edit_medsos'],
                 ],
                 [
