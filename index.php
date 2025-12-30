@@ -87,6 +87,9 @@ if(!$cb_data){
 		require_once 'reply/social.php';
 	}
 } else {
+	if($cb_data == "/start") {
+		require_once 'reply/start.php';
+	}
 	if($cb_data == "/social") {
 		require_once 'reply/social.php';
 	}
