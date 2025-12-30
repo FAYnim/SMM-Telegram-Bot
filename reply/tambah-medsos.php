@@ -1,6 +1,4 @@
 <?php
-
-// Load username validation helper
 require_once __DIR__ . '/../helpers/username-validator.php';
 
 if ($cb_data == "/tambah_medsos") {
