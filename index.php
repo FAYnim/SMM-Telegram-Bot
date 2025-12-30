@@ -90,6 +90,9 @@ if(!$cb_data){
 	if ($user[0]['menu'] == 'add_instagram' || $user[0]['menu'] == 'add_tiktok') {
 		require_once 'reply/tambah-medsos.php';
 	}
+	if ($user[0]['menu'] == 'edit_username') {
+		require_once 'reply/edit-username.php';
+	}
 } else {
 	if($cb_data == "/start") {
 		require_once 'reply/start.php';
@@ -106,6 +109,39 @@ if(!$cb_data){
 	if($cb_data == "/add_tiktok") {
 		require_once 'reply/tambah-medsos.php';
 	}
+	if($cb_data == "/edit_medsos") {
+		require_once 'reply/edit-medsos.php';
+	}
+	// Handle edit account callback
+	if(strpos($cb_data, '/edit_account_') === 0) {
+		require_once 'reply/edit-medsos.php';
+	}
+	// Handle delete account callback
+	if(strpos($cb_data, '/delete_account_') === 0) {
+		require_once 'reply/delete-medsos.php';
+	}
+	if(strpos($cb_data, '/confirm_delete_') === 0) {
+		require_once 'reply/delete-medsos.php';
+	}
+	// Handle edit username callback
+	if(strpos($cb_data, '/edit_username_') === 0) {
+		require_once 'reply/edit-username.php';
+	}
 }
+
+// Trace keyboard structure
+$keyboard_trace = [
+    'timestamp' => date('Y-m-d H:i:s'),
+    'chat_id' => $chat_id,
+    'cb_data' => $cb_data,
+    'message' => $message,
+    'user_position' => [
+        'menu' => $user[0]['menu'] ?? 'unknown',
+        'submenu' => $user[0]['submenu'] ?? ''
+    ],
+    'keyboard_structure' => isset($keyboard) ? $keyboard : 'not_set'
+];
+
+file_put_contents('log/keyboard.log', json_encode($keyboard_trace, JSON_PRETTY_PRINT));
 
 ?>
