@@ -43,14 +43,6 @@ $document = $bot->getDocument();
 $caption = $bot->getCaption();
 $file_type = null;
 
-if ($photo) {
-    $file_type = 'photo';
-    $file_id = $bot->getPhotoFileId();
-} elseif ($document) {
-    $file_type = 'document';
-    $file_id = $bot->getDocumentFileId();
-}
-
 // Log file detection
 $file_log = [
     'timestamp' => date('Y-m-d H:i:s'),
@@ -132,23 +124,53 @@ if(!$cb_data){
 		require_once 'reply/edit-username.php';
 	}
 
-	
+
 	if ($photo) {
+		// Get File Data
 		$file_id = $bot->getPhotoFileId();
-		$reply = "📷 Foto terdeteksi!\nFile ID: " . $file_id;
+		$file_info = $bot->getFile($file_id);
+		$file_url = null;
+
+		// Get download URL
+		if ($file_info && isset($file_info['result']['file_path'])) {
+			$file_url = $bot->getFileUrl($file_info['result']['file_path']);
+		}
+
+		// Log
+		$file_info_log = [
+			'timestamp' => date('Y-m-d H:i:s'),
+			'chat_id' => $chat_id,
+			'file_id' => $file_id,
+			'file_info' => $file_info,
+			'file_url' => $file_url,
+			'caption' => $caption
+		];
+		file_put_contents('log/file_info.log', json_encode($file_info_log, JSON_PRETTY_PRINT));
+
+		if($user[0]['menu'] == "confirm_topup") {
+			include "reply/topup-proof.php";
+		}
+
+		// DEBUGGING ONLY:
+/*		$reply = "📷 Foto terdeteksi!\nFile ID: " . $file_id;
 		if ($caption) {
 			$reply .= "\nCaption: " . $caption;
 		}
-		$bot->sendMessage($chat_id, $reply);
+		if ($file_url) {
+			$reply .= "\n📥 Download URL: " . $file_url;
+		}
+		$reply .= "\n<pre>".json_encode($file_info, JSON_PRETTY_PRINT)."</pre>";
+		$bot->sendMessage($chat_id, $reply);*/
 	}
-	
+
 	if ($document) {
-		$file_id = $bot->getDocumentFileId();
+		// DEBUGGING ONLY:
+/*		$file_id = $bot->getDocumentFileId();
 		$reply = "📄 Dokumen terdeteksi!\nFile ID: " . $file_id;
 		if ($caption) {
 			$reply .= "\nCaption: " . $caption;
 		}
-		$bot->sendMessage($chat_id, $reply);
+		$bot->sendMessage($chat_id, $reply);*/
 	}
 } else {
 	if($cb_data == "/start") {
@@ -199,14 +221,6 @@ if(!$cb_data){
 		require_once 'reply/edit-username.php';
 	}
 }
-
-// Handle Photo/Document
-/*if ($photo || $document) {
-	if($photo) {
-		$bot->sendMessage($chat_id, "Gambar diterima");
-	}
-}*/
-
 
 // Trace keyboard structure
 $keyboard_trace = [
