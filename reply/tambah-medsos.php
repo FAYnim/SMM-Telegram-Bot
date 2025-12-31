@@ -115,9 +115,16 @@ if (!$cb_data && $user[0]['menu'] == 'add_instagram') {
                 ."ORDER BY platform, created_at", [$user_id]);
 
             if (count($social_accounts) > 0) {
+                $current_platform = '';
                 foreach ($social_accounts as $account) {
-                    $icon = getPlatformIcon($account['platform']);
-                    $reply .= $icon . " " . ucfirst($account['platform']) . ": @" . $account['username'] . "\n";
+                    if ($current_platform !== $account['platform']) {
+                        if ($current_platform !== '') {
+                            $reply .= "\n";
+                        }
+                        $reply .= ucfirst($account['platform']) . "\n\n";
+                        $current_platform = $account['platform'];
+                    }
+                    $reply .= "- " . $account['account_url'] . "\n";
                 }
                 $reply .= "\n";
             } else {
@@ -194,9 +201,16 @@ if (!$cb_data && $user[0]['menu'] == 'add_tiktok') {
                 ."ORDER BY platform, created_at", [$user_id]);
 
             if (count($social_accounts) > 0) {
+                $current_platform = '';
                 foreach ($social_accounts as $account) {
-                    $icon = getPlatformIcon($account['platform']);
-                    $reply .= $icon . " " . ucfirst($account['platform']) . ": @" . $account['username'] . "\n";
+                    if ($current_platform !== $account['platform']) {
+                        if ($current_platform !== '') {
+                            $reply .= "\n";
+                        }
+                        $reply .= ucfirst($account['platform']) . "\n\n";
+                        $current_platform = $account['platform'];
+                    }
+                    $reply .= "- " . $account['account_url'] . "\n";
                 }
                 $reply .= "\n";
             } else {
