@@ -16,6 +16,19 @@ CREATE TABLE IF NOT EXISTS smm_users (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- Admins table - data khusus untuk admin
+CREATE TABLE IF NOT EXISTS smm_admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    chatid BIGINT UNIQUE NOT NULL,
+    username VARCHAR(255),
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    permissions JSON,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
 -- Wallets table - dompet internal untuk setiap user
 CREATE TABLE IF NOT EXISTS smm_wallets (
     id INT AUTO_INCREMENT PRIMARY KEY,
@@ -132,6 +145,8 @@ CREATE TABLE IF NOT EXISTS smm_audit_logs (
 CREATE INDEX idx_users_telegram_id ON smm_users(chatid);
 CREATE INDEX idx_users_msg_id ON smm_users(msg_id);
 CREATE INDEX idx_users_role ON smm_users(role);
+CREATE INDEX idx_admins_chatid ON smm_admins(chatid);
+CREATE INDEX idx_admins_status ON smm_admins(status);
 CREATE INDEX idx_wallet_transactions_wallet_id ON smm_wallet_transactions(wallet_id);
 CREATE INDEX idx_wallet_transactions_type ON smm_wallet_transactions(type);
 CREATE INDEX idx_campaigns_client_id ON smm_campaigns(client_id);

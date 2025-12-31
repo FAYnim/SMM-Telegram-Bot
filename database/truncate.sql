@@ -8,4 +8,5 @@ TRUNCATE TABLE smm_campaigns;
 TRUNCATE TABLE smm_social_accounts;
 TRUNCATE TABLE smm_wallet_transactions;
 TRUNCATE TABLE smm_wallets;
+TRUNCATE TABLE smm_admins;
 TRUNCATE TABLE smm_users;

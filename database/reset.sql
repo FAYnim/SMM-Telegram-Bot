@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS smm_campaigns;
 DROP TABLE IF EXISTS smm_social_accounts;
 DROP TABLE IF EXISTS smm_wallet_transactions;
 DROP TABLE IF EXISTS smm_wallets;
+DROP TABLE IF EXISTS smm_admins;
 DROP TABLE IF EXISTS smm_users;
 
 -- Wait 2 seconds (commented for SQL, use in application)
@@ -28,6 +29,19 @@ CREATE TABLE IF NOT EXISTS smm_users (
     menu VARCHAR(50) DEFAULT 'main',
     submenu VARCHAR(50) DEFAULT '',
     msg_id INT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- Admins table - data khusus untuk admin
+CREATE TABLE IF NOT EXISTS smm_admins (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    chatid BIGINT UNIQUE NOT NULL,
+    username VARCHAR(255),
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    permissions JSON,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -162,6 +176,8 @@ CREATE TABLE IF NOT EXISTS smm_social_accounts (
 CREATE INDEX idx_users_telegram_id ON smm_users(chatid);
 CREATE INDEX idx_users_role ON smm_users(role);
 CREATE INDEX idx_users_msg_id ON smm_users(msg_id);
+CREATE INDEX idx_admins_chatid ON smm_admins(chatid);
+CREATE INDEX idx_admins_status ON smm_admins(status);
 CREATE INDEX idx_wallets_user_id ON smm_wallets(user_id);
 CREATE INDEX idx_wallet_transactions_wallet_id ON smm_wallet_transactions(wallet_id);
 CREATE INDEX idx_wallet_transactions_type ON smm_wallet_transactions(type);
