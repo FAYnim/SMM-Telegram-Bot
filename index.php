@@ -73,12 +73,24 @@ $log_data = [
     'cb_data' => $bot->getCallbackData(),
     'update' => $bot->getUpdate()
 ];
-file_put_contents('log/trace.log', json_encode($log_data));
+file_put_contents('log/trace.log', json_encode($log_data, JSON_PRETTY_PRINT));
 
 // Validasi input
-if (!$chat_id || (!$message && !$bot->getCallbackData())) {
+if (!$chat_id || (!$message && !$bot->getCallbackData() && !$photo && !$document)) {
     exit();
 }
+	// Handle file upload
+	$debug_log = [
+		'timestamp' => date('Y-m-d H:i:s'),
+		'chat_id' => $chat_id,
+		'cb_data' => $cb_data,
+		'photo_exists' => $photo ? true : false,
+		'document_exists' => $document ? true : false,
+		'photo_data' => $photo,
+		'document_data' => $document,
+		'full_update' => $bot->getUpdate()
+	];
+	file_put_contents('log/debug.log', json_encode($debug_log, JSON_PRETTY_PRINT));
 
 // Check atau insert user ke database
 $user = db_read('smm_users', ['chatid' => $chat_id]);
@@ -118,6 +130,25 @@ if(!$cb_data){
 	}
 	if ($user[0]['menu'] == 'edit_username') {
 		require_once 'reply/edit-username.php';
+	}
+
+	
+	if ($photo) {
+		$file_id = $bot->getPhotoFileId();
+		$reply = "📷 Foto terdeteksi!\nFile ID: " . $file_id;
+		if ($caption) {
+			$reply .= "\nCaption: " . $caption;
+		}
+		$bot->sendMessage($chat_id, $reply);
+	}
+	
+	if ($document) {
+		$file_id = $bot->getDocumentFileId();
+		$reply = "📄 Dokumen terdeteksi!\nFile ID: " . $file_id;
+		if ($caption) {
+			$reply .= "\nCaption: " . $caption;
+		}
+		$bot->sendMessage($chat_id, $reply);
 	}
 } else {
 	if($cb_data == "/start") {
@@ -168,6 +199,14 @@ if(!$cb_data){
 		require_once 'reply/edit-username.php';
 	}
 }
+
+// Handle Photo/Document
+/*if ($photo || $document) {
+	if($photo) {
+		$bot->sendMessage($chat_id, "Gambar diterima");
+	}
+}*/
+
 
 // Trace keyboard structure
 $keyboard_trace = [
