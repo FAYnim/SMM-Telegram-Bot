@@ -150,6 +150,7 @@ if(!$cb_data){
 		if($user[0]['menu'] == "confirm_topup") {
 			include "reply/topup-proof.php";
 		}
+//		$bot->sendPhoto($chat_id, $file_id);
 
 		// DEBUGGING ONLY:
 /*		$reply = "📷 Foto terdeteksi!\nFile ID: " . $file_id;
