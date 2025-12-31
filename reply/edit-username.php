@@ -131,14 +131,16 @@ if(!$cb_data && $user[0]['menu'] == 'edit_username') {
                 ."ORDER BY platform, created_at", [$user_id]);
 
             if (count($social_accounts) > 0) {
-                $platform_icons = [
-                    'instagram' => '📷',
-                    'tiktok' => '🎵'
-                ];
-
+                $current_platform = '';
                 foreach ($social_accounts as $account) {
-                    $icon = $platform_icons[$account['platform']] ?? '🌐';
-                    $social_reply .= $icon . " " . ucfirst($account['platform']) . ": @" . $account['username'] . "\n";
+                    if ($current_platform !== $account['platform']) {
+                        if ($current_platform !== '') {
+                            $social_reply .= "\n";
+                        }
+                        $social_reply .= ucfirst($account['platform']) . "\n\n";
+                        $current_platform = $account['platform'];
+                    }
+                    $social_reply .= "- " . $account['account_url'] . "\n";
                 }
                 $social_reply .= "\n";
             } else {
