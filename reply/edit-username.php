@@ -101,16 +101,10 @@ if(!$cb_data && $user[0]['menu'] == 'edit_username') {
     if ($update_result) {
         $icon = getPlatformIcon($platform);
 
-        $reply = "✅ <b>Username Berhasil Diperbarui!</b>\n\n" .
+        $reply = "✅ <b>Username baru berhasil dimasukkan!</b>\n\n" .
                 $icon . " <b>" . ucfirst($platform) . "</b>\n" .
                 "👤 Username baru: <code>@" . $username_input . "</code>\n\n" .
-                "Data akun Anda telah berhasil disimpan.";
-
-        $keyboard = $bot->buildInlineKeyboard([
-            [
-                ['text' => '🔙 Kembali ke Menu Sosial', 'callback_data' => '/social']
-            ]
-        ]);
+                "Data akun Anda sedang disimpan. Mohon tunggu...";
 
         $bot->deleteMessage($chat_id, $msg_id);
         $send_result = $bot->sendMessage($chat_id, $reply);
