@@ -1,0 +1,25 @@
+<?php
+require_once __DIR__ . '/../helpers/username-validator.php';
+
+$update_result = updateUserPosition($chat_id, 'topup');
+
+if (!$update_result) {
+    $bot->sendMessage($chat_id, "❌ Something Error!");
+    return;
+}
+
+$reply = "Saldoku: 0";
+
+$keyboard = $bot->buildInlineKeyboard([
+    [
+        ['text' => '💵 DANA', 'callback_data' => '/topup_dana'],
+        ['text' => '💵 ShopeePay', 'callback_data' => '/topup_shopeepay']
+    ],
+    [
+        ['text' => '🔙 Kembali', 'callback_data' => '/start']
+    ]
+]);
+
+$bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+
+?>

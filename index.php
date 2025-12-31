@@ -100,6 +100,11 @@ if(!$cb_data){
 	if($cb_data == "/social") {
 		require_once 'reply/social.php';
 	}
+	if($cb_data == "/topup") {
+		require_once 'reply/topup.php';
+	}
+
+	// Add New Account
 	if($cb_data == "/tambah_medsos") {
 		require_once 'reply/tambah-medsos.php';
 	}
@@ -109,21 +114,23 @@ if(!$cb_data){
 	if($cb_data == "/add_tiktok") {
 		require_once 'reply/tambah-medsos.php';
 	}
+
+	// Edit Account
 	if($cb_data == "/edit_medsos") {
 		require_once 'reply/edit-medsos.php';
 	}
-	// Handle edit account callback
 	if(strpos($cb_data, '/edit_account_') === 0) {
 		require_once 'reply/edit-medsos.php';
 	}
-	// Handle delete account callback
+
+	// Delete Account
 	if(strpos($cb_data, '/delete_account_') === 0) {
 		require_once 'reply/delete-medsos.php';
 	}
 	if(strpos($cb_data, '/confirm_delete_') === 0) {
 		require_once 'reply/delete-medsos.php';
 	}
-	// Handle edit username callback
+	// Edit Username
 	if(strpos($cb_data, '/edit_username_') === 0) {
 		require_once 'reply/edit-username.php';
 	}
