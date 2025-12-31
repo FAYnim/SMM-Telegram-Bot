@@ -1,0 +1,20 @@
+<?php
+
+$update_result = updateUserPosition($chat_id, 'confirm_topup', '');
+
+if (!$update_result) {
+    $bot->sendMessage($chat_id, "❌ Something Error!");
+    return;
+}
+
+$reply = "Kirim bukti topupmu";
+
+$keyboard = $bot->buildInlineKeyboard([
+    [
+        ['text' => '🔙 Kembali', 'callback_data' => '/topup']
+    ]
+]);
+
+$bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+
+?>

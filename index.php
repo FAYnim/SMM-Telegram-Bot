@@ -37,6 +37,24 @@ $first_name = $bot->getFirstName();
 $last_name = $bot->getLastName();
 $cb_data = $bot->getCallbackData();
 
+// Cek apakah user mengirim file (foto atau dokumen)
+$photo = $bot->getPhoto();
+$document = $bot->getDocument();
+$caption = $bot->getCaption();
+$file_type = null;
+
+// Log file detection
+$file_log = [
+    'timestamp' => date('Y-m-d H:i:s'),
+    'chat_id' => $chat_id,
+    'file_type' => $file_type,
+    'file_id' => $file_id ?? null,
+    'caption' => $caption,
+    'has_photo' => $photo ? true : false,
+    'has_document' => $document ? true : false
+];
+file_put_contents('log/file.log', json_encode($file_log));
+
 // Trace log
 $log_data = [
     'timestamp' => date('Y-m-d H:i:s'),
@@ -47,12 +65,24 @@ $log_data = [
     'cb_data' => $bot->getCallbackData(),
     'update' => $bot->getUpdate()
 ];
-file_put_contents('log/trace.log', json_encode($log_data));
+file_put_contents('log/trace.log', json_encode($log_data, JSON_PRETTY_PRINT));
 
 // Validasi input
-if (!$chat_id || (!$message && !$bot->getCallbackData())) {
+if (!$chat_id || (!$message && !$bot->getCallbackData() && !$photo && !$document)) {
     exit();
 }
+	// Handle file upload
+	$debug_log = [
+		'timestamp' => date('Y-m-d H:i:s'),
+		'chat_id' => $chat_id,
+		'cb_data' => $cb_data,
+		'photo_exists' => $photo ? true : false,
+		'document_exists' => $document ? true : false,
+		'photo_data' => $photo,
+		'document_data' => $document,
+		'full_update' => $bot->getUpdate()
+	];
+	file_put_contents('log/debug.log', json_encode($debug_log, JSON_PRETTY_PRINT));
 
 // Check atau insert user ke database
 $user = db_read('smm_users', ['chatid' => $chat_id]);
@@ -93,6 +123,56 @@ if(!$cb_data){
 	if ($user[0]['menu'] == 'edit_username') {
 		require_once 'reply/edit-username.php';
 	}
+
+
+	if ($photo) {
+		// Get File Data
+		$file_id = $bot->getPhotoFileId();
+		$file_info = $bot->getFile($file_id);
+		$file_url = null;
+
+		// Get download URL
+		if ($file_info && isset($file_info['result']['file_path'])) {
+			$file_url = $bot->getFileUrl($file_info['result']['file_path']);
+		}
+
+		// Log
+		$file_info_log = [
+			'timestamp' => date('Y-m-d H:i:s'),
+			'chat_id' => $chat_id,
+			'file_id' => $file_id,
+			'file_info' => $file_info,
+			'file_url' => $file_url,
+			'caption' => $caption
+		];
+		file_put_contents('log/file_info.log', json_encode($file_info_log, JSON_PRETTY_PRINT));
+
+		if($user[0]['menu'] == "confirm_topup") {
+			include "reply/topup-proof.php";
+		}
+//		$bot->sendPhoto($chat_id, $file_id);
+
+		// DEBUGGING ONLY:
+/*		$reply = "📷 Foto terdeteksi!\nFile ID: " . $file_id;
+		if ($caption) {
+			$reply .= "\nCaption: " . $caption;
+		}
+		if ($file_url) {
+			$reply .= "\n📥 Download URL: " . $file_url;
+		}
+		$reply .= "\n<pre>".json_encode($file_info, JSON_PRETTY_PRINT)."</pre>";
+		$bot->sendMessage($chat_id, $reply);*/
+	}
+
+	if ($document) {
+		// DEBUGGING ONLY:
+/*		$file_id = $bot->getDocumentFileId();
+		$reply = "📄 Dokumen terdeteksi!\nFile ID: " . $file_id;
+		if ($caption) {
+			$reply .= "\nCaption: " . $caption;
+		}
+		$bot->sendMessage($chat_id, $reply);*/
+	}
 } else {
 	if($cb_data == "/start") {
 		require_once 'reply/start.php';
@@ -100,6 +180,22 @@ if(!$cb_data){
 	if($cb_data == "/social") {
 		require_once 'reply/social.php';
 	}
+	// Cek Saldo
+	if($cb_data == "/cek-saldo") {
+		require_once 'reply/cek-saldo.php';
+	}
+	// Topup
+	if($cb_data == "/topup") {
+		require_once 'reply/topup.php';
+	}
+	if(strpos($cb_data, '/topup_') === 0) {
+		require_once 'reply/opsi-topup.php';
+	}
+	if($cb_data == "/konfirmasi_topup") {
+		require_once 'reply/konfirmasi-topup.php';
+	}
+
+	// Add New Account
 	if($cb_data == "/tambah_medsos") {
 		require_once 'reply/tambah-medsos.php';
 	}
@@ -109,21 +205,23 @@ if(!$cb_data){
 	if($cb_data == "/add_tiktok") {
 		require_once 'reply/tambah-medsos.php';
 	}
+
+	// Edit Account
 	if($cb_data == "/edit_medsos") {
 		require_once 'reply/edit-medsos.php';
 	}
-	// Handle edit account callback
 	if(strpos($cb_data, '/edit_account_') === 0) {
 		require_once 'reply/edit-medsos.php';
 	}
-	// Handle delete account callback
+
+	// Delete Account
 	if(strpos($cb_data, '/delete_account_') === 0) {
 		require_once 'reply/delete-medsos.php';
 	}
 	if(strpos($cb_data, '/confirm_delete_') === 0) {
 		require_once 'reply/delete-medsos.php';
 	}
-	// Handle edit username callback
+	// Edit Username
 	if(strpos($cb_data, '/edit_username_') === 0) {
 		require_once 'reply/edit-username.php';
 	}
