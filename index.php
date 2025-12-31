@@ -100,8 +100,15 @@ if(!$cb_data){
 	if($cb_data == "/social") {
 		require_once 'reply/social.php';
 	}
+	// Topup
 	if($cb_data == "/topup") {
 		require_once 'reply/topup.php';
+	}
+	if(strpos($cb_data, '/topup_') === 0) {
+		require_once 'reply/opsi-topup.php';
+	}
+	if($cb_data == "/konfirmasi_topup") {
+		require_once 'reply/konfirmasi-topup.php';
 	}
 
 	// Add New Account

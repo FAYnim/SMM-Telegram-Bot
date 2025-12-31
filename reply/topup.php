@@ -1,5 +1,4 @@
 <?php
-require_once __DIR__ . '/../helpers/username-validator.php';
 
 $update_result = updateUserPosition($chat_id, 'topup');
 
