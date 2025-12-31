@@ -180,6 +180,10 @@ if(!$cb_data){
 	if($cb_data == "/social") {
 		require_once 'reply/social.php';
 	}
+	// Cek Saldo
+	if($cb_data == "/cek-saldo") {
+		require_once 'reply/cek-saldo.php';
+	}
 	// Topup
 	if($cb_data == "/topup") {
 		require_once 'reply/topup.php';

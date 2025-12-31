@@ -22,7 +22,7 @@
                 ['text' => '💼 Cari Cuan', 'callback_data' => '/tugas']
             ],
             [
-                ['text' => '💰 Cek Saldo', 'callback_data' => '/topup'],
+                ['text' => '💰 Cek Saldo', 'callback_data' => '/cek-saldo'],
                 ['text' => '💸 Tarik Dana', 'callback_data' => '/withdraw']
             ],
             [

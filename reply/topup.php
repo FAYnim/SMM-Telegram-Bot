@@ -7,7 +7,7 @@ if (!$update_result) {
     return;
 }
 
-$reply = "Saldoku: 0";
+$reply = "Pilih metode Topup";
 
 $keyboard = $bot->buildInlineKeyboard([
     [
