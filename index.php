@@ -37,6 +37,32 @@ $first_name = $bot->getFirstName();
 $last_name = $bot->getLastName();
 $cb_data = $bot->getCallbackData();
 
+// Cek apakah user mengirim file (foto atau dokumen)
+$photo = $bot->getPhoto();
+$document = $bot->getDocument();
+$caption = $bot->getCaption();
+$file_type = null;
+
+if ($photo) {
+    $file_type = 'photo';
+    $file_id = $bot->getPhotoFileId();
+} elseif ($document) {
+    $file_type = 'document';
+    $file_id = $bot->getDocumentFileId();
+}
+
+// Log file detection
+$file_log = [
+    'timestamp' => date('Y-m-d H:i:s'),
+    'chat_id' => $chat_id,
+    'file_type' => $file_type,
+    'file_id' => $file_id ?? null,
+    'caption' => $caption,
+    'has_photo' => $photo ? true : false,
+    'has_document' => $document ? true : false
+];
+file_put_contents('log/file.log', json_encode($file_log));
+
 // Trace log
 $log_data = [
     'timestamp' => date('Y-m-d H:i:s'),

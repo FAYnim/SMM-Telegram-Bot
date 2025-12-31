@@ -37,6 +37,50 @@ class TelegramBot {
     }
     
     /**
+     * Mendapatkan data foto dari update
+     */
+    public function getPhoto() {
+        return isset($this->update['message']['photo']) ? $this->update['message']['photo'] : null;
+    }
+    
+    /**
+     * Mendapatkan data dokumen dari update
+     */
+    public function getDocument() {
+        return isset($this->update['message']['document']) ? $this->update['message']['document'] : null;
+    }
+    
+    /**
+     * Mendapatkan file ID dari foto (ukuran terbesar)
+     */
+    public function getPhotoFileId() {
+        $photo = $this->getPhoto();
+        if ($photo && is_array($photo)) {
+            $lastPhoto = end($photo);
+            return isset($lastPhoto['file_id']) ? $lastPhoto['file_id'] : null;
+        }
+        return null;
+    }
+    
+    /**
+     * Mendapatkan file ID dari dokumen
+     */
+    public function getDocumentFileId() {
+        $document = $this->getDocument();
+        if ($document) {
+            return isset($document['file_id']) ? $document['file_id'] : null;
+        }
+        return null;
+    }
+    
+    /**
+     * Mendapatkan caption dari pesan (untuk foto/dokumen)
+     */
+    public function getCaption() {
+        return isset($this->update['message']['caption']) ? $this->update['message']['caption'] : null;
+    }
+    
+    /**
      * Mendapatkan callback data dari inline keyboard
      */
     public function getCallbackData() {
@@ -240,6 +284,41 @@ class TelegramBot {
         }
         
         return $this->request('sendDocument', $params);
+    }
+    
+    /**
+     * Mengirim foto
+     */
+    public function sendPhoto($chatId, $photo, $caption = null, $replyTo = null, $parseMode = 'HTML') {
+        $params = [
+            'chat_id' => $chatId,
+            'photo' => $photo,
+            'parse_mode' => $parseMode
+        ];
+        
+        if ($caption) {
+            $params['caption'] = $caption;
+        }
+        
+        if ($replyTo) {
+            $params['reply_to_message_id'] = $replyTo;
+        }
+        
+        return $this->request('sendPhoto', $params);
+    }
+    
+    /**
+     * Mendapatkan info file dari Telegram
+     */
+    public function getFile($fileId) {
+        return $this->request('getFile', ['file_id' => $fileId]);
+    }
+    
+    /**
+     * Mendapatkan URL download file
+     */
+    public function getFileUrl($filePath) {
+        return "https://api.telegram.org/file/bot{$this->token}/{$filePath}";
     }
     
     /**
