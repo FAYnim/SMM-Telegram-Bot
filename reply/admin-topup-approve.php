@@ -2,7 +2,7 @@
 
 // Extract User ID
 $parts = explode('_', $submenu);
-$user_id = $parts[2];
+$user_chat_id = $parts[2];
 
 // Validasi Input
 $nominal = trim($message);
@@ -17,7 +17,7 @@ if (!is_numeric($nominal) || $nominal <= 0) {
 
 // Dapatkan Balance User
 // Cari user_id dari smm_users berdasarkan chatid
-$user = db_read('smm_users', ['chatid' => $user_id]);
+$user = db_read('smm_users', ['chatid' => $user_chat_id]);
 if (!$user) {
     $reply = "❌ User tidak ditemukan!";
     $bot->editMessage($chat_id, $msg_id, $reply);
@@ -54,6 +54,15 @@ $transaction_data = [
 ];
 db_create('smm_wallet_transactions', $transaction_data);
 
+// Update Deposit Status
+$deposit_update = [
+    'amount' => $nominal,
+    'admin_id' => $user_id,
+    'status' => 'approved',
+    'processed_at' => date('Y-m-d H:i:s')
+];
+db_update('smm_deposits', $deposit_update, ['user_id' => $actual_user_id, 'status' => 'pending']);
+
 // Update Posisi Admin
 $update_result = updateUserPosition($chat_id, 'main', '');
 
@@ -67,7 +76,7 @@ $bot->deleteMessage($chat_id, $msg_id);
 
 // Notifikasi User
 $user_reply = "✅ Top-up Anda sebesar Rp " . number_format($nominal, 0, ',', '.') . " telah disetujui!\n\nSaldo akan segera ditambahkan ke akun Anda.";
-$bot->sendMessage($user_id, $user_reply);
+$bot->sendMessage($user_chat_id, $user_reply);
 
 // Konfirmasi ke Admin
 $reply = "✅ Top-up sebesar Rp " . number_format($nominal, 0, ',', '.') . " telah disetujui!\n\nPesan approve sudah dikirim ke user!";
