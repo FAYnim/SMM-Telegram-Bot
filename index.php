@@ -103,6 +103,8 @@ if (empty($user)) {
 $user = db_read('smm_users', ['chatid' => $chat_id]);
 $user_id = $user[0]['id'];
 $role = $user[0]['role'];
+$menu = $user[0]['menu'];
+$submenu = $user[0]['submenu'];
 $msg_id = $user[0]['msg_id'] ?? null;
 
 // Cek apakah user adalah admin
@@ -119,6 +121,17 @@ if(!$cb_data){
 	if ($message == "/start") {
 		require_once 'reply/start.php';
 	}
+	// ADMIN
+	if($role == "admin") {
+		if(strpos($submenu, 'topup_approve_') === 0) {
+			require_once 'reply/admin-topup-approve.php';
+		}
+		if(strpos($submenu, 'topup_reject_') === 0) {
+			require_once 'reply/admin-topup-reject.php';
+		}
+	}
+
+	// USER
 	if ($message == "/social") {
 		require_once 'reply/social.php';
 	}

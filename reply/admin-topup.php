@@ -24,8 +24,8 @@ if(!$admin_msg_id) {
 
 if($admin_msg_id != $msg_id) {
 	// Update msg_id column with $admin_msg_id in table users and admins
-	db_update('smm_users', ['chatid' => $chat_id], ['msg_id' => $admin_msg_id]);
-	db_update('smm_admins', ['chatid' => $chat_id], ['msg_id' => $admin_msg_id]);
+	db_update('smm_users', ['msg_id' => $admin_msg_id], ['chatid' => $chat_id]);
+	db_update('smm_admins',  ['msg_id' => $admin_msg_id], ['chatid' => $chat_id]);
 }
 
 // Get user_chat_id
