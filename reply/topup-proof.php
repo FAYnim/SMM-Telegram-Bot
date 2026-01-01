@@ -3,61 +3,79 @@
 $update_result = updateUserPosition($chat_id, 'topup_proof', '');
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Something Error!");
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem.");
     return;
 }
 
+// Hapus pesan instruksi upload sebelumnya agar chat bersih
 $bot->deleteMessage($chat_id, $msg_id);
 
-$waiting_result = $bot->sendMessage($chat_id, "Bukti sedang dikirim ke Admin, mohon menunggu...");
+// Kirim pesan waiting
+$waiting_result = $bot->sendMessage($chat_id, "⏳ Sedang mengirim bukti ke Admin...");
 $waiting_msg_id = $waiting_result['result']['message_id'];
+
 if (isset($waiting_msg_id)) {
+    // Simpan msg_id untuk update nanti
     db_update('smm_users', ['msg_id' => $waiting_msg_id], ['chatid' => $chat_id]);
 
-	// Send notif to admin
-	$admins = db_read("smm_admins");
+    // Kirim notifikasi ke Admin
+    $admins = db_read("smm_admins");
 
-	if($admins) {
-		if(!isset($file_id)) {
-		    $bot->sendMessage($chat_id, "❌ Something Error!");
-		    return;
-		}
-		foreach($admins as $admin):
-			$admin_id = $admin["chatid"];
-			$caption = "User {$chat_id} melakukan topup";
+    if ($admins) {
+        if (!isset($file_id)) {
+            $bot->sendMessage($chat_id, "❌ Gagal mendeteksi gambar.");
+            return;
+        }
 
-			$keyboard = $bot->buildInlineKeyboard([
-			    [
-			        ['text' => '✅ Terima', 'callback_data' => 'admin_approve_topup_' . $chat_id],
-			        ['text' => '❌ Tolak', 'callback_data' => 'admin_reject_topup_' . $chat_id]
-			    ]
-			]);
+        foreach ($admins as $admin) {
+            $admin_id = $admin["chatid"];
 
-			$bot->sendPhoto($admin_id, $file_id, $caption);
-			sleep(1);
+            // Siapkan data user untuk display
+            $sender_name = $username ? "@$username" : $first_name;
+            $caption_plain = "🔔 TOPUP BARU!\nUser: $sender_name (ID: $chat_id)\nWaktu: " . date('d M Y, H:i');
 
-			$reply = "Pilih aksi untuk topup User {$chat_id}:";
-			$bot->sendMessageWithKeyboard($admin_id, $reply, $keyboard);
-			sleep(1);
-		endforeach;
-	}
+            $keyboard_admin = $bot->buildInlineKeyboard([
+                [
+                    ['text' => '✅ Terima', 'callback_data' => 'admin_approve_topup_' . $chat_id],
+                    ['text' => '❌ Tolak', 'callback_data' => 'admin_reject_topup_' . $chat_id]
+                ]
+            ]);
 
-	// Insert topup ke deposits table
-	db_create('smm_deposits', [
-	    'user_id' => $user_id,
-	    'proof_image_id' => $file_id
-	]);
+            // Kirim foto bukti ke admin
+            $bot->sendPhoto($admin_id, $file_id, $caption_plain);
+            sleep(1); // Mencegah rate limit
 
-	// Edit pesan waiting menjadi final
-	$reply = "Bukti topup sudah dikirim ke Admin. Mohon menunggu";
-	$keyboard = $bot->buildInlineKeyboard([
-	    [
-	        ['text' => '🔙 Kembali', 'callback_data' => '/start']
-	    ]
-	]);
-	$bot->editMessage($chat_id, $waiting_msg_id, $reply, 'HTML', $keyboard);
+            // Kirim menu aksi
+            $reply_admin = "👇 <b>Tindakan Admin</b>\nSilakan cek bukti di atas dari User ID: <code>$chat_id</code>";
+            $bot->sendMessageWithKeyboard($admin_id, $reply_admin, $keyboard_admin);
+            sleep(1);
+        }
+    }
+
+    // Simpan data deposit ke database
+    db_create('smm_deposits', [
+        'user_id' => $user_id,
+        'proof_image_id' => $file_id,
+        'amount' => 0,
+        'status' => 'pending'
+    ]);
+
+    // Update pesan user jadi Final
+    $reply_user = "✅ <b>Bukti Terkirim</b>\n\n";
+    $reply_user .= "Terima kasih! Bukti pembayaran Anda telah kami terima.\n\n";
+    $reply_user .= "⏳ <b>Status: Menunggu Verifikasi</b>\n";
+    $reply_user .= "Admin kami akan mengecek bukti transfer Anda. Saldo akan otomatis bertambah jika disetujui (Estimasi 5-10 menit).";
+
+    $keyboard_user = $bot->buildInlineKeyboard([
+        [
+            ['text' => '🔙 Kembali ke Menu Utama', 'callback_data' => '/start']
+        ]
+    ]);
+
+    $bot->editMessage($chat_id, $waiting_msg_id, $reply_user, 'HTML', $keyboard_user);
+
 } else {
-    $bot->sendMessage($chat_id, "❌ Something Error!");
+    $bot->sendMessage($chat_id, "❌ Gagal memproses permintaan.");
     return;
 }
 ?>
