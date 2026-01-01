@@ -95,6 +95,13 @@ class TelegramBot {
     }
     
     /**
+     * Mendapatkan message ID dari callback query
+     */
+    public function getCallbackMessageId() {
+        return isset($this->update['callback_query']['message']['message_id']) ? $this->update['callback_query']['message']['message_id'] : null;
+    }
+    
+    /**
      * Mendapatkan ID pesan yang diterima
      */
     public function getMessageId() {
