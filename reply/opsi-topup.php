@@ -9,7 +9,22 @@ if (!$update_result) {
     return;
 }
 
-$reply = "Kirim ke alamat 08xxxxxx";
+if($platform == "shopeepay") $display_platform = "ShopeePay"; // Fix capitalization
+if($platform == "dana") $display_platform = "DANA"; // Fix capitalization
+
+$reply = "💎 <b>Topup via " . $display_platform . "</b>\n\n";
+$reply .= "Silakan transfer dana deposit Anda ke nomor berikut:\n\n";
+
+if($platform == "dana") {
+	$reply .= "📞 <b>0812-3456-7890</b>\n";
+	$reply .= "A/N: <b>Admin SMM</b>\n";
+} elseif ($platform == "shopeepay") {
+	$reply .= "📞 <b>0812-3456-7890</b>\n";
+	$reply .= "A/N: <b>Admin SMM</b>\n";
+}
+
+$reply .= "\n⚠️ <b>Penting:</b>\n";
+$reply .= "Setelah berhasil melakukan transfer, mohon tekan tombol <b>✅ Konfirmasi</b> di bawah untuk mengunggah bukti pembayaran.";
 
 $keyboard = $bot->buildInlineKeyboard([
     [

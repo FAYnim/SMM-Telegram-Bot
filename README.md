@@ -14,6 +14,7 @@ Bot Telegram berbasis PHP Native untuk marketplace engagement media sosial (Paid
 - **Sistem Dompet (Wallet)**: Pencatatan saldo real-time dengan log transaksi lengkap (Deposit, Reward, Withdraw).
 - **Verifikasi Bukti**: Worker mengunggah screenshot bukti kerja langsung ke bot untuk diverifikasi manual oleh Admin.
 - **Manajemen Akun Medsos**: User dapat mendaftarkan akun media sosial mereka untuk validasi tugas.
+- **Top-up System**: Deposit saldo dengan panduan transfer otomatis dan verifikasi bukti pembayaran manual oleh Admin.
 
 ## Teknologi
 - **Bahasa**: PHP (Native)
@@ -31,6 +32,18 @@ Bot Telegram berbasis PHP Native untuk marketplace engagement media sosial (Paid
 ├── index.php       # Entry point webhook
 └── TelegramBot.php # Class wrapper API Telegram
 ```
+
+## Development Standards
+
+### Copywriting & UX
+Bot ini menggunakan standar copywriting yang konsisten untuk kenyamanan pengguna:
+- **Tone**: Profesional, informatif, dan sopan.
+- **Format**: Menggunakan HTML Parse Mode.
+- **Struktur Pesan**:
+  - **Header**: Icon + Judul Tebal (contoh: `💳 <b>Informasi Saldo</b>`)
+  - **Body**: Informasi jelas dengan penekanan pada nilai penting (Rp, ID, Kode).
+  - **Footer**: Instruksi tambahan dengan teks miring (*italic*).
+- **Mata Uang**: Format Rupiah tanpa desimal sen (contoh: `Rp 50.000`).
 
 ## Cara Instalasi
 

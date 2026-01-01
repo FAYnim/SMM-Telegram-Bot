@@ -1,6 +1,6 @@
 <?php
 
-// Extract User ID
+// Extract User ID from submenu
 $parts = explode('_', $submenu);
 $user_chat_id = $parts[2];
 
@@ -8,24 +8,22 @@ $user_chat_id = $parts[2];
 $reason = trim($message);
 
 if (empty($reason)) {
-    $reply = "❌ Masukkan alasan penolakan!";
-    $keyboard = [];
-
-    $bot->editMessage($chat_id, $msg_id, $reply);
+    $reply = "❌ <b>Alasan Wajib Diisi</b>\nMohon berikan alasan penolakan agar user mengerti mengapa topup ditolak.";
+    $bot->sendMessage($chat_id, $reply, 'HTML');
     return;
 }
 
-// Dapatkan User ID
+// Cari data user
 $user = db_read('smm_users', ['chatid' => $user_chat_id]);
 if (!$user) {
-    $reply = "❌ User tidak ditemukan!";
-    $bot->editMessage($chat_id, $msg_id, $reply);
+    $bot->sendMessage($chat_id, "❌ User tidak ditemukan di database.");
     return;
 }
 
 $actual_user_id = $user[0]['id'];
 
-// Update Deposit Status
+// Update Status di Tabel Deposits
+// Mengubah status SEMUA pending deposit user ini menjadi rejected
 $deposit_update = [
     'admin_id' => $user_id,
     'admin_notes' => $reason,
@@ -34,30 +32,31 @@ $deposit_update = [
 ];
 db_update('smm_deposits', $deposit_update, ['user_id' => $actual_user_id, 'status' => 'pending']);
 
-// Update Posisi Admin
-$update_result = updateUserPosition($chat_id, 'main', '');
+// Reset Posisi Admin
+updateUserPosition($chat_id, 'main', '');
 
-if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Something Error!");
-    return;
-}
-
-// Hapus Message Admin
+// Hapus pesan prompt input admin
 $bot->deleteMessage($chat_id, $msg_id);
 
-// Notifikasi User
-$user_reply = "❌ Top-up Anda telah ditolak.\n\nAlasan: " . $reason . "\n\nSilakan hubungi admin untuk informasi lebih lanjut.";
-$bot->sendMessage($user_chat_id, $user_reply);
+// --- NOTIFIKASI KE USER ---
+$user_reply = "❌ <b>Topup Ditolak</b>\n\n";
+$user_reply .= "Mohon maaf, permintaan topup Anda tidak dapat kami proses saat ini.\n\n";
+$user_reply .= "📝 <b>Alasan:</b> " . htmlspecialchars($reason) . "\n\n";
+$user_reply .= "Silakan perbaiki data bukti pembayaran atau hubungi Admin jika ada kesalahan.";
 
-// Konfirmasi ke Admin
-$reply = "✅ Top-up telah ditolak!\n\nAlasan: " . $reason . "\n\nPesan penolakan sudah dikirim ke user!";
-$keyboard = [];
+$bot->sendMessage($user_chat_id, $user_reply, 'HTML');
 
-$message_result = $bot->sendMessage($chat_id, $reply);
+// --- KONFIRMASI KE ADMIN ---
+$admin_reply = "✅ <b>Topup Ditolak</b>\n\n";
+$admin_reply .= "👤 User ID: <code>$user_chat_id</code>\n";
+$admin_reply .= "📝 Alasan: " . htmlspecialchars($reason) . "\n";
+$admin_reply .= "📢 Status: User telah dinotifikasi.";
 
-// Update Message ID
-if ($message_result && isset($message_result['message_id'])) {
-    $new_msg_id = $message_result['message_id'];
+$message_result = $bot->sendMessage($chat_id, $admin_reply, 'HTML');
+
+// Update last msg_id admin
+if ($message_result && isset($message_result['result']['message_id'])) {
+    $new_msg_id = $message_result['result']['message_id'];
     db_update('smm_users', ['msg_id' => $new_msg_id], ['chatid' => $chat_id]);
 }
 

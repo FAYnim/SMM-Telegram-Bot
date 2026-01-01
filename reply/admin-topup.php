@@ -3,7 +3,7 @@
 $update_result = updateUserPosition($chat_id, 'main', '');
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Something Error 1!");
+    $bot->sendMessage($chat_id, "❌ Gagal memperbarui status admin (Err: 1).");
     return;
 }
 
@@ -18,7 +18,7 @@ if (empty($admin)) {
 
 $admin_msg_id = $bot->getCallbackMessageId();
 if(!$admin_msg_id) {
-    $bot->sendMessage($chat_id, "❌ Something Error 2!");
+    $bot->sendMessage($chat_id, "❌ Gagal mengambil ID pesan (Err: 2).");
     return;
 }
 
@@ -28,7 +28,7 @@ if($admin_msg_id != $msg_id) {
 	db_update('smm_admins',  ['msg_id' => $admin_msg_id], ['chatid' => $chat_id]);
 }
 
-// Get user_chat_id
+// Get user_chat_id from callback data
 $parts = explode('_', $cb_data);
 $user_chat_id = end($parts);
 
@@ -36,23 +36,31 @@ if(strpos($cb_data, "approve") !== false) {
 
 	$update_result = updateUserPosition($chat_id, 'main', 'topup_approve_'.$user_chat_id);
 	if (!$update_result) {
-		$bot->sendMessage($chat_id, "❌ Something Error!");
+		$bot->sendMessage($chat_id, "❌ Gagal memperbarui posisi admin.");
 		return;
 	}
 
-	$bot->editMessage($chat_id, $admin_msg_id,  "✅ Berapa nominal topup yang disetujui?");
+    $reply = "✅ <b>Setujui Topup</b>\n\n";
+    $reply .= "Masukkan <b>nominal saldo</b> (angka) yang akan ditambahkan untuk User ID: <code>$user_chat_id</code>\n\n";
+    $reply .= "<i>Contoh: 50000</i>";
+
+	$bot->editMessage($chat_id, $admin_msg_id, $reply, 'HTML');
 
 } elseif (strpos($cb_data, "reject")) {
 
 	$update_result = updateUserPosition($chat_id, 'main', 'topup_reject_'.$user_chat_id);
 	if (!$update_result) {
-		$bot->sendMessage($chat_id, "❌ Something Error!");
+		$bot->sendMessage($chat_id, "❌ Gagal memperbarui posisi admin.");
 		return;
 	}
 
-	$bot->editMessage($chat_id, $admin_msg_id, "❌ Kenapa topup ini ditolak?");
+    $reply = "❌ <b>Tolak Topup</b>\n\n";
+    $reply .= "Masukkan <b>alasan penolakan</b> untuk User ID: <code>$user_chat_id</code>\n\n";
+    $reply .= "<i>Alasan ini akan dikirimkan kepada user.</i>";
+
+	$bot->editMessage($chat_id, $admin_msg_id, $reply, 'HTML');
 
 } else {
-	$bot->sendMessage($chat_id, "System Error!");
+	$bot->sendMessage($chat_id, "❌ Perintah tidak dikenali.");
 }
 ?>

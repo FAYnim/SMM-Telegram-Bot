@@ -7,7 +7,8 @@ if (!$update_result) {
     return;
 }
 
-$reply = "Pilih metode Topup";
+$reply = "💎 <b>Isi Ulang Saldo</b>\n\n";
+$reply .= "Silakan pilih metode pembayaran yang tersedia di bawah ini untuk melakukan pengisian saldo.";
 
 $keyboard = $bot->buildInlineKeyboard([
     [

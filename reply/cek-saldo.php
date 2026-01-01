@@ -23,7 +23,9 @@ if (!$wallet_check) {
     $balance = $wallet_check[0]["balance"];
 }
 
-$reply = "Saldoku: " . number_format($balance, 2, ',', '.');
+$reply = "💳 <b>Informasi Saldo</b>\n\n";
+$reply .= "Saldo Anda saat ini: <b>Rp " . number_format($balance, 0, ',', '.') . "</b>\n\n";
+$reply .= "<i>Gunakan tombol di bawah untuk isi ulang saldo atau kembali ke menu utama.</i>";
 
 $keyboard = $bot->buildInlineKeyboard([
     [

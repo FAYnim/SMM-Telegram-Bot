@@ -1,60 +1,60 @@
 <?php
 
-// Extract User ID
+// Extract User ID from submenu (format: topup_approve_{chat_id})
 $parts = explode('_', $submenu);
 $user_chat_id = $parts[2];
 
-// Validasi Input
+// Validasi Input Nominal
 $nominal = trim($message);
 
 if (!is_numeric($nominal) || $nominal <= 0) {
-    $reply = "❌ Masukkan nominal yang valid (angka lebih dari 0)";
-    $keyboard = [];
-
-    $bot->editMessage($chat_id, $msg_id, $reply);
+    $reply = "❌ <b>Nominal Tidak Valid</b>\nMohon masukkan angka nominal yang benar (contoh: 50000).";
+    $bot->sendMessage($chat_id, $reply, 'HTML');
     return;
 }
 
-// Dapatkan Balance User
-// Cari user_id dari smm_users berdasarkan chatid
+// Cari data user
 $user = db_read('smm_users', ['chatid' => $user_chat_id]);
 if (!$user) {
-    $reply = "❌ User tidak ditemukan!";
-    $bot->editMessage($chat_id, $msg_id, $reply);
+    $bot->sendMessage($chat_id, "❌ User tidak ditemukan di database.");
     return;
 }
 
 $actual_user_id = $user[0]['id'];
 $wallet = db_read('smm_wallets', ['user_id' => $actual_user_id]);
+
+// Create wallet if not exists (fail-safe)
 if (!$wallet) {
-    $reply = "❌ Wallet user tidak ditemukan!";
-    $bot->editMessage($chat_id, $msg_id, $reply);
-    return;
+    db_create('smm_wallets', ['user_id' => $actual_user_id, 'balance' => 0]);
+    $balance_before = 0;
+} else {
+    $balance_before = $wallet[0]['balance'];
 }
 
-$balance_before = $wallet[0]['balance'];
 $balance_after = $balance_before + $nominal;
 
 // Update Saldo Wallet
 $update_wallet = db_update('smm_wallets', ['balance' => $balance_after], ['user_id' => $actual_user_id]);
+
 if (!$update_wallet) {
-    $reply = "❌ Gagal update saldo!";
-    $bot->editMessage($chat_id, $msg_id, $reply);
+    $bot->sendMessage($chat_id, "❌ Gagal mengupdate saldo database.");
     return;
 }
 
 // Log Transaksi Wallet
 $transaction_data = [
-    'wallet_id' => $wallet[0]['id'],
+    'wallet_id' => $wallet ? $wallet[0]['id'] : db_read('smm_wallets', ['user_id' => $actual_user_id])[0]['id'],
     'type' => 'deposit',
     'amount' => $nominal,
     'balance_before' => $balance_before,
     'balance_after' => $balance_after,
-    'description' => 'Top-up manual oleh admin'
+    'description' => 'Top-up manual oleh Admin',
+    'status' => 'approved'
 ];
 db_create('smm_wallet_transactions', $transaction_data);
 
-// Update Deposit Status
+// Update Status di Tabel Deposits
+// NOTE: Mengupdate SEMUA pending deposit user ini. Idealnya by ID, tapi ID tidak ada di callback state.
 $deposit_update = [
     'amount' => $nominal,
     'admin_id' => $user_id,
@@ -63,30 +63,29 @@ $deposit_update = [
 ];
 db_update('smm_deposits', $deposit_update, ['user_id' => $actual_user_id, 'status' => 'pending']);
 
-// Update Posisi Admin
-$update_result = updateUserPosition($chat_id, 'main', '');
+// Reset Posisi Admin
+updateUserPosition($chat_id, 'main', '');
 
-if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Something Error!");
-    return;
-}
-
-// Hapus Message Admin
+// Hapus pesan prompt input admin sebelumnya
 $bot->deleteMessage($chat_id, $msg_id);
 
-// Notifikasi User
-$user_reply = "✅ Top-up Anda sebesar Rp " . number_format($nominal, 0, ',', '.') . " telah disetujui!\n\nSaldo akan segera ditambahkan ke akun Anda.";
-$bot->sendMessage($user_chat_id, $user_reply);
+// --- NOTIFIKASI KE USER ---
+$user_reply = "✅ <b>Topup Berhasil!</b>\n\n";
+$user_reply .= "Saldo sebesar <b>Rp " . number_format($nominal, 0, ',', '.') . "</b> telah ditambahkan ke akun Anda.\n";
+$user_reply .= "Terima kasih telah melakukan pengisian saldo.";
+$bot->sendMessage($user_chat_id, $user_reply, 'HTML');
 
-// Konfirmasi ke Admin
-$reply = "✅ Top-up sebesar Rp " . number_format($nominal, 0, ',', '.') . " telah disetujui!\n\nPesan approve sudah dikirim ke user!";
-$keyboard = [];
+// --- KONFIRMASI KE ADMIN ---
+$admin_reply = "✅ <b>Topup Disetujui</b>\n\n";
+$admin_reply .= "👤 User ID: <code>$user_chat_id</code>\n";
+$admin_reply .= "💰 Nominal: <b>Rp " . number_format($nominal, 0, ',', '.') . "</b>\n";
+$admin_reply .= "📢 Status: User telah dinotifikasi.";
 
-$message_result = $bot->sendMessage($chat_id, $reply);
+$message_result = $bot->sendMessage($chat_id, $admin_reply, 'HTML');
 
-// Update Message ID
-if ($message_result && isset($message_result['message_id'])) {
-    $new_msg_id = $message_result['message_id'];
+// Update last msg_id admin
+if ($message_result && isset($message_result['result']['message_id'])) {
+    $new_msg_id = $message_result['result']['message_id'];
     db_update('smm_users', ['msg_id' => $new_msg_id], ['chatid' => $chat_id]);
 }
 
