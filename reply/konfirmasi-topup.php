@@ -7,7 +7,9 @@ if (!$update_result) {
     return;
 }
 
-$reply = "Kirim bukti topupmu";
+$reply = "🧾 <b>Konfirmasi Pembayaran</b>\n\n";
+$reply .= "Silakan kirimkan foto atau screenshot <b>bukti transfer</b> Anda di sini.\n\n";
+$reply .= "<i>Pastikan foto terlihat jelas agar proses verifikasi dapat berjalan lancar.</i>";
 
 $keyboard = $bot->buildInlineKeyboard([
     [
