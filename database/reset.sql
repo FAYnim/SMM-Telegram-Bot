@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS smm_admins (
     last_name VARCHAR(255),
     status ENUM('active', 'inactive') DEFAULT 'active',
     permissions JSON,
+    msg_id INT DEFAULT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
@@ -116,7 +117,7 @@ CREATE TABLE IF NOT EXISTS smm_deposits (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     amount DECIMAL(15,2) NOT NULL,
-    proof_image_path VARCHAR(500),
+    proof_image_id VARCHAR(500),
     status ENUM('pending', 'approved', 'rejected', 'canceled') DEFAULT 'pending',
     admin_id INT NULL,
     admin_notes TEXT,
@@ -178,6 +179,7 @@ CREATE INDEX idx_users_role ON smm_users(role);
 CREATE INDEX idx_users_msg_id ON smm_users(msg_id);
 CREATE INDEX idx_admins_chatid ON smm_admins(chatid);
 CREATE INDEX idx_admins_status ON smm_admins(status);
+CREATE INDEX idx_admins_msg_id ON smm_admins(msg_id);
 CREATE INDEX idx_wallets_user_id ON smm_wallets(user_id);
 CREATE INDEX idx_wallet_transactions_wallet_id ON smm_wallet_transactions(wallet_id);
 CREATE INDEX idx_wallet_transactions_type ON smm_wallet_transactions(type);
