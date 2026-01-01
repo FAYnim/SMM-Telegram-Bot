@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS smm_deposits (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     amount DECIMAL(15,2) NOT NULL,
-    proof_image_path VARCHAR(500),
+    proof_image_id VARCHAR(500),
     status ENUM('pending', 'approved', 'rejected', 'canceled') DEFAULT 'pending',
     admin_id INT NULL,
     admin_notes TEXT,
