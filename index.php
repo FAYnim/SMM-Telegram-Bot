@@ -71,18 +71,18 @@ file_put_contents('log/trace.log', json_encode($log_data, JSON_PRETTY_PRINT));
 if (!$chat_id || (!$message && !$bot->getCallbackData() && !$photo && !$document)) {
     exit();
 }
-	// Handle file upload
-	$debug_log = [
-		'timestamp' => date('Y-m-d H:i:s'),
-		'chat_id' => $chat_id,
-		'cb_data' => $cb_data,
-		'photo_exists' => $photo ? true : false,
-		'document_exists' => $document ? true : false,
-		'photo_data' => $photo,
-		'document_data' => $document,
-		'full_update' => $bot->getUpdate()
-	];
-	file_put_contents('log/debug.log', json_encode($debug_log, JSON_PRETTY_PRINT));
+// Handle file upload
+$debug_log = [
+	'timestamp' => date('Y-m-d H:i:s'),
+	'chat_id' => $chat_id,
+	'cb_data' => $cb_data,
+	'photo_exists' => $photo ? true : false,
+	'document_exists' => $document ? true : false,
+	'photo_data' => $photo,
+	'document_data' => $document,
+	'full_update' => $bot->getUpdate()
+];
+file_put_contents('log/debug.log', json_encode($debug_log, JSON_PRETTY_PRINT));
 
 // Check atau insert user ke database
 $user = db_read('smm_users', ['chatid' => $chat_id]);
@@ -104,6 +104,12 @@ $user = db_read('smm_users', ['chatid' => $chat_id]);
 $user_id = $user[0]['id'];
 $role = $user[0]['role'];
 $msg_id = $user[0]['msg_id'] ?? null;
+
+// Cek apakah user adalah admin
+$admin = db_read('smm_admins', ['chatid' => $chat_id]);
+if (!empty($admin)) {
+    $role = 'admin';
+}
 
 //	FOR DEBUGGING ONLY:
 //	$reply .= "<pre>".json_encode($user)."</pre>";
@@ -174,6 +180,15 @@ if(!$cb_data){
 		$bot->sendMessage($chat_id, $reply);*/
 	}
 } else {
+	// ADMIN
+	if(strpos($cb_data, 'admin_approve_topup_') === 0) {
+		require_once 'reply/admin-topup.php';
+	}
+	if(strpos($cb_data, 'admin_reject_topup_') === 0) {
+		require_once 'reply/admin-topup.php';
+	}
+
+	// USER
 	if($cb_data == "/start") {
 		require_once 'reply/start.php';
 	}
