@@ -124,7 +124,10 @@ if (!$cb_data && $user[0]['menu'] == 'add_instagram') {
                         $reply .= ucfirst($account['platform']) . "\n\n";
                         $current_platform = $account['platform'];
                     }
-                    $reply .= "- " . $account['account_url'] . "\n";
+                    $account_url = $account["account_url"];
+                    $remove_https = explode("//", $account_url);
+                    $display_url = $remove_https[1];
+                    $reply .= "- " .$display_url. "\n";
                 }
                 $reply .= "\n";
             } else {
@@ -210,7 +213,10 @@ if (!$cb_data && $user[0]['menu'] == 'add_tiktok') {
                         $reply .= ucfirst($account['platform']) . "\n\n";
                         $current_platform = $account['platform'];
                     }
-                    $reply .= "- " . $account['account_url'] . "\n";
+                    $account_url = $account["account_url"];
+                    $remove_https = explode("//", $account_url);
+                    $display_url = $remove_https[1];
+                    $reply .= "- " .$display_url. "\n";
                 }
                 $reply .= "\n";
             } else {

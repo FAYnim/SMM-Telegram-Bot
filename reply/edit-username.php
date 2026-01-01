@@ -77,7 +77,7 @@ if(!$cb_data && $user[0]['menu'] == 'edit_username') {
     $existing_username = db_query("SELECT id FROM smm_social_accounts "
         ."WHERE platform = ? AND username = ? AND id != ? "
         ."LIMIT 1", [$platform, $username_input, $account_id]);
-    
+
     if (count($existing_username) > 0) {
         handleErrorAndRebuildList($bot, $chat_id, $msg_id, "❌ Username @{$username_input} sudah digunakan oleh pengguna lain. Silakan gunakan username lain.", $user_id);
         return;
@@ -134,7 +134,10 @@ if(!$cb_data && $user[0]['menu'] == 'edit_username') {
                         $social_reply .= ucfirst($account['platform']) . "\n\n";
                         $current_platform = $account['platform'];
                     }
-                    $social_reply .= "- " . $account['account_url'] . "\n";
+                    $account_url = $account['account_url'];
+                    $remove_https = explode("//", $account_url);
+                    $display_url = $remove_https[1];
+                    $social_reply .= "- " . $display_url . "\n";
                 }
                 $social_reply .= "\n";
             } else {
