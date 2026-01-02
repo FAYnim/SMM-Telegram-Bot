@@ -284,6 +284,11 @@ if(!$cb_data){
 	if($cb_data == "/simpan_campaign") {
 		require_once 'reply/buat-campaign-simpan.php';
 	}
+
+	// edit campaign
+	if($cb_data == "/edit_campaign") {
+		require_once 'reply/edit-campaign.php';
+	}
 }
 
 // Trace keyboard structure
