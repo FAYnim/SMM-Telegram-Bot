@@ -142,6 +142,9 @@ if(!$cb_data){
 	if ($user[0]['menu'] == 'edit_username') {
 		require_once 'reply/edit-username.php';
 	}
+	if ($user[0]['menu'] == 'buat_campaign_type') {
+		require_once 'reply/buat-campaign-judul.php';
+	}
 
 
 	if ($photo) {
