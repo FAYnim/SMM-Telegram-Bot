@@ -18,7 +18,7 @@
             
         $keyboard = $bot->buildInlineKeyboard([
             [
-                ['text' => '📢 Buat Campaign', 'callback_data' => '/buat_campaign'],
+                ['text' => '📢 Campaignku', 'callback_data' => '/cek_campaign'],
                 ['text' => '💼 Cari Cuan', 'callback_data' => '/tugas']
             ],
             [

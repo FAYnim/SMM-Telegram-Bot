@@ -256,6 +256,11 @@ if(!$cb_data){
 	if(strpos($cb_data, '/edit_username_') === 0) {
 		require_once 'reply/edit-username.php';
 	}
+
+	// Campaign
+	if($cb_data == "/cek_campaign") {
+		require_once 'reply/cek-campaign.php';
+	}
 }
 
 // Trace keyboard structure
