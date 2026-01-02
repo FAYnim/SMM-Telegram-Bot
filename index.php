@@ -150,6 +150,9 @@ if(!$cb_data){
 	if ($user[0]['menu'] == 'buat_campaign_link') {
 		require_once 'reply/buat-campaign-link.php';
 	}
+	if ($user[0]['menu'] == 'buat_campaign_reward') {
+		require_once 'reply/buat-campaign-reward.php';
+	}
 
 
 	if ($photo) {
