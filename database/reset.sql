@@ -77,11 +77,13 @@ CREATE TABLE IF NOT EXISTS smm_wallet_transactions (
 CREATE TABLE IF NOT EXISTS smm_campaigns (
     id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT NOT NULL,
+    campaign_title VARCHAR(255) NOT NULL,
     type ENUM('view', 'like', 'comment', 'share', 'follow') NOT NULL,
     link_target TEXT NOT NULL,
     price_per_task DECIMAL(10,2) NOT NULL,
     target_total INT NOT NULL,
     completed_count INT DEFAULT 0,
+    campaign_balance DECIMAL(15,2) DEFAULT 0.00,
     status ENUM('active', 'paused', 'completed', 'deleted') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

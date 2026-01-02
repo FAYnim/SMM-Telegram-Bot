@@ -143,6 +143,20 @@ if(!$cb_data){
 		require_once 'reply/edit-username.php';
 	}
 
+	// campaign
+	if ($user[0]['menu'] == 'buat_campaign_type') {
+		require_once 'reply/buat-campaign-judul.php';
+	}
+	if ($user[0]['menu'] == 'buat_campaign_link') {
+		require_once 'reply/buat-campaign-link.php';
+	}
+	if ($user[0]['menu'] == 'buat_campaign_reward') {
+		require_once 'reply/buat-campaign-reward.php';
+	}
+	if ($user[0]['menu'] == 'buat_campaign_target') {
+		require_once 'reply/buat-campaign-target.php';
+	}
+
 
 	if ($photo) {
 		// Get File Data
@@ -255,6 +269,20 @@ if(!$cb_data){
 	// Edit Username
 	if(strpos($cb_data, '/edit_username_') === 0) {
 		require_once 'reply/edit-username.php';
+	}
+
+	// Campaign
+	if($cb_data == "/cek_campaign") {
+		require_once 'reply/cek-campaign.php';
+	}
+	if($cb_data == "/buat_campaign") {
+		require_once 'reply/buat-campaign.php';
+	}
+	if(strpos($cb_data, '/buat_campaign_') === 0) {
+		require_once 'reply/buat-campaign-type.php';
+	}
+	if($cb_data == "/simpan_campaign") {
+		require_once 'reply/buat-campaign-simpan.php';
 	}
 }
 
