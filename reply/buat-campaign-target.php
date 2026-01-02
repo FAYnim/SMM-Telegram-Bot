@@ -36,6 +36,15 @@ $campaign = db_query("SELECT id, campaign_title, type, link_target, price_per_ta
 if (!empty($campaign)) {
     $campaign_data = $campaign[0];
 
+    // Kalkulasi price_per_task
+    $price_per_task = $campaign_data['campaign_balance'] / $target;
+
+    // Update price_per_task di database
+    db_execute("UPDATE smm_campaigns SET price_per_task = ? WHERE id = ?", [$price_per_task, $campaign_data['id']]);
+
+    // Update campaign_data dengan nilai baru
+    $campaign_data['price_per_task'] = $price_per_task;
+
     $reply = "<b>📋 Konfirmasi Campaign Baru</b>\n\n";
     $reply .= "Silakan periksa detail campaign Anda:\n\n";
     $reply .= "<b>📋 Detail Campaign:</b>\n";
