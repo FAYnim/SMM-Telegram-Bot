@@ -289,6 +289,9 @@ if(!$cb_data){
 	if($cb_data == "/edit_campaign") {
 		require_once 'reply/edit-campaign.php';
 	}
+	if(strpos($cb_data, '/select_campaign_') === 0) {
+		require_once 'reply/select-campaign.php';
+	}
 }
 
 // Trace keyboard structure
