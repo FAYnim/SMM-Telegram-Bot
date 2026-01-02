@@ -153,6 +153,9 @@ if(!$cb_data){
 	if ($user[0]['menu'] == 'buat_campaign_reward') {
 		require_once 'reply/buat-campaign-reward.php';
 	}
+	if ($user[0]['menu'] == 'buat_campaign_target') {
+		require_once 'reply/buat-campaign-target.php';
+	}
 
 
 	if ($photo) {
@@ -277,6 +280,9 @@ if(!$cb_data){
 	}
 	if(strpos($cb_data, '/buat_campaign_') === 0) {
 		require_once 'reply/buat-campaign-type.php';
+	}
+	if($cb_data == "/simpan_campaign") {
+		require_once 'reply/buat-campaign-simpan.php';
 	}
 }
 
