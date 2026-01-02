@@ -261,6 +261,9 @@ if(!$cb_data){
 	if($cb_data == "/cek_campaign") {
 		require_once 'reply/cek-campaign.php';
 	}
+	if($cb_data == "/buat_campaign") {
+		require_once 'reply/buat-campaign.php';
+	}
 }
 
 // Trace keyboard structure

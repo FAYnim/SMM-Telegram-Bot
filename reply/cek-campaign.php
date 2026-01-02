@@ -7,6 +7,9 @@ if (!$update_result) {
     return;
 }
 
+// Hapus campaign yang masih dalam proses pembuatan (status='creating')
+db_execute("DELETE FROM smm_campaigns WHERE client_id = ? AND status = 'creating'", [$user_id]);
+
 $reply = "<b>📋 Cek Campaign Saya</b>\n\n";
 $reply .= "Berikut adalah daftar campaign yang Anda buat:\n\n";
 
