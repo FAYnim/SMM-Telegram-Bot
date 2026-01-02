@@ -209,8 +209,11 @@ if(!$cb_data){
 		require_once 'reply/social.php';
 	}
 	// Cek Saldo
-	if($cb_data == "/cek-saldo") {
+	if($cb_data == "/cek_saldo") {
 		require_once 'reply/cek-saldo.php';
+	}
+	if($cb_data == "/riwayat_topup") {
+		require_once 'reply/riwayat-topup.php';
 	}
 	// Topup
 	if($cb_data == "/topup") {

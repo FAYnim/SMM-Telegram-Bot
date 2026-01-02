@@ -32,6 +32,9 @@ $keyboard = $bot->buildInlineKeyboard([
         ['text' => '💰 Topup', 'callback_data' => '/topup']
     ],
     [
+        ['text' => '📋 Riwayat Topup', 'callback_data' => '/riwayat_topup']
+    ],
+    [
         ['text' => '🔙 Kembali', 'callback_data' => '/start']
     ]
 ]);
