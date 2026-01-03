@@ -17,7 +17,7 @@ $reply .= "Berikut adalah daftar campaign yang Anda buat:\n\n";
 // Get user's campaigns
 $campaigns = db_query("SELECT id, campaign_title, type, link_target, price_per_task, target_total, completed_count, campaign_balance, status, created_at "
     ."FROM smm_campaigns "
-    ."WHERE client_id = ? "
+    ."WHERE client_id = ? and status NOT IN ('deleted', 'creating') "
 	."ORDER BY created_at DESC", [$user_id]);
 
 if (count($campaigns) > 0) {

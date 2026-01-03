@@ -156,6 +156,18 @@ if(!$cb_data){
 	if ($user[0]['menu'] == 'buat_campaign_target') {
 		require_once 'reply/buat-campaign-target.php';
 	}
+	
+	// Handle campaign edit inputs
+	if ($user[0]['menu'] == 'edit_campaign_title') {
+		require_once 'reply/process-edit-campaign-title.php';
+	}
+	if ($user[0]['menu'] == 'edit_campaign_target') {
+		require_once 'reply/process-edit-campaign-target.php';
+	}
+	if ($user[0]['menu'] == 'add_campaign_balance') {
+		require_once 'reply/process-add-campaign-balance.php';
+	}
+	// edit campaign
 
 
 	if ($photo) {
@@ -283,6 +295,39 @@ if(!$cb_data){
 	}
 	if($cb_data == "/simpan_campaign") {
 		require_once 'reply/buat-campaign-simpan.php';
+	}
+
+	// edit campaign
+	if($cb_data == "/edit_campaign") {
+		require_once 'reply/edit-campaign.php';
+	}
+	if(strpos($cb_data, '/select_campaign_') === 0) {
+		require_once 'reply/select-campaign.php';
+	}
+	if(strpos($cb_data, '/edit_campaign_detail_') === 0) {
+		require_once 'reply/edit-campaign-detail.php';
+	}
+	if(strpos($cb_data, '/pause_campaign_') === 0) {
+		require_once 'reply/pause-campaign.php';
+	}
+	if(strpos($cb_data, '/resume_campaign_') === 0) {
+		require_once 'reply/resume-campaign.php';
+	}
+	if(strpos($cb_data, '/add_campaign_balance_') === 0) {
+		require_once 'reply/add-campaign-balance.php';
+	}
+	if(strpos($cb_data, '/edit_campaign_title_') === 0) {
+		require_once 'reply/edit-campaign-title.php';
+	}
+	if(strpos($cb_data, '/edit_campaign_target_') === 0) {
+		require_once 'reply/edit-campaign-target.php';
+	}
+
+	// delete campaign
+	if(strpos($cb_data, '/delete_campaign_confirm_') === 0) {
+		require_once 'reply/delete-campaign-confirm.php';
+	} elseif (strpos($cb_data, '/delete_campaign_') === 0) {
+		require_once 'reply/delete-campaign.php';
 	}
 }
 
