@@ -292,6 +292,9 @@ if(!$cb_data){
 	if(strpos($cb_data, '/select_campaign_') === 0) {
 		require_once 'reply/select-campaign.php';
 	}
+	if(strpos($cb_data, '/edit_campaign_detail_') === 0) {
+		require_once 'reply/edit-campaign-detail.php';
+	}
 
 	// delete campaign
 	if(strpos($cb_data, '/delete_campaign_confirm_') === 0) {
