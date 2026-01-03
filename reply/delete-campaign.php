@@ -1,7 +1,6 @@
 <?php
 // Handle delete campaign callback
 if($cb_data && strpos($cb_data, '/delete_campaign_') === 0) {
-	file_put_contents('log/delete-campaign.log', "delete capaign file included\n", FILE_APPEND);
 	// get campaign id
     $campaign_id = str_replace('/delete_campaign_', '', $cb_data);
 
@@ -11,7 +10,6 @@ if($cb_data && strpos($cb_data, '/delete_campaign_') === 0) {
         ."WHERE id = ? AND client_id = ?", [$campaign_id, $user_id]);
 
     if (!empty($campaign)) {
-		file_put_contents('log/delete-campaign.log', "campaign found 1\n", FILE_APPEND);
         $campaign_data = $campaign[0];
 
         // Update position
@@ -40,7 +38,6 @@ if($cb_data && strpos($cb_data, '/delete_campaign_') === 0) {
 
         $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
     } else {
-		file_put_contents('log/delete-campaign.log', "campaign not found 1\n", FILE_APPEND);
         // Campaign not found
         $error_reply = "❌ Campaign tidak ditemukan atau tidak valid.";
 

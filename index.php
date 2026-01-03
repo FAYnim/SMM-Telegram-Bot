@@ -295,10 +295,8 @@ if(!$cb_data){
 
 	// delete campaign
 	if(strpos($cb_data, '/delete_campaign_confirm_') === 0) {
-		file_put_contents('log/delete-campaign.log', "confirm_delete_campaign_ detected", FILE_APPEND);
 		require_once 'reply/delete-campaign-confirm.php';
 	} elseif (strpos($cb_data, '/delete_campaign_') === 0) {
-		file_put_contents('log/delete-campaign.log', "delete_campaign_ detected", FILE_APPEND);
 		require_once 'reply/delete-campaign.php';
 	}
 }

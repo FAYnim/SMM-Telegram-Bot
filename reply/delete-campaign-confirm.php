@@ -1,7 +1,6 @@
 <?php
 // Handle confirm delete campaign callback
 if($cb_data && strpos($cb_data, '/delete_campaign_confirm_') === 0) {
-	file_put_contents('log/delete-campaign.log', "confirm delete campaign included\n", FILE_APPEND);
     $campaign_id = str_replace('/delete_campaign_confirm_', '', $cb_data);
 
     // Get campaign data for audit log
@@ -10,7 +9,6 @@ if($cb_data && strpos($cb_data, '/delete_campaign_confirm_') === 0) {
         ."WHERE id = ? AND client_id = ?", [$campaign_id, $user_id]);
 
     if (!empty($campaign)) {
-		file_put_contents('log/delete-campaign.log', "campaign found 2\n", FILE_APPEND);
         $campaign_data = $campaign[0];
 
         // Update position
@@ -28,7 +26,6 @@ if($cb_data && strpos($cb_data, '/delete_campaign_confirm_') === 0) {
         );
 
         if ($update_result) {
-			file_put_contents('log/delete-campaign.log', "campaign status updated to deleted\n", FILE_APPEND);
 
             // Refund remaining balance to user's wallet
             if ($campaign_data['campaign_balance'] > 0) {
@@ -36,7 +33,6 @@ if($cb_data && strpos($cb_data, '/delete_campaign_confirm_') === 0) {
                 $wallet = db_read('smm_wallets', ['user_id' => $user_id]);
 
                 if (!empty($wallet)) {
-					file_put_contents('log/delete-campaign.log', "balance user found\n", FILE_APPEND);
                     $wallet_data = $wallet[0];
                     $new_balance = $wallet_data['balance'] + $campaign_data['campaign_balance'];
 
@@ -60,7 +56,6 @@ if($cb_data && strpos($cb_data, '/delete_campaign_confirm_') === 0) {
                 }
             }
 
-			file_put_contents('log/delete-campaign.log', "create audit log\n", FILE_APPEND);
             // Create audit log
             db_create('smm_audit_logs', [
                 'admin_id' => $user_id,
@@ -84,7 +79,6 @@ if($cb_data && strpos($cb_data, '/delete_campaign_confirm_') === 0) {
 
             $bot->editMessage($chat_id, $msg_id, $success_reply, 'HTML', $keyboard);
         } else {
-			file_put_contents('log/delete-campaign.log', "campaign not deleted\n", FILE_APPEND);
             $error_reply = "❌ Gagal menghapus campaign. Silakan coba lagi.";
 
             $keyboard = $bot->buildInlineKeyboard([
@@ -96,7 +90,6 @@ if($cb_data && strpos($cb_data, '/delete_campaign_confirm_') === 0) {
             $bot->editMessage($chat_id, $msg_id, $error_reply, 'HTML', $keyboard);
         }
     } else {
-		file_put_contents('log/delete-campaign.log', "campaign not found 2\n", FILE_APPEND);
         // Campaign not found
         $error_reply = "❌ Campaign tidak ditemukan atau tidak valid.";
 
