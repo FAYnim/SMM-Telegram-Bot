@@ -294,6 +294,11 @@ if(!$cb_data){
 	} elseif (strpos($cb_data, '/delete_campaign_') === 0) {
 		require_once 'reply/delete-campaign.php';
 	}
+
+	// tugas
+	if($cb_data == "/task") {
+		require_once 'reply/task.php';
+	}
 }
 
 // Trace keyboard structure
