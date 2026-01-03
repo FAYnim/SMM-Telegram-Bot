@@ -12,6 +12,32 @@ if (!is_numeric($reward) || $reward <= 0) {
     return;
 }
 
+// Get saldo user
+$wallet = db_read("smm_wallets", ["user_id" => $user_id], 'balance');
+$balance = 0;
+if(empty($wallet)) {
+	// buat wallet
+	$wallet_data = [
+		"user_id" => $user_id,
+	];
+	db_create("smm_wallets", $wallet_data);
+} else {
+	$balance = $wallet[0]['balance'];
+}
+
+// Cek saldo user
+if($balance < $reward) {
+    $bot->sendMessage($chat_id, "❌ Saldo tidak cukup");
+    return;
+}
+
+// cek minimal reward
+if($reward < 15000) {
+    $bot->sendMessage($chat_id, "❌ Minimal pembuatan campaign adalah Rp 15.000");
+    return;
+
+}
+
 // Update reward campaign di database
 db_execute("UPDATE smm_campaigns SET campaign_balance = ? WHERE client_id = ? AND status = 'creating'", [$reward, $user_id]);
 
