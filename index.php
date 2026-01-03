@@ -301,6 +301,9 @@ if(!$cb_data){
 	if(strpos($cb_data, '/resume_campaign_') === 0) {
 		require_once 'reply/resume-campaign.php';
 	}
+	if(strpos($cb_data, '/add_campaign_balance_') === 0) {
+		require_once 'reply/add-campaign-balance.php';
+	}
 
 	// delete campaign
 	if(strpos($cb_data, '/delete_campaign_confirm_') === 0) {
