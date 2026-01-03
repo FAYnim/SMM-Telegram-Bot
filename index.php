@@ -103,39 +103,35 @@ if(!$cb_data){
 	}
 
 	// USER
-	if ($message == "/social") {
-		require_once 'reply/social.php';
-	}
-
-	if ($user[0]['menu'] == 'add_instagram' || $user[0]['menu'] == 'add_tiktok') {
+	if ($menu == 'add_instagram' || $menu == 'add_tiktok') {
 		require_once 'reply/tambah-medsos.php';
 	}
-	if ($user[0]['menu'] == 'edit_username') {
+	if ($menu == 'edit_username') {
 		require_once 'reply/edit-username.php';
 	}
 
 	// campaign
-	if ($user[0]['menu'] == 'buat_campaign_type') {
+	if ($menu == 'buat_campaign_type') {
 		require_once 'reply/buat-campaign-judul.php';
 	}
-	if ($user[0]['menu'] == 'buat_campaign_link') {
+	if ($menu == 'buat_campaign_link') {
 		require_once 'reply/buat-campaign-link.php';
 	}
-	if ($user[0]['menu'] == 'buat_campaign_reward') {
+	if ($menu == 'buat_campaign_reward') {
 		require_once 'reply/buat-campaign-reward.php';
 	}
-	if ($user[0]['menu'] == 'buat_campaign_target') {
+	if ($menu == 'buat_campaign_target') {
 		require_once 'reply/buat-campaign-target.php';
 	}
 	
 	// Handle campaign edit inputs
-	if ($user[0]['menu'] == 'edit_campaign_title') {
+	if ($menu == 'edit_campaign_title') {
 		require_once 'reply/process-edit-campaign-title.php';
 	}
-	if ($user[0]['menu'] == 'edit_campaign_target') {
+	if ($menu == 'edit_campaign_target') {
 		require_once 'reply/process-edit-campaign-target.php';
 	}
-	if ($user[0]['menu'] == 'add_campaign_balance') {
+	if ($menu == 'add_campaign_balance') {
 		require_once 'reply/process-add-campaign-balance.php';
 	}
 	// edit campaign
@@ -161,7 +157,7 @@ if(!$cb_data){
 			'caption' => $caption
 		], 'debug');
 
-		if($user[0]['menu'] == "confirm_topup") {
+		if($menu == "confirm_topup") {
 			include "reply/topup-proof.php";
 		}
 //		$bot->sendPhoto($chat_id, $file_id);
@@ -306,8 +302,8 @@ logMessage('keyboard', [
     'cb_data' => $cb_data,
     'message' => $message,
     'user_position' => [
-        'menu' => $user[0]['menu'] ?? 'unknown',
-        'submenu' => $user[0]['submenu'] ?? ''
+        'menu' => $menu ?? 'unknown',
+        'submenu' => $submenu ?? ''
     ],
     'keyboard_structure' => isset($keyboard) ? $keyboard : 'not_set'
 ]);
