@@ -304,6 +304,12 @@ if(!$cb_data){
 	if(strpos($cb_data, '/add_campaign_balance_') === 0) {
 		require_once 'reply/add-campaign-balance.php';
 	}
+	if(strpos($cb_data, '/edit_campaign_title_') === 0) {
+		require_once 'reply/edit-campaign-title.php';
+	}
+	if(strpos($cb_data, '/edit_campaign_target_') === 0) {
+		require_once 'reply/edit-campaign-target.php';
+	}
 
 	// delete campaign
 	if(strpos($cb_data, '/delete_campaign_confirm_') === 0) {
