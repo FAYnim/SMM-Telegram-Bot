@@ -156,6 +156,18 @@ if(!$cb_data){
 	if ($user[0]['menu'] == 'buat_campaign_target') {
 		require_once 'reply/buat-campaign-target.php';
 	}
+	
+	// Handle campaign edit inputs
+	if ($user[0]['menu'] == 'edit_campaign_title') {
+		require_once 'reply/process-edit-campaign-title.php';
+	}
+	if ($user[0]['menu'] == 'edit_campaign_target') {
+		require_once 'reply/process-edit-campaign-target.php';
+	}
+	if ($user[0]['menu'] == 'add_campaign_balance') {
+		require_once 'reply/process-add-campaign-balance.php';
+	}
+	// edit campaign
 
 
 	if ($photo) {
