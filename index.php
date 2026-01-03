@@ -2,29 +2,7 @@
 require_once 'TelegramBot.php';
 require_once 'db.php';
 require_once 'config/config.php';
-
-// Fungsi handle posisi user
-function updateUserPosition($chatid, $menu, $submenu = '') {
-    $sql = "UPDATE smm_users SET menu = ?, submenu = ? WHERE chatid = ?";
-    $params = [$menu, $submenu, $chatid];
-    
-    $result = db_execute($sql, $params);
-    
-    // Log position update result
-    $position_log = [
-        'timestamp' => date('Y-m-d H:i:s'),
-        'action' => 'update_position',
-        'chatid' => $chatid,
-        'menu' => $menu,
-        'submenu' => $submenu,
-        'result' => $result
-    ];
-    file_put_contents('log/position.log', json_encode($position_log));
-    if($menu === "main") {
-    	$result = 1;
-    }
-    return $result;
-}
+require_once 'helpers/index-helper.php';
 
 // Inisialisasi bot
 $bot = new TelegramBot($bot_token);
@@ -44,45 +22,38 @@ $caption = $bot->getCaption();
 $file_type = null;
 
 // Log file detection
-$file_log = [
-    'timestamp' => date('Y-m-d H:i:s'),
+logMessage('file_detection', [
     'chat_id' => $chat_id,
     'file_type' => $file_type,
-    'file_id' => $file_id ?? null,
     'caption' => $caption,
     'has_photo' => $photo ? true : false,
     'has_document' => $document ? true : false
-];
-file_put_contents('log/file.log', json_encode($file_log));
+], 'debug');
 
 // Trace log
-$log_data = [
-    'timestamp' => date('Y-m-d H:i:s'),
+logMessage('trace', [
     'chat_id' => $chat_id,
-    'msg_id' => $msg_id,
     'message' => $message,
     'username' => $username,
     'cb_data' => $bot->getCallbackData(),
     'update' => $bot->getUpdate()
-];
-file_put_contents('log/trace.log', json_encode($log_data, JSON_PRETTY_PRINT));
+], 'debug');
 
 // Validasi input
 if (!$chat_id || (!$message && !$bot->getCallbackData() && !$photo && !$document)) {
     exit();
 }
-// Handle file upload
-$debug_log = [
-	'timestamp' => date('Y-m-d H:i:s'),
-	'chat_id' => $chat_id,
-	'cb_data' => $cb_data,
-	'photo_exists' => $photo ? true : false,
-	'document_exists' => $document ? true : false,
-	'photo_data' => $photo,
-	'document_data' => $document,
-	'full_update' => $bot->getUpdate()
-];
-file_put_contents('log/debug.log', json_encode($debug_log, JSON_PRETTY_PRINT));
+
+// Debug log
+logMessage('debug', [
+    'chat_id' => $chat_id,
+    'cb_data' => $cb_data,
+    'photo_exists' => $photo ? true : false,
+    'document_exists' => $document ? true : false,
+    'photo_data' => $photo,
+    'document_data' => $document,
+    'full_update' => $bot->getUpdate()
+], 'debug');
 
 // Check atau insert user ke database
 $user = db_read('smm_users', ['chatid' => $chat_id]);
@@ -181,16 +152,14 @@ if(!$cb_data){
 			$file_url = $bot->getFileUrl($file_info['result']['file_path']);
 		}
 
-		// Log
-		$file_info_log = [
-			'timestamp' => date('Y-m-d H:i:s'),
+		// Log file info
+		logMessage('file_info', [
 			'chat_id' => $chat_id,
 			'file_id' => $file_id,
 			'file_info' => $file_info,
 			'file_url' => $file_url,
 			'caption' => $caption
-		];
-		file_put_contents('log/file_info.log', json_encode($file_info_log, JSON_PRETTY_PRINT));
+		], 'debug');
 
 		if($user[0]['menu'] == "confirm_topup") {
 			include "reply/topup-proof.php";
@@ -332,8 +301,7 @@ if(!$cb_data){
 }
 
 // Trace keyboard structure
-$keyboard_trace = [
-    'timestamp' => date('Y-m-d H:i:s'),
+logMessage('keyboard', [
     'chat_id' => $chat_id,
     'cb_data' => $cb_data,
     'message' => $message,
@@ -342,8 +310,6 @@ $keyboard_trace = [
         'submenu' => $user[0]['submenu'] ?? ''
     ],
     'keyboard_structure' => isset($keyboard) ? $keyboard : 'not_set'
-];
-
-file_put_contents('log/keyboard.log', json_encode($keyboard_trace, JSON_PRETTY_PRINT));
+]);
 
 ?>
