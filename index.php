@@ -305,6 +305,9 @@ if(!$cb_data){
 	if(strpos($cb_data, '/take_task_') === 0) {
 		require_once 'reply/take-task.php';
 	}
+	if(strpos($cb_data, '/cancel_task_') === 0) {
+		require_once 'reply/cancel-task.php';
+	}
 }
 
 // Trace keyboard structure

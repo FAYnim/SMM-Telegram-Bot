@@ -1,21 +1,63 @@
 <?php
 
-// Update position hanya untuk /task, bukan /task_refresh
-if ($cb_data != '/task_refresh') {
-    $update_result = updateUserPosition($chat_id, 'task');
+$update_result = updateUserPosition($chat_id, 'task');
 
-    if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
-        return;
-    }
-} else {
-    // Untuk /task_refresh, tampilkan loading dulu
-    $loading_reply = "⏳ <b>Memuat...</b>\n\n";
-    $loading_reply .= "Sedang mencari task tersedia...";
-    $loading_keyboard = [];
-    $bot->editMessage($chat_id, $msg_id, $loading_reply, 'HTML', $loading_keyboard);
-    sleep(1);
+if (!$update_result) {
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+    return;
 }
+
+// Extract task ID dari callback data
+$task_id = str_replace('/cancel_task_', '', $cb_data);
+
+$task = db_read("smm_tasks", ["id" => $task_id, "worker_id" => $user_id]);
+
+if (empty($task)) {
+    $reply = "❌ <b>Task Tidak Tersedia</b>\n\n";
+    $reply .= "Task ini sudah diambil oleh user lain atau campaign tidak lagi aktif.\n";
+    $reply .= "Silakan coba task lain!";
+
+    $keyboard = $bot->buildInlineKeyboard([
+        [
+            ['text' => '🔄 Cari Task Lagi', 'callback_data' => '/task_refresh'],
+            ['text' => '🔙 Kembali', 'callback_data' => '/start']
+        ]
+    ]);
+    $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+    return;
+}
+
+// Update task status ke 'available' dan set worker_id
+$update_data = [
+    'worker_id' => NULL,
+    'status' => 'available',
+    'taken_at' => NULL
+];
+
+$task_updated = db_update('smm_tasks', $update_data, ['id' => $task_id]);
+
+if (!$task_updated) {
+    $reply = "❌ <b>Gagal Mengambil Task</b>\n\n";
+    $reply .= "Terjadi kesalahan saat mengambil task.\n";
+    $reply .= "Silakan coba lagi!";
+
+    $keyboard = $bot->buildInlineKeyboard([
+        [
+            ['text' => '🔄 Coba Lagi', 'callback_data' => '/task_refresh'],
+            ['text' => '🔙 Kembali', 'callback_data' => '/start']
+        ]
+    ]);
+
+    $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+    return;
+}
+
+$loading_reply = "⏳ <b>Memuat...</b>\n\n";
+$loading_reply .= "Sedang mencari task tersedia...";
+$loading_keyboard = [];
+$bot->editMessage($chat_id, $msg_id, $loading_reply, 'HTML', $loading_keyboard);
+
+// Get new task
 
 $reply = "📋 <b>Task Tersedia</b>\n\n";
 
@@ -34,10 +76,9 @@ if (empty($campaign)) {
         ]
     ]);
 
-$bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+	$bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
 }
 
-//$reply .= "Campaign active found";
 $campaign_data = $campaign[0];
 $campaign_id = $campaign_data['id'];
 $campaign_type = $campaign_data['type'];
@@ -84,4 +125,3 @@ if (empty($task)) {
 $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
 
 ?>
-
