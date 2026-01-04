@@ -299,6 +299,9 @@ if(!$cb_data){
 	if($cb_data == "/task") {
 		require_once 'reply/task.php';
 	}
+	if($cb_data == "/task_refresh") {
+		require_once 'reply/task.php';
+	}
 }
 
 // Trace keyboard structure
