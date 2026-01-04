@@ -100,6 +100,12 @@ if(!$cb_data){
 		if(strpos($submenu, 'topup_reject_') === 0) {
 			require_once 'reply/admin-topup-reject.php';
 		}
+		if(strpos($submenu, 'task_approve_') === 0) {
+			require_once 'reply/admin-task-approve.php';
+		}
+		if(strpos($submenu, 'task_reject_') === 0) {
+			require_once 'reply/admin-task-reject.php';
+		}
 	}
 
 	// USER
@@ -123,7 +129,7 @@ if(!$cb_data){
 	if ($menu == 'buat_campaign_target') {
 		require_once 'reply/buat-campaign-target.php';
 	}
-	
+
 	// Handle campaign edit inputs
 	if ($menu == 'edit_campaign_title') {
 		require_once 'reply/process-edit-campaign-title.php';
@@ -160,6 +166,10 @@ if(!$cb_data){
 		if($menu == "confirm_topup") {
 			include "reply/topup-proof.php";
 		}
+
+		if($menu == "upload_proof") {
+			include "reply/task-proof.php";
+		}
 //		$bot->sendPhoto($chat_id, $file_id);
 
 		// DEBUGGING ONLY:
@@ -185,11 +195,20 @@ if(!$cb_data){
 	}
 } else {
 	// ADMIN
+	// topup
 	if(strpos($cb_data, 'admin_approve_topup_') === 0) {
 		require_once 'reply/admin-topup.php';
 	}
 	if(strpos($cb_data, 'admin_reject_topup_') === 0) {
 		require_once 'reply/admin-topup.php';
+	}
+
+	// task
+	if(strpos($cb_data, 'admin_approve_task_') === 0) {
+		require_once 'reply/admin-task.php';
+	}
+	if(strpos($cb_data, 'admin_reject_task_') === 0) {
+		require_once 'reply/admin-task.php';
 	}
 
 	// USER
@@ -293,6 +312,20 @@ if(!$cb_data){
 		require_once 'reply/delete-campaign-confirm.php';
 	} elseif (strpos($cb_data, '/delete_campaign_') === 0) {
 		require_once 'reply/delete-campaign.php';
+	}
+
+	// tugas
+	if($cb_data == "/task") {
+		require_once 'reply/task.php';
+	}
+	if($cb_data == "/task_refresh") {
+		require_once 'reply/task.php';
+	}
+	if(strpos($cb_data, '/take_task_') === 0) {
+		require_once 'reply/take-task.php';
+	}
+	if(strpos($cb_data, '/cancel_task_') === 0) {
+		require_once 'reply/cancel-task.php';
 	}
 }
 

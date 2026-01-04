@@ -9,7 +9,7 @@ function logMessage($category, $data, $level = 'info') {
     ];
 
     $file = $level === 'debug' ? 'log/debug.log' : 'log/app.log';
-    file_put_contents($file, json_encode($entry) . "\n");
+    file_put_contents($file, json_encode($entry, JSON_PRETTY_PRINT), FILE_APPEND);
 }
 
 // Fungsi handle posisi user
