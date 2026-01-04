@@ -160,6 +160,10 @@ if(!$cb_data){
 		if($menu == "confirm_topup") {
 			include "reply/topup-proof.php";
 		}
+
+		if($menu == "upload_proof") {
+			include "reply/task-proof.php";
+		}
 //		$bot->sendPhoto($chat_id, $file_id);
 
 		// DEBUGGING ONLY:
