@@ -19,18 +19,42 @@ if ($cb_data != '/task_refresh') {
 
 $reply = "📋 <b>Task Tersedia</b>\n\n";
 
-// Query untuk cek task available
-$tasks = db_query("SELECT t.*, c.campaign_title, c.type, c.price_per_task "
-    ."FROM smm_tasks t "
-    ."JOIN smm_campaigns c ON t.campaign_id = c.id "
-    ."WHERE t.status = 'available' AND c.status = 'active' "
-    ."ORDER BY c.created_at DESC "
-    ."LIMIT 10");
+$campaign = db_query("SELECT id, campaign_title, type, link_target, price_per_task "
+	."FROM smm_campaigns WHERE status = 'active' "
+	."ORDER BY price_per_task DESC LIMIT 0,1");
 
-if (empty($tasks)) {
+if (empty($campaign)) {
     $reply .= "❌ Tidak ada task yang tersedia saat ini.\n";
     $reply .= "Silakan coba lagi nanti!";
-    
+
+    $keyboard = $bot->buildInlineKeyboard([
+        [
+            ['text' => '🔄 Refresh', 'callback_data' => '/task_refresh'],
+            ['text' => '🔙 Kembali', 'callback_data' => '/start']
+        ]
+    ]);
+
+$bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+}
+
+//$reply .= "Campaign active found";
+$campaign_data = $campaign[0];
+$campaign_id = $campaign_data['id'];
+$campaign_type = $campaign_data['type'];
+$campaign_link = $campaign_data['link_target'];
+$campaign_price = $campaign_data['price_per_task'];
+$campaign_title = $campaign_data['campaign_title'];
+
+$task = db_query("SELECT id "
+	."FROM smm_tasks WHERE "
+	."status = 'available' AND "
+	."campaign_id = ? LIMIT 0,1",
+	[$campaign_id]);
+
+if (empty($task)) {
+    $reply .= "❌ Tidak ada task yang tersedia saat ini.\n";
+    $reply .= "Silakan coba lagi nanti!";
+
     $keyboard = $bot->buildInlineKeyboard([
         [
             ['text' => '🔄 Refresh', 'callback_data' => '/task_refresh'],
@@ -38,15 +62,17 @@ if (empty($tasks)) {
         ]
     ]);
 } else {
-    $task = $tasks[0];
-    $reply .= "📌 <b>" . htmlspecialchars($task['campaign_title']) . "</b>\n";
-    $reply .= "🎯 Jenis: " . ucfirst($task['type']) . "\n";
-    $reply .= "💰 Reward: Rp " . number_format($task['price_per_task'], 0, ',', '.') . "\n\n";
+	$task_data = $task[0];
+	$task_id = $task_data["id"];
+
+    $reply .= "📌 <b>" . htmlspecialchars($campaign_title) . "</b>\n";
+    $reply .= "🎯 Jenis: " . ucfirst($campaign_type) . "\n";
+    $reply .= "💰 Reward: Rp " . number_format($campaign_price, 0, ',', '.') . "\n\n";
     $reply .= "Klik tombol di bawah untuk mengambil task ini:";
-    
+
     $keyboard = $bot->buildInlineKeyboard([
         [
-            ['text' => '🎯 Ambil Task', 'callback_data' => '/take_task_' . $task['id']]
+            ['text' => '🎯 Ambil Task', 'callback_data' => '/take_task_' . $task_id]
         ],
         [
             ['text' => '🔄 Refresh', 'callback_data' => '/task_refresh'],
@@ -58,3 +84,4 @@ if (empty($tasks)) {
 $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
 
 ?>
+

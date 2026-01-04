@@ -302,6 +302,9 @@ if(!$cb_data){
 	if($cb_data == "/task_refresh") {
 		require_once 'reply/task.php';
 	}
+	if(strpos($cb_data, '/take_task_') === 0) {
+		require_once 'reply/take-task.php';
+	}
 }
 
 // Trace keyboard structure
