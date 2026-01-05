@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS smm_wallets (
     id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     balance DECIMAL(15,2) DEFAULT 0.00,
+    profit DECIMAL(15,2) DEFAULT 0.00,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES smm_users(id) ON DELETE CASCADE,
@@ -84,7 +85,7 @@ CREATE TABLE IF NOT EXISTS smm_campaigns (
     target_total INT NOT NULL,
     completed_count INT DEFAULT 0,
     campaign_balance DECIMAL(15,2) DEFAULT 0.00,
-    status ENUM('active', 'paused', 'completed', 'deleted') DEFAULT 'active',
+    status ENUM('creating', 'active', 'paused', 'completed', 'deleted') DEFAULT 'creating',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (client_id) REFERENCES smm_users(id) ON DELETE CASCADE
@@ -177,12 +178,11 @@ CREATE TABLE IF NOT EXISTS smm_social_accounts (
 
 -- Indexes for performance optimization
 CREATE INDEX idx_users_telegram_id ON smm_users(chatid);
-CREATE INDEX idx_users_role ON smm_users(role);
 CREATE INDEX idx_users_msg_id ON smm_users(msg_id);
+CREATE INDEX idx_users_role ON smm_users(role);
 CREATE INDEX idx_admins_chatid ON smm_admins(chatid);
 CREATE INDEX idx_admins_status ON smm_admins(status);
 CREATE INDEX idx_admins_msg_id ON smm_admins(msg_id);
-CREATE INDEX idx_wallets_user_id ON smm_wallets(user_id);
 CREATE INDEX idx_wallet_transactions_wallet_id ON smm_wallet_transactions(wallet_id);
 CREATE INDEX idx_wallet_transactions_type ON smm_wallet_transactions(type);
 CREATE INDEX idx_campaigns_client_id ON smm_campaigns(client_id);
@@ -190,7 +190,6 @@ CREATE INDEX idx_campaigns_status ON smm_campaigns(status);
 CREATE INDEX idx_tasks_campaign_id ON smm_tasks(campaign_id);
 CREATE INDEX idx_tasks_worker_id ON smm_tasks(worker_id);
 CREATE INDEX idx_tasks_status ON smm_tasks(status);
-CREATE INDEX idx_task_proofs_task_id ON smm_task_proofs(task_id);
 CREATE INDEX idx_deposits_user_id ON smm_deposits(user_id);
 CREATE INDEX idx_deposits_status ON smm_deposits(status);
 CREATE INDEX idx_withdrawals_user_id ON smm_withdrawals(user_id);
