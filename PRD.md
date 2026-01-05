@@ -300,7 +300,9 @@ Aturan:
 
 campaign otomatis completed saat target tercapai.
 
-saldo client dikurangi saat reward dibayarkan, bukan di depan.
+saldo client (wallet) dikurangi saat campaign dibuat/disimpan (di depan).
+
+campaign_balance berkurang saat reward dibayarkan ke worker (setelah admin approve task).
 
 
 

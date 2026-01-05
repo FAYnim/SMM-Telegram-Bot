@@ -24,6 +24,45 @@ if (!empty($campaign)) {
     $campaign_id = $campaign_data['id'];
     $target_total = $campaign_data['target_total'];
     $price_per_task = $campaign_data['price_per_task'];
+    $campaign_balance = $campaign_data['campaign_balance'];
+
+    // Ambil wallet client
+    $wallet = db_read('smm_wallets', ['user_id' => $user_id]);
+
+    if (empty($wallet)) {
+        $bot->editMessage($chat_id, $msg_id, "❌ <b>Gagal Membuat Campaign</b>\n\nWallet tidak ditemukan. Silakan hubungi admin.", 'HTML', []);
+        return;
+    }
+
+    $wallet_data = $wallet[0];
+    $wallet_id = $wallet_data['id'];
+    $balance_before = $wallet_data['balance'];
+
+    // Cek saldo cukup
+    if ($balance_before < $campaign_balance) {
+        $bot->editMessage($chat_id, $msg_id, "❌ <b>Saldo Tidak Cukup</b>\n\nSaldo Anda: Rp ".number_format($balance_before, 0, ',', '.')."\nDibutuhkan: Rp ".number_format($campaign_balance, 0, ',', '.')."\n\nSilakan top-up terlebih dahulu.", 'HTML', []);
+
+        // Hapus campaign yang gagal
+        db_execute("DELETE FROM smm_campaigns WHERE id = ?", [$campaign_id]);
+        return;
+    }
+
+    // Kurangi saldo wallet client
+    $balance_after = $balance_before - $campaign_balance;
+    db_execute("UPDATE smm_wallets SET balance = ? WHERE id = ?", [$balance_after, $wallet_id]);
+
+    // Buat record transaksi
+    $transaction_data = [
+        'wallet_id' => $wallet_id,
+        'type' => 'adjustment',
+        'amount' => -$campaign_balance,
+        'balance_before' => $balance_before,
+        'balance_after' => $balance_after,
+        'description' => "Pembayaran campaign #".$campaign_id." - ".$campaign_data['campaign_title'],
+        'reference_id' => $campaign_id,
+        'status' => 'approved'
+    ];
+    db_create('smm_wallet_transactions', $transaction_data);
 
     // Generate tasks untuk campaign
     $tasks_generated = 0;
@@ -46,7 +85,10 @@ if (!empty($campaign)) {
         'campaign_id' => $campaign_id,
         'target_total' => $target_total,
         'tasks_generated' => $tasks_generated,
-        'user_id' => $user_id
+        'user_id' => $user_id,
+        'campaign_balance' => $campaign_balance,
+        'wallet_balance_before' => $balance_before,
+        'wallet_balance_after' => $balance_after
     ], 'debug');
 }
 
