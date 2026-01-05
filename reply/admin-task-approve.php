@@ -14,8 +14,8 @@ if ($confirmation !== 'YA') {
     return;
 }
 
-// Ambil detail task
-$task_detail = db_query("SELECT t.*, c.campaign_title, c.type, c.price_per_task, u.full_name, u.chatid as user_chatid, w.id as wallet_id "
+// Ambil detail task dan campaign
+$task_detail = db_query("SELECT t.*, c.campaign_title, c.type, c.price_per_task, c.campaign_balance, c.target_total, c.completed_count, c.client_id, u.full_name, u.chatid as user_chatid, w.id as wallet_id "
     ."FROM smm_tasks t "
     ."JOIN smm_campaigns c ON t.campaign_id = c.id "
     ."JOIN smm_users u ON t.worker_id = u.id "
@@ -30,26 +30,37 @@ if (empty($task_detail)) {
 
 $task = $task_detail[0];
 $reward_amount = $task['price_per_task'];
+$campaign_balance = $task['campaign_balance'];
+$campaign_id = $task['campaign_id'];
+$target_total = $task['target_total'];
+$completed_count = $task['completed_count'];
+$client_id = $task['client_id'];
+
+// Validasi campaign_balance masih cukup
+if ($campaign_balance < $reward_amount) {
+    $bot->sendMessage($chat_id, "❌ Campaign balance tidak cukup untuk membayar reward task ini.\n\nBalance campaign: Rp ".number_format($campaign_balance, 0, ',', '.')."\nReward task: Rp ".number_format($reward_amount, 0, ',', '.')."\n");
+    return;
+}
 
 // Create wallet if not exists
 if (!$task['wallet_id']) {
-    db_create('smm_wallets', ['user_id' => $task['worker_id'], 'balance' => 0]);
+    db_create('smm_wallets', ['user_id' => $task['worker_id'], 'balance' => 0, 'profit' => 0]);
     $wallet_info = db_read('smm_wallets', ['user_id' => $task['worker_id']]);
     $wallet_id = $wallet_info[0]['id'];
-    $balance_before = 0;
+    $profit_before = 0;
 } else {
     $wallet_id = $task['wallet_id'];
     $wallet_info = db_read('smm_wallets', ['id' => $wallet_id]);
-    $balance_before = $wallet_info[0]['balance'];
+    $profit_before = $wallet_info[0]['profit'];
 }
 
-$balance_after = $balance_before + $reward_amount;
+$profit_after = $profit_before + $reward_amount;
 
-// Update Saldo Wallet
-$update_wallet = db_update('smm_wallets', ['balance' => $balance_after], ['id' => $wallet_id]);
+// Update Profit Wallet (bukan balance)
+$update_wallet = db_update('smm_wallets', ['profit' => $profit_after], ['id' => $wallet_id]);
 
 if (!$update_wallet) {
-    $bot->sendMessage($chat_id, "❌ Gagal mengupdate saldo worker.");
+    $bot->sendMessage($chat_id, "❌ Gagal mengupdate profit worker.");
     return;
 }
 
@@ -58,8 +69,8 @@ $transaction_data = [
     'wallet_id' => $wallet_id,
     'type' => 'task_reward',
     'amount' => $reward_amount,
-    'balance_before' => $balance_before,
-    'balance_after' => $balance_after,
+    'balance_before' => $profit_before,
+    'balance_after' => $profit_after,
     'description' => 'Reward task: ' . htmlspecialchars($task['campaign_title']),
     'reference_id' => $task_id,
     'status' => 'approved'
@@ -73,8 +84,37 @@ $task_update = [
 ];
 db_update('smm_tasks', $task_update, ['id' => $task_id]);
 
-// Update Campaign completed_count
-db_execute("UPDATE smm_campaigns SET completed_count = completed_count + 1 WHERE id = ?", [$task['campaign_id']]);
+// Kurangi campaign_balance dan update completed_count
+$new_campaign_balance = $campaign_balance - $reward_amount;
+$new_completed_count = $completed_count + 1;
+
+db_execute("UPDATE smm_campaigns SET completed_count = ?, campaign_balance = ? WHERE id = ?", [$new_completed_count, $new_campaign_balance, $campaign_id]);
+
+// Cek apakah campaign sudah completed
+$is_target_reached = ($new_completed_count >= $target_total);
+$is_balance_empty = ($new_campaign_balance <= 0);
+
+if ($is_target_reached || $is_balance_empty) {
+    // Update status campaign menjadi completed
+    db_execute("UPDATE smm_campaigns SET status = 'completed' WHERE id = ?", [$campaign_id]);
+    
+    // Notifikasi ke client bahwa campaign sudah selesai
+    $client_data = db_query("SELECT chatid FROM smm_users WHERE id = ?", [$client_id]);
+    
+    if (!empty($client_data)) {
+        $client_chatid = $client_data[0]['chatid'];
+        $completion_reason = $is_target_reached ? "target tercapai" : "balance habis";
+        
+        $client_notification = "🎉 <b>Campaign Selesai!</b>\n\n";
+        $client_notification .= "Campaign Anda telah selesai (".$completion_reason.").\n\n";
+        $client_notification .= "📋 Campaign: ".htmlspecialchars($task['campaign_title'])."\n";
+        $client_notification .= "✅ Completed: ".$new_completed_count."/".$target_total." tasks\n";
+        $client_notification .= "💰 Sisa Balance: Rp ".number_format($new_campaign_balance, 0, ',', '.')."\n\n";
+        $client_notification .= "Terima kasih telah menggunakan layanan kami!";
+        
+        $bot->sendMessage($client_chatid, $client_notification, 'HTML');
+    }
+}
 
 // Reset Posisi Admin
 updateUserPosition($chat_id, 'main', '');
@@ -88,8 +128,8 @@ $user_reply .= "Selamat! Task Anda telah disetujui oleh Admin.\n\n";
 $user_reply .= "📋 <b>Detail Task:</b>\n";
 $user_reply .= "• Campaign: " . htmlspecialchars($task['campaign_title']) . "\n";
 $user_reply .= "• Reward: <b>Rp " . number_format($reward_amount, 0, ',', '.') . "</b>\n\n";
-$user_reply .= "💰 <b>Saldo Ditambahkan!</b>\n";
-$user_reply .= "Saldo Anda sekarang: <b>Rp " . number_format($balance_after, 0, ',', '.') . "</b>\n\n";
+$user_reply .= "💰 <b>Profit Ditambahkan!</b>\n";
+$user_reply .= "Profit Anda sekarang: <b>Rp " . number_format($profit_after, 0, ',', '.') . "</b>\n\n";
 $user_reply .= "Terima kasih telah mengerjakan task! 🎉";
 
 $bot->sendMessage($task['user_chatid'], $user_reply, 'HTML');
@@ -100,7 +140,14 @@ $admin_reply .= "👤 Worker: " . htmlspecialchars($task['full_name']) . " (ID: 
 $admin_reply .= "📋 Campaign: " . htmlspecialchars($task['campaign_title']) . "\n";
 $admin_reply .= "🎯 Jenis: " . ucfirst($task['type']) . "\n";
 $admin_reply .= "💰 Reward: <b>Rp " . number_format($reward_amount, 0, ',', '.') . "</b>\n";
-$admin_reply .= "📢 Status: Worker telah dinotifikasi dan saldo ditambahkan.";
+$admin_reply .= "📊 Progress: ".$new_completed_count."/".$target_total." tasks\n";
+$admin_reply .= "💳 Campaign Balance: Rp ".number_format($new_campaign_balance, 0, ',', '.')."\n";
+
+if ($is_target_reached || $is_balance_empty) {
+    $admin_reply .= "\n🎉 <b>Campaign Completed!</b>\n";
+}
+
+$admin_reply .= "\n📢 Status: Worker telah dinotifikasi dan profit ditambahkan.";
 
 $message_result = $bot->sendMessage($chat_id, $admin_reply, 'HTML');
 
