@@ -40,12 +40,12 @@ if (empty($wallet_result)) {
     return;
 }
 
-$current_balance = $wallet_result[0]['balance'];
+$current_profit = $wallet_result[0]['profit'];
 
-if ($amount > $current_balance) {
+if ($amount > $current_profit) {
     $reply = "❌ <b>Saldo Tidak Mencukupi</b>\n\n"
         . "Terjadi perubahan saldo saat proses withdraw.\n"
-        . "Saldo Anda saat ini: Rp " . number_format($current_balance, 0, ',', '.') . "\n\n"
+        . "Saldo Anda saat ini: Rp " . number_format($current_profit, 0, ',', '.') . "\n\n"
         . "Silakan ulangi proses withdraw dengan nominal yang sesuai.";
 
     updateUserPosition($chat_id, 'main', '');

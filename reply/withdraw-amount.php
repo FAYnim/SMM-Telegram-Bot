@@ -35,14 +35,14 @@ if (empty($wallet_result)) {
     return;
 }
 
-$current_balance = $wallet_result[0]['profit'];
+$current_profit = $wallet_result[0]['profit'];
 
 // Cek apakah saldo cukup
-if ($amount > $current_balance) {
+if ($amount > $current_profit) {
     $reply = "❌ <b>Saldo Tidak Mencukupi</b>\n\n"
-        . "Saldo Anda: Rp " . number_format($current_balance, 0, ',', '.') . "\n"
+        . "Saldo Anda: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
         . "Nominal withdraw: Rp " . number_format($amount, 0, ',', '.') . "\n"
-        . "Kekurangan: Rp " . number_format($amount - $current_balance, 0, ',', '.') . "\n\n"
+        . "Kekurangan: Rp " . number_format($amount - $current_profit, 0, ',', '.') . "\n\n"
         . "Silakan masukkan nominal yang tidak melebihi saldo Anda.";
 
     $bot->deleteMessage($chat_id, $msg_id);

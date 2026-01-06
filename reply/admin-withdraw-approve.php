@@ -48,17 +48,17 @@ if (!$wallet) {
     return;
 }
 
-$balance_before = $wallet[0]['balance'];
-$balance_after = $balance_before - $amount;
+$profit_before = $wallet[0]['profit'];
+$profit_after = $profit_before - $amount;
 
 // Validasi saldo cukup
-if ($balance_before < $amount) {
-    $bot->sendMessage($chat_id, "❌ Saldo user tidak mencukupi. Saldo: Rp " . number_format($balance_before, 0, ',', '.') . ", Withdraw: Rp " . number_format($amount, 0, ',', '.'));
+if ($profit_before < $amount) {
+    $bot->sendMessage($chat_id, "❌ Saldo user tidak mencukupi. Saldo: Rp " . number_format($profit_before, 0, ',', '.') . ", Withdraw: Rp " . number_format($amount, 0, ',', '.'));
     return;
 }
 
-// Update Saldo Wallet
-$update_wallet = db_update('smm_wallets', ['balance' => $balance_after], ['user_id' => $actual_user_id]);
+// Update Saldo Wallet (profit)
+$update_wallet = db_update('smm_wallets', ['profit' => $profit_after], ['user_id' => $actual_user_id]);
 
 if (!$update_wallet) {
     $bot->sendMessage($chat_id, "❌ Gagal mengupdate saldo database.");
@@ -70,8 +70,8 @@ $transaction_data = [
     'wallet_id' => $wallet[0]['id'],
     'type' => 'withdraw',
     'amount' => -$amount,
-    'balance_before' => $balance_before,
-    'balance_after' => $balance_after,
+    'balance_before' => $profit_before,
+    'balance_after' => $profit_after,
     'description' => 'Withdraw disetujui oleh Admin',
     'reference_id' => $withdraw_id,
     'status' => 'approved'
@@ -95,7 +95,7 @@ $bot->deleteMessage($chat_id, $msg_id);
 // --- NOTIFIKASI KE USER ---
 $user_reply = "✅ <b>Withdraw Berhasil!</b>\n\n";
 $user_reply .= "Dana sebesar <b>Rp " . number_format($amount, 0, ',', '.') . "</b> telah ditransfer ke nomor <b>" . $destination_account . "</b>.\n\n";
-$user_reply .= "💰 Saldo Anda sekarang: Rp " . number_format($balance_after, 0, ',', '.') . "\n\n";
+$user_reply .= "💰 Saldo Anda sekarang: Rp " . number_format($profit_after, 0, ',', '.') . "\n\n";
 $user_reply .= "Terima kasih telah menggunakan layanan kami!";
 $bot->sendMessage($user_chat_id, $user_reply);
 
@@ -104,7 +104,7 @@ $admin_reply = "✅ <b>Withdraw Disetujui</b>\n\n";
 $admin_reply .= "👤 User ID: <code>$user_chat_id</code>\n";
 $admin_reply .= "💰 Nominal: <b>Rp " . number_format($amount, 0, ',', '.') . "</b>\n";
 $admin_reply .= "💳 Tujuan: " . $destination_account . "\n";
-$admin_reply .= "📊 Saldo User: Rp " . number_format($balance_before, 0, ',', '.') . " → Rp " . number_format($balance_after, 0, ',', '.') . "\n";
+$admin_reply .= "📊 Saldo User: Rp " . number_format($profit_before, 0, ',', '.') . " → Rp " . number_format($profit_after, 0, ',', '.') . "\n";
 $admin_reply .= "📢 Status: User telah dinotifikasi.";
 
 $message_result = $bot->sendMessage($chat_id, $admin_reply);
