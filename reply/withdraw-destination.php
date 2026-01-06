@@ -107,7 +107,7 @@ if ($admins) {
             ]
         ]);
 
-        $bot->sendMessage($admin_id, $reply_admin, $keyboard_admin);
+        $bot->sendMessageWithKeyboard($admin_id, $reply_admin, $keyboard_admin);
         sleep(1); // Mencegah rate limit
     }
 }
