@@ -115,6 +115,14 @@ if(!$cb_data){
 	if ($menu == 'edit_username') {
 		require_once 'reply/edit-username.php';
 	}
+	
+	// Withdraw
+	if ($menu == 'withdraw_amount') {
+		require_once 'reply/withdraw-amount.php';
+	}
+	if ($menu == 'withdraw_destination') {
+		require_once 'reply/withdraw-destination.php';
+	}
 
 	// campaign
 	if ($menu == 'buat_campaign_type') {
@@ -234,6 +242,10 @@ if(!$cb_data){
 	}
 	if($cb_data == "/konfirmasi_topup") {
 		require_once 'reply/konfirmasi-topup.php';
+	}
+	// Withdraw
+	if($cb_data == "/withdraw") {
+		require_once 'reply/withdraw.php';
 	}
 
 	// Add New Account
