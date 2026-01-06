@@ -106,6 +106,12 @@ if(!$cb_data){
 		if(strpos($submenu, 'task_reject_') === 0) {
 			require_once 'reply/admin-task-reject.php';
 		}
+		if(strpos($submenu, 'withdraw_approve_') === 0) {
+			require_once 'reply/admin-withdraw-approve.php';
+		}
+		if(strpos($submenu, 'withdraw_reject_') === 0) {
+			require_once 'reply/admin-withdraw-reject.php';
+		}
 	}
 
 	// USER
@@ -209,6 +215,14 @@ if(!$cb_data){
 	}
 	if(strpos($cb_data, 'admin_reject_topup_') === 0) {
 		require_once 'reply/admin-topup.php';
+	}
+
+	// withdraw
+	if(strpos($cb_data, 'admin_approve_withdraw_') === 0) {
+		require_once 'reply/admin-withdraw.php';
+	}
+	if(strpos($cb_data, 'admin_reject_withdraw_') === 0) {
+		require_once 'reply/admin-withdraw.php';
 	}
 
 	// task
