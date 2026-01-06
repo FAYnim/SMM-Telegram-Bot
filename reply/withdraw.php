@@ -19,14 +19,14 @@ if (!empty($pending_result)) {
         ]
     ]);
 
-    $bot->sendMessage($chat_id, $reply, $keyboard);
+    $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
     return;
 }
 
 // Cek saldo user
 $wallet_result = db_read('smm_wallets', ['user_id' => $user_id]);
 if (empty($wallet_result)) {
-    $bot->sendMessage($chat_id, "❌ Wallet tidak ditemukan!");
+    $bot->editMessage($chat_id, $msg_id, "❌ Wallet tidak ditemukan!", 'HTML');
     return;
 }
 
@@ -47,7 +47,7 @@ if ($current_profit < $min_withdraw) {
         ]
     ]);
 
-    $bot->sendMessage($chat_id, $reply, $keyboard);
+    $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
     return;
 }
 
@@ -58,7 +58,13 @@ $reply = "💸 <b>Form Withdraw</b>\n\n"
     . "Silakan masukkan nominal withdraw yang Anda inginkan:\n\n"
     . "💡 <i>Ketik nominal dalam angka (contoh: 50000)</i>";
 
-$bot->sendMessage($chat_id, $reply);
+$keyboard = $bot->buildInlineKeyboard([
+    [
+        ['text' => '🔙 Batal', 'callback_data' => '/start']
+    ]
+]);
+
+$bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
 
 // Update posisi user untuk menunggu input nominal
 updateUserPosition($chat_id, 'withdraw_amount');
