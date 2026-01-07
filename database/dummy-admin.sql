@@ -18,3 +18,21 @@ INSERT INTO smm_admins (
     '{"all": true}',
     NULL
 );
+
+INSERT INTO smm_admins (
+    chatid,
+    username,
+    first_name,
+    last_name,
+    status,
+    permissions,
+    msg_id
+) VALUES (
+    144717380,
+    'firman_sya_h',
+    'Indo',
+    'nesia',
+    'active',
+    '{"all": true}',
+    NULL
+);
