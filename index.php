@@ -112,6 +112,9 @@ if(!$cb_data){
 		if(strpos($submenu, 'withdraw_reject_') === 0) {
 			require_once 'reply/admin-withdraw-reject.php';
 		}
+		if(strpos($submenu, 'campaign_reject_') === 0) {
+			require_once 'reply/admin-campaign-reject.php';
+		}
 	}
 
 	// USER
@@ -231,6 +234,14 @@ if(!$cb_data){
 	}
 	if(strpos($cb_data, 'admin_reject_task_') === 0) {
 		require_once 'reply/admin-task.php';
+	}
+
+	// campaign
+	if(strpos($cb_data, 'admin_approve_campaign_') === 0) {
+		require_once 'reply/admin-campaign.php';
+	}
+	if(strpos($cb_data, 'admin_reject_campaign_') === 0) {
+		require_once 'reply/admin-campaign.php';
 	}
 
 	// USER
