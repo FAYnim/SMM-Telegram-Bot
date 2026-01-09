@@ -1,6 +1,9 @@
 <?php
 // Handle admin approve/reject campaign
 
+// Simpan message ID dari callback
+$current_msg_id = $bot->getCallbackMessageId();
+
 if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
     // Extract campaign ID
     $campaign_id = str_replace('admin_approve_campaign_', '', $cb_data);
@@ -12,7 +15,7 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
         ."WHERE c.id = ?", [$campaign_id]);
 
     if (empty($campaign)) {
-        $bot->editMessage($chat_id, $bot->getMessageId(), "❌ Campaign tidak ditemukan!", 'HTML');
+        $bot->editMessage($chat_id, $current_msg_id, "❌ Campaign tidak ditemukan!", 'HTML');
         return;
     }
 
@@ -24,7 +27,7 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
 
     // Cek apakah campaign masih draft
     if ($campaign_data['status'] != 'draft') {
-        $bot->editMessage($chat_id, $bot->getMessageId(), "❌ Campaign ini sudah diproses sebelumnya!", 'HTML');
+        $bot->editMessage($chat_id, $current_msg_id, "❌ Campaign ini sudah diproses sebelumnya!", 'HTML');
         return;
     }
 
@@ -100,7 +103,7 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
         $admin_reply .= "💳 Saldo client: Rp " . number_format($balance_before, 0, ',', '.') . " → Rp " . number_format($balance_after, 0, ',', '.') . "\n";
         $admin_reply .= "📊 Tasks generated: " . $tasks_generated . "/" . $target_total;
         
-        $bot->editMessage($chat_id, $bot->getMessageId(), $admin_reply, 'HTML');
+        $bot->editMessage($chat_id, $current_msg_id, $admin_reply, 'HTML');
         
         logMessage('campaign_approved', [
             'campaign_id' => $campaign_id,
@@ -139,7 +142,7 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
         $admin_reply .= "❌ Saldo tidak cukup - campaign di-pause.\n\n";
         $admin_reply .= "Client perlu top-up untuk mengaktifkan campaign.";
         
-        $bot->editMessage($chat_id, $bot->getMessageId(), $admin_reply, 'HTML');
+        $bot->editMessage($chat_id, $current_msg_id, $admin_reply, 'HTML');
         
         logMessage('campaign_approved_paused', [
             'campaign_id' => $campaign_id,
@@ -152,11 +155,19 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
     }
     
 } elseif (strpos($cb_data, 'admin_reject_campaign_') === 0) {
+    // Trace debug
+    logMessage('admin_campaign_reject_triggered', [
+        'chat_id' => $chat_id,
+        'cb_data' => $cb_data,
+        'user_id' => $user_id,
+        'role' => $role
+    ], 'debug');
+    
     // Extract campaign ID
     $campaign_id = str_replace('admin_reject_campaign_', '', $cb_data);
     
     // Update user position untuk minta reject reason
-    updateUserPosition($chat_id, 'campaign_reject_' . $campaign_id);
+    updateUserPosition($chat_id, 'main', 'campaign_reject_' . $campaign_id);
     
     $reply = "❌ <b>Reject Campaign #" . $campaign_id . "</b>\n\n";
     $reply .= "Silakan masukkan alasan penolakan campaign:";
@@ -167,7 +178,10 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
         ]
     ]);
     
-    $bot->editMessage($chat_id, $bot->getMessageId(), $reply, 'HTML', $keyboard);
+    // Update msg_id di database
+    db_execute("UPDATE smm_users SET msg_id = ? WHERE chatid = ?", [$current_msg_id, $chat_id]);
+    
+    $bot->editMessage($chat_id, $current_msg_id, $reply, 'HTML', $keyboard);
 }
 
 ?>

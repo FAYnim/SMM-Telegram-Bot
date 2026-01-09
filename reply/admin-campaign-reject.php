@@ -1,6 +1,15 @@
 <?php
 // Handle admin reject campaign with reason
 
+// Trace debug - file executed
+logMessage('admin_campaign_reject_file_executed', [
+    'chat_id' => $chat_id,
+    'user_id' => $user_id,
+    'submenu' => $submenu,
+    'message' => $message,
+    'role' => $role
+], 'debug');
+
 // Extract campaign ID dari submenu
 $campaign_id = str_replace('campaign_reject_', '', $submenu);
 
@@ -35,7 +44,7 @@ if ($msg_id) {
 }
 
 // Reset user position
-updateUserPosition($chat_id, 'main');
+updateUserPosition($chat_id, 'main', '');
 
 // Notifikasi ke client
 $client_reply = "❌ <b>Campaign Ditolak</b>\n\n";
