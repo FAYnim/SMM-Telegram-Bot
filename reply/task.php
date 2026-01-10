@@ -20,8 +20,8 @@ if ($cb_data != '/task_refresh') {
 $reply = "📋 <b>Task Tersedia</b>\n\n";
 
 $campaign = db_query("SELECT id, campaign_title, type, link_target, price_per_task "
-	."FROM smm_campaigns WHERE status = 'active' "
-	."ORDER BY price_per_task DESC LIMIT 0,1");
+	."FROM smm_campaigns WHERE status = 'active' AND client_id != ? "
+	."ORDER BY price_per_task DESC LIMIT 0,1", [$user_id]);
 
 if (empty($campaign)) {
     $reply .= "❌ Tidak ada task yang tersedia saat ini.\n";
@@ -34,7 +34,8 @@ if (empty($campaign)) {
         ]
     ]);
 
-$bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+	$bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+	return;
 }
 
 //$reply .= "Campaign active found";
