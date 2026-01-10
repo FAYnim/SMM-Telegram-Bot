@@ -96,7 +96,7 @@ if ($admins) {
         $reply_admin = "💸 <b>WITHDRAW BARU!</b>\n\n"
             . "User: " . $sender_name . " (ID: " . $chat_id . ")\n"
             . "💰 Nominal: Rp " . number_format($amount, 0, ',', '.') . "\n"
-            . "💳 Tujuan: " . $destination_account . "\n"
+            . "💳 Tujuan: <code>" . $destination_account . "</code>\n"
             . "📅 Waktu: " . date('d M Y, H:i') . "\n\n"
             . "Silakan proses permintaan withdraw ini.";
 

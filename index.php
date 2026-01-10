@@ -132,6 +132,9 @@ if(!$cb_data){
 	if ($menu == 'withdraw_destination') {
 		require_once 'reply/withdraw-destination.php';
 	}
+	if ($menu == 'withdraw_campaign_amount') {
+		require_once 'reply/withdraw-campaign-amount.php';
+	}
 
 	// campaign
 	if ($menu == 'buat_campaign_type') {
@@ -253,6 +256,27 @@ if(!$cb_data){
 	if($cb_data == "/start") {
 		require_once 'reply/start.php';
 	}
+	if($cb_data == "/help") {
+		require_once 'reply/help.php';
+	}
+	if($cb_data == "/help_about") {
+		require_once 'reply/help-about.php';
+	}
+	if($cb_data == "/help_campaign") {
+		require_once 'reply/help-campaign.php';
+	}
+	if($cb_data == "/help_task") {
+		require_once 'reply/help-task.php';
+	}
+	if($cb_data == "/help_saldo") {
+		require_once 'reply/help-saldo.php';
+	}
+	if($cb_data == "/help_withdraw") {
+		require_once 'reply/help-withdraw.php';
+	}
+	if($cb_data == "/help_medsos") {
+		require_once 'reply/help-medsos.php';
+	}
 	if($cb_data == "/social") {
 		require_once 'reply/social.php';
 	}
@@ -276,6 +300,12 @@ if(!$cb_data){
 	// Withdraw
 	if($cb_data == "/withdraw") {
 		require_once 'reply/withdraw.php';
+	}
+	if($cb_data == "/withdraw_wallet") {
+		require_once 'reply/withdraw-wallet.php';
+	}
+	if($cb_data == "/withdraw_campaign") {
+		require_once 'reply/withdraw-campaign.php';
 	}
 
 	// Add New Account

@@ -15,8 +15,8 @@ if (!is_numeric($amount) || $amount <= 0) {
 
 $amount = (int) $amount;
 
-// Cek minimal withdraw (Rp 50.000)
-$min_withdraw = 50000;
+// Cek minimal withdraw (Rp 1.000)
+$min_withdraw = 1000;
 if ($amount < $min_withdraw) {
     $reply = "❌ <b>Nominal Terlalu Kecil</b>\n\n"
         . "Nominal: Rp " . number_format($amount, 0, ',', '.') . "\n"
@@ -66,7 +66,7 @@ $reply = "💳 <b>Nomor Tujuan Withdraw</b>\n\n"
 
 $keyboard = $bot->buildInlineKeyboard([
     [
-        ['text' => '🔙 Batal', 'callback_data' => '/start']
+        ['text' => '🔙 Batal', 'callback_data' => '/withdraw']
     ]
 ]);
 
