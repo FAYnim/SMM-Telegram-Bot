@@ -58,7 +58,16 @@ $user_reply .= "📝 <b>Alasan Penolakan:</b>\n";
 $user_reply .= htmlspecialchars($reason) . "\n\n";
 $user_reply .= "Silakan perbaiki bukti task atau hubungi Admin jika ada kesalahan.";
 
-$bot->sendMessage($task['user_chatid'], $user_reply, 'HTML');
+// Keyboard untuk tutup notifikasi
+$keyboard = [
+    'inline_keyboard' => [
+        [
+            ['text' => '✖️ Tutup Notifikasi', 'callback_data' => 'close_notif']
+        ]
+    ]
+];
+
+$bot->sendMessageWithKeyboard($task['user_chatid'], $user_reply, $keyboard, null, 'HTML');
 
 // --- KONFIRMASI KE ADMIN ---
 $admin_reply = "✅ <b>Task Ditolak</b>\n\n";

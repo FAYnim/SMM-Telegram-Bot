@@ -141,7 +141,16 @@ $user_reply .= "💰 <b>Profit Ditambahkan!</b>\n";
 $user_reply .= "Profit Anda sekarang: <b>Rp " . number_format($profit_after, 0, ',', '.') . "</b>\n\n";
 $user_reply .= "Terima kasih telah mengerjakan task! 🎉";
 
-$bot->sendMessage($task['user_chatid'], $user_reply, 'HTML');
+// Keyboard untuk tutup notifikasi
+$keyboard_task = [
+    'inline_keyboard' => [
+        [
+            ['text' => '✖️ Tutup Notifikasi', 'callback_data' => 'close_notif']
+        ]
+    ]
+];
+
+$bot->sendMessageWithKeyboard($task['user_chatid'], $user_reply, $keyboard_task, null, 'HTML');
 
 // --- KONFIRMASI KE ADMIN ---
 $admin_reply = "✅ <b>Task Disetujui</b>\n\n";
