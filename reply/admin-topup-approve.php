@@ -73,7 +73,17 @@ $bot->deleteMessage($chat_id, $msg_id);
 $user_reply = "✅ <b>Topup Berhasil!</b>\n\n";
 $user_reply .= "Saldo sebesar <b>Rp " . number_format($nominal, 0, ',', '.') . "</b> telah ditambahkan ke akun Anda.\n";
 $user_reply .= "Terima kasih telah melakukan pengisian saldo.";
-$bot->sendMessage($user_chat_id, $user_reply, 'HTML');
+
+// Keyboard untuk tutup notifikasi
+$keyboard = [
+    'inline_keyboard' => [
+        [
+            ['text' => '✖️ Tutup Notifikasi', 'callback_data' => 'close_notif']
+        ]
+    ]
+];
+
+$bot->sendMessageWithKeyboard($user_chat_id, $user_reply, $keyboard, null, 'HTML');
 
 // --- KONFIRMASI KE ADMIN ---
 $admin_reply = "✅ <b>Topup Disetujui</b>\n\n";

@@ -244,6 +244,11 @@ if(!$cb_data){
 		require_once 'reply/admin-campaign.php';
 	}
 
+	// Close Notification
+	if($cb_data == "close_notif") {
+		require_once 'reply/close-notif.php';
+	}
+
 	// USER
 	if($cb_data == "/start") {
 		require_once 'reply/start.php';

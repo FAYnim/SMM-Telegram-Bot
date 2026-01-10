@@ -44,7 +44,16 @@ $user_reply .= "Mohon maaf, permintaan topup Anda tidak dapat kami proses saat i
 $user_reply .= "📝 <b>Alasan:</b> " . htmlspecialchars($reason) . "\n\n";
 $user_reply .= "Silakan perbaiki data bukti pembayaran atau hubungi Admin jika ada kesalahan.";
 
-$bot->sendMessage($user_chat_id, $user_reply, 'HTML');
+// Keyboard untuk tutup notifikasi
+$keyboard = [
+    'inline_keyboard' => [
+        [
+            ['text' => '✖️ Tutup Notifikasi', 'callback_data' => 'close_notif']
+        ]
+    ]
+];
+
+$bot->sendMessageWithKeyboard($user_chat_id, $user_reply, $keyboard, null, 'HTML');
 
 // --- KONFIRMASI KE ADMIN ---
 $admin_reply = "✅ <b>Topup Ditolak</b>\n\n";
