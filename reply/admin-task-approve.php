@@ -112,7 +112,16 @@ if ($is_target_reached || $is_balance_empty) {
         $client_notification .= "💰 Sisa Balance: Rp ".number_format($new_campaign_balance, 0, ',', '.')."\n\n";
         $client_notification .= "Terima kasih telah menggunakan layanan kami!";
         
-        $bot->sendMessage($client_chatid, $client_notification, 'HTML');
+        // Keyboard untuk tutup notifikasi
+        $keyboard_campaign_done = [
+            'inline_keyboard' => [
+                [
+                    ['text' => '✖️ Tutup Notifikasi', 'callback_data' => 'close_notif']
+                ]
+            ]
+        ];
+        
+        $bot->sendMessageWithKeyboard($client_chatid, $client_notification, $keyboard_campaign_done, null, 'HTML');
     }
 }
 
