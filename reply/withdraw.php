@@ -37,7 +37,7 @@ $min_withdraw = 50000;
 
 if ($current_profit < $min_withdraw) {
     $reply = "❌ <b>Saldo Tidak Mencukupi</b>\n\n"
-        . "Saldo Anda: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
+        . "Saldo Penghasilan: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
         . "Minimal withdraw: Rp " . number_format($min_withdraw, 0, ',', '.') . "\n\n"
         . "Silakan kerjakan lebih banyak tugas untuk menambah saldo.";
 
