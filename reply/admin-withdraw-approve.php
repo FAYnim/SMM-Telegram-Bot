@@ -97,7 +97,17 @@ $user_reply = "✅ <b>Withdraw Berhasil!</b>\n\n";
 $user_reply .= "Dana sebesar <b>Rp " . number_format($amount, 0, ',', '.') . "</b> telah ditransfer ke nomor <b>" . $destination_account . "</b>.\n\n";
 $user_reply .= "💰 Saldo Anda sekarang: Rp " . number_format($profit_after, 0, ',', '.') . "\n\n";
 $user_reply .= "Terima kasih telah menggunakan layanan kami!";
-$bot->sendMessage($user_chat_id, $user_reply);
+
+// Keyboard untuk tutup notifikasi
+$keyboard = [
+    'inline_keyboard' => [
+        [
+            ['text' => '✖️ Tutup Notifikasi', 'callback_data' => 'close_notif']
+        ]
+    ]
+];
+
+$bot->sendMessageWithKeyboard($user_chat_id, $user_reply, $keyboard, null, 'HTML');
 
 // --- KONFIRMASI KE ADMIN ---
 $admin_reply = "✅ <b>Withdraw Disetujui</b>\n\n";
