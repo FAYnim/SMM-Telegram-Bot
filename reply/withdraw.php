@@ -62,6 +62,9 @@ $keyboard = $bot->buildInlineKeyboard([
         ['text' => '💳 E-Wallet (DANA/OVO/GoPay)', 'callback_data' => '/withdraw_wallet']
     ],
     [
+        ['text' => '💰 Saldo Campaign', 'callback_data' => '/withdraw_campaign']
+    ],
+    [
         ['text' => '🔙 Kembali', 'callback_data' => '/start']
     ]
 ]);

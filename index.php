@@ -132,6 +132,9 @@ if(!$cb_data){
 	if ($menu == 'withdraw_destination') {
 		require_once 'reply/withdraw-destination.php';
 	}
+	if ($menu == 'withdraw_campaign_amount') {
+		require_once 'reply/withdraw-campaign-amount.php';
+	}
 
 	// campaign
 	if ($menu == 'buat_campaign_type') {
@@ -279,6 +282,9 @@ if(!$cb_data){
 	}
 	if($cb_data == "/withdraw_wallet") {
 		require_once 'reply/withdraw-wallet.php';
+	}
+	if($cb_data == "/withdraw_campaign") {
+		require_once 'reply/withdraw-campaign.php';
 	}
 
 	// Add New Account
