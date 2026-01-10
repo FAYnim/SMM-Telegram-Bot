@@ -68,7 +68,7 @@ CREATE TABLE IF NOT EXISTS smm_campaigns (
     target_total INT NOT NULL,
     completed_count INT DEFAULT 0,
     campaign_balance DECIMAL(15,2) DEFAULT 0.00,
-    status ENUM('creating', 'active', 'paused', 'completed', 'deleted') DEFAULT 'creating',
+    status ENUM('creating', 'draft', 'active', 'paused', 'completed', 'deleted') DEFAULT 'creating',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (client_id) REFERENCES smm_users(id) ON DELETE CASCADE

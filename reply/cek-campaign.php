@@ -22,13 +22,30 @@ $campaigns = db_query("SELECT id, campaign_title, type, link_target, price_per_t
 
 if (count($campaigns) > 0) {
     foreach ($campaigns as $campaign) {
+        // Status emoji mapping
+        $status_emoji = [
+            'draft' => '📝',
+            'active' => '✅',
+            'paused' => '⏸️',
+            'completed' => '✔️'
+        ];
+        $status_icon = $status_emoji[$campaign['status']] ?? '❓';
+        
         $reply .= "<b>" . htmlspecialchars($campaign['campaign_title']) . "</b>\n";
         $reply .= "🆔 ID: #" . $campaign['id'] . "\n";
         $reply .= "🎯 Tipe: " . ucfirst($campaign['type']) . "\n";
         $reply .= "💰 Harga/task: Rp " . number_format($campaign['price_per_task'], 0, ',', '.') . "\n";
         $reply .= "📊 Progress: " . $campaign['completed_count'] . "/" . $campaign['target_total'] . " tasks\n";
         $reply .= "💰 Total Budget: Rp " . number_format($campaign['campaign_balance'], 0, ',', '.') . "\n";
-        $reply .= "📈 Status: " . ucfirst($campaign['status']) . "\n";
+        $reply .= $status_icon . " Status: " . ucfirst($campaign['status']) . "\n";
+        
+        // Tambahan info untuk status tertentu
+        if ($campaign['status'] == 'draft') {
+            $reply .= "   <i>Menunggu verifikasi admin</i>\n";
+        } elseif ($campaign['status'] == 'paused') {
+            $reply .= "   <i>Saldo tidak cukup, silakan top-up</i>\n";
+        }
+        
         $reply .= "📅 Dibuat: " . date('d/m/Y', strtotime($campaign['created_at'])) . "\n";
         $reply .= "==================\n\n";
     }
