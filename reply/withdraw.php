@@ -32,8 +32,8 @@ if (empty($wallet_result)) {
 
 $current_profit = $wallet_result[0]['profit'];
 
-// Cek minimal withdraw (Rp 50.000)
-$min_withdraw = 50000;
+// Cek minimal withdraw (Rp 1.000)
+$min_withdraw = 1000;
 
 if ($current_profit < $min_withdraw) {
     $reply = "❌ <b>Saldo Tidak Mencukupi</b>\n\n"
