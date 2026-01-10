@@ -128,7 +128,7 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
         $client_reply .= "📝 Judul: " . htmlspecialchars($campaign_data['campaign_title']) . "\n";
         $client_reply .= "💰 Total Budget: Rp " . number_format($campaign_balance, 0, ',', '.') . "\n";
         $client_reply .= "💳 Sisa Budget: Rp " . number_format($balance_before, 0, ',', '.') . "\n\n";
-		$client_reply .= "🔴 Status: paused";
+		$client_reply .= "🔴 Status: paused\n\n";
 /*        $client_reply .= "❌ <b>Saldo tidak mencukupi!</b>\n";
         $client_reply .= "Campaign akan di-pause sampai saldo Anda cukup.\n\n";
         $client_reply .= "Silakan top-up minimal Rp " . number_format($campaign_balance - $balance_before, 0, ',', '.') . " untuk mengaktifkan campaign.";
