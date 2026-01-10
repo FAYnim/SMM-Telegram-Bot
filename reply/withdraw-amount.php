@@ -66,7 +66,7 @@ $reply = "💳 <b>Nomor Tujuan Withdraw</b>\n\n"
 
 $keyboard = $bot->buildInlineKeyboard([
     [
-        ['text' => '🔙 Batal', 'callback_data' => '/start']
+        ['text' => '🔙 Batal', 'callback_data' => '/withdraw']
     ]
 ]);
 

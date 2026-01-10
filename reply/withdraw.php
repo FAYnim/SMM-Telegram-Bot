@@ -51,21 +51,22 @@ if ($current_profit < $min_withdraw) {
     return;
 }
 
-// Tampilkan form withdraw
-$reply = "💸 <b>Form Withdraw</b>\n\n"
-    . "Saldo Anda: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
+// Tampilkan pilihan withdraw
+$reply = "💸 <b>Tarik Dana</b>\n\n"
+    . "Saldo Penghasilan: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
     . "Minimal withdraw: Rp " . number_format($min_withdraw, 0, ',', '.') . "\n\n"
-    . "Silakan masukkan nominal withdraw yang Anda inginkan:\n\n"
-    . "💡 <i>Ketik nominal dalam angka (contoh: 50000)</i>";
+    . "Silakan pilih metode penarikan:";
 
 $keyboard = $bot->buildInlineKeyboard([
     [
-        ['text' => '🔙 Batal', 'callback_data' => '/start']
+        ['text' => '💳 E-Wallet (DANA/OVO/GoPay)', 'callback_data' => '/withdraw_wallet']
+    ],
+    [
+        ['text' => '🔙 Kembali', 'callback_data' => '/start']
     ]
 ]);
 
 $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
 
-// Update posisi user untuk menunggu input nominal
-updateUserPosition($chat_id, 'withdraw_amount');
+updateUserPosition($chat_id, 'withdraw');
 ?>

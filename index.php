@@ -277,6 +277,9 @@ if(!$cb_data){
 	if($cb_data == "/withdraw") {
 		require_once 'reply/withdraw.php';
 	}
+	if($cb_data == "/withdraw_wallet") {
+		require_once 'reply/withdraw-wallet.php';
+	}
 
 	// Add New Account
 	if($cb_data == "/tambah_medsos") {
