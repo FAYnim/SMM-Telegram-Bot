@@ -121,17 +121,19 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
         db_execute("UPDATE smm_campaigns SET status = 'paused' WHERE id = ?", [$campaign_id]);
         
         // Notifikasi ke client
-        $client_reply = "⚠️ <b>Campaign Disetujui - Saldo Tidak Cukup</b>\n\n";
+        $client_reply = "⚠️ <b>Campaign Disetujui</b>\n\n";
         $client_reply .= "Campaign Anda telah diverifikasi oleh admin.\n\n";
         $client_reply .= "<b>📋 Detail Campaign:</b>\n";
         $client_reply .= "🆔 ID: #" . $campaign_id . "\n";
         $client_reply .= "📝 Judul: " . htmlspecialchars($campaign_data['campaign_title']) . "\n";
         $client_reply .= "💰 Total Budget: Rp " . number_format($campaign_balance, 0, ',', '.') . "\n";
-        $client_reply .= "💳 Saldo Anda: Rp " . number_format($balance_before, 0, ',', '.') . "\n\n";
-        $client_reply .= "❌ <b>Saldo tidak mencukupi!</b>\n";
+        $client_reply .= "💳 Sisa Budget: Rp " . number_format($balance_before, 0, ',', '.') . "\n\n";
+		$client_reply .= "🔴 Status: paused";
+/*        $client_reply .= "❌ <b>Saldo tidak mencukupi!</b>\n";
         $client_reply .= "Campaign akan di-pause sampai saldo Anda cukup.\n\n";
         $client_reply .= "Silakan top-up minimal Rp " . number_format($campaign_balance - $balance_before, 0, ',', '.') . " untuk mengaktifkan campaign.";
-        
+*/
+		$client_reply .= "Status akan menjadi 🟢 Running setelah Budget Campaign memiliki saldo cukup";
         $bot->sendMessage($client_chatid, $client_reply);
         
         // Notifikasi ke admin
