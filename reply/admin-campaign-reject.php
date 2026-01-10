@@ -57,7 +57,16 @@ $client_reply .= "💰 Total Budget: Rp " . number_format($campaign_data['campai
 $client_reply .= "📝 <b>Alasan:</b>\n<i>" . htmlspecialchars($reject_reason) . "</i>\n\n";
 $client_reply .= "Silakan perbaiki dan buat campaign baru.";
 
-$bot->sendMessage($client_chatid, $client_reply);
+// Keyboard untuk tutup notifikasi
+$keyboard = [
+    'inline_keyboard' => [
+        [
+            ['text' => '✖️ Tutup Notifikasi', 'callback_data' => 'close_notif']
+        ]
+    ]
+];
+
+$bot->sendMessageWithKeyboard($client_chatid, $client_reply, $keyboard, null, 'HTML');
 
 // Notifikasi ke admin
 $admin_reply = "✅ <b>Campaign Berhasil Ditolak</b>\n\n";

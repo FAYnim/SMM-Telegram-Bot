@@ -64,7 +64,16 @@ $user_reply .= "💳 Tujuan: " . $destination_account . "\n\n";
 $user_reply .= "📝 <b>Alasan:</b> " . htmlspecialchars($reason) . "\n\n";
 $user_reply .= "Saldo Anda tidak dikurangi. Silakan coba lagi atau hubungi Admin jika ada kesalahan.";
 
-$bot->sendMessage($user_chat_id, $user_reply);
+// Keyboard untuk tutup notifikasi
+$keyboard = [
+    'inline_keyboard' => [
+        [
+            ['text' => '✖️ Tutup Notifikasi', 'callback_data' => 'close_notif']
+        ]
+    ]
+];
+
+$bot->sendMessageWithKeyboard($user_chat_id, $user_reply, $keyboard, null, 'HTML');
 
 // --- KONFIRMASI KE ADMIN ---
 $admin_reply = "✅ <b>Withdraw Ditolak</b>\n\n";

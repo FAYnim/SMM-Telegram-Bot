@@ -95,7 +95,16 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
         $client_reply .= "💳 Saldo Terpotong: Rp " . number_format($campaign_balance, 0, ',', '.') . "\n\n";
         $client_reply .= "Campaign Anda sekarang aktif dan siap menerima workers!";
         
-        $bot->sendMessage($client_chatid, $client_reply);
+        // Keyboard untuk tutup notifikasi
+        $keyboard = [
+            'inline_keyboard' => [
+                [
+                    ['text' => '✖️ Tutup Notifikasi', 'callback_data' => 'close_notif']
+                ]
+            ]
+        ];
+        
+        $bot->sendMessageWithKeyboard($client_chatid, $client_reply, $keyboard, null, 'HTML');
         
         // Notifikasi ke admin
         $admin_reply = "✅ <b>Campaign Berhasil Disetujui</b>\n\n";
@@ -134,7 +143,17 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
         $client_reply .= "Silakan top-up minimal Rp " . number_format($campaign_balance - $balance_before, 0, ',', '.') . " untuk mengaktifkan campaign.";
 */
 		$client_reply .= "Status akan menjadi 🟢 Running setelah Budget Campaign memiliki saldo cukup";
-        $bot->sendMessage($client_chatid, $client_reply);
+        
+        // Keyboard untuk tutup notifikasi
+        $keyboard = [
+            'inline_keyboard' => [
+                [
+                    ['text' => '✖️ Tutup Notifikasi', 'callback_data' => 'close_notif']
+                ]
+            ]
+        ];
+        
+        $bot->sendMessageWithKeyboard($client_chatid, $client_reply, $keyboard, null, 'HTML');
         
         // Notifikasi ke admin
         $admin_reply = "⚠️ <b>Campaign Disetujui - Status Paused</b>\n\n";
