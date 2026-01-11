@@ -261,6 +261,11 @@ if(!$cb_data){
 		require_once 'reply/task-admin.php';
 	}
 
+	// withdraw
+	if($cb_data == "withdraw_admin") {
+		require_once 'reply/withdraw-admin.php';
+	}
+
 	// Close Notification
 	if($cb_data == "close_notif") {
 		require_once 'reply/close-notif.php';
