@@ -36,16 +36,19 @@
             
         $keyboard = $bot->buildInlineKeyboard([
             [
-                ['text' => '✅ Verifikasi Tugas', 'callback_data' => '/verifikasi'],
-                ['text' => '💰 Cek Deposit', 'callback_data' => '/deposit']
+                ['text' => '✅ Verifikasi Tugas', 'callback_data' => 'verifikasi'],
+                ['text' => '📢 Verifikasi Campaign', 'callback_data' => 'campaign_admin']
             ],
             [
-                ['text' => '💸 Proses Withdraw', 'callback_data' => '/withdraw_admin'],
-                ['text' => '👥 Kelola User', 'callback_data' => '/manage_user']
+                ['text' => '💰 Cek Deposit', 'callback_data' => 'deposit_admin'],
+                ['text' => '💸 Proses Withdraw', 'callback_data' => 'withdraw_admin']
             ],
             [
-                ['text' => '📊 Statistik', 'callback_data' => '/laporan'],
-                ['text' => '⚙️ Settings', 'callback_data' => '/settings']
+                ['text' => '👥 Kelola User', 'callback_data' => 'manage_user'],
+                ['text' => '📊 Statistik', 'callback_data' => 'laporan']
+            ],
+            [
+                ['text' => '⚙️ Settings', 'callback_data' => 'settings']
             ]
         ]);
     }
@@ -53,7 +56,7 @@
     // Check if this is callback or message
 if ($cb_data) {
     // Callback: edit existing message
-    $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+    $bot->editMessage($chat_id, $bot->getCallbackMessageId(), $reply, 'HTML', $keyboard);
 } else {
     // Message: send new message
     $sent_message = $bot->sendMessageWithKeyboard($chat_id, $reply, $keyboard);

@@ -7,7 +7,7 @@ if (!$update_result) {
     return;
 }
 
-$bot->deleteMessage($chat_id, $msg_id);
+//$bot->deleteMessage($chat_id, $msg_id);
 
 // Cek apakah user adalah admin
 $admin = db_read('smm_admins', ['chatid' => $chat_id]);
@@ -28,13 +28,34 @@ if($admin_msg_id != $msg_id) {
 	db_update('smm_admins',  ['msg_id' => $admin_msg_id], ['chatid' => $chat_id]);
 }
 
-// Get user_chat_id from callback data
+// Get deposit_id from callback data
 $parts = explode('_', $cb_data);
-$user_chat_id = end($parts);
+$deposit_id = end($parts);
+
+// Query deposit data berdasarkan deposit_id
+$deposit = db_read('smm_deposits', ['id' => $deposit_id]);
+
+if (!$deposit) {
+    $bot->sendMessage($chat_id, "❌ Data deposit tidak ditemukan.");
+    return;
+}
+
+$deposit_data = $deposit[0];
+$user_id = $deposit_data['user_id'];
+
+// Query user data untuk mendapatkan chat_id
+$user = db_read('smm_users', ['id' => $user_id]);
+
+if (!$user) {
+    $bot->sendMessage($chat_id, "❌ User tidak ditemukan.");
+    return;
+}
+
+$user_chat_id = $user[0]['chatid'];
 
 if(strpos($cb_data, "approve") !== false) {
 
-	$update_result = updateUserPosition($chat_id, 'main', 'topup_approve_'.$user_chat_id);
+	$update_result = updateUserPosition($chat_id, 'main', 'topup_approve_'.$deposit_id);
 	if (!$update_result) {
 		$bot->sendMessage($chat_id, "❌ Gagal memperbarui posisi admin.");
 		return;
@@ -48,7 +69,7 @@ if(strpos($cb_data, "approve") !== false) {
 
 } elseif (strpos($cb_data, "reject")) {
 
-	$update_result = updateUserPosition($chat_id, 'main', 'topup_reject_'.$user_chat_id);
+	$update_result = updateUserPosition($chat_id, 'main', 'topup_reject_'.$deposit_id);
 	if (!$update_result) {
 		$bot->sendMessage($chat_id, "❌ Gagal memperbarui posisi admin.");
 		return;

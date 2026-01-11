@@ -215,7 +215,16 @@ if(!$cb_data){
 	}
 } else {
 	// ADMIN
+	
+	// campaign
+	if($cb_data == "campaign_admin") {
+		require_once 'reply/campaign-admin.php';
+	}
+	
 	// topup
+	if($cb_data == "deposit_admin") {
+		require_once 'reply/deposit-admin.php';
+	}
 	if(strpos($cb_data, 'admin_approve_topup_') === 0) {
 		require_once 'reply/admin-topup.php';
 	}
@@ -245,6 +254,16 @@ if(!$cb_data){
 	}
 	if(strpos($cb_data, 'admin_reject_campaign_') === 0) {
 		require_once 'reply/admin-campaign.php';
+	}
+
+	// task
+	if($cb_data == "verifikasi") {
+		require_once 'reply/task-admin.php';
+	}
+
+	// withdraw
+	if($cb_data == "withdraw_admin") {
+		require_once 'reply/withdraw-admin.php';
 	}
 
 	// Close Notification
