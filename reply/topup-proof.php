@@ -21,6 +21,14 @@ if (isset($waiting_msg_id)) {
     // Kirim notifikasi ke Admin
     $admins = db_read("smm_admins");
 
+    // Simpan data deposit ke database dan dapatkan deposit_id
+    $deposit_id = db_create('smm_deposits', [
+        'user_id' => $user_id,
+        'proof_image_id' => $file_id,
+        'amount' => 0,
+        'status' => 'pending'
+    ]);
+
     if ($admins) {
         if (!isset($file_id)) {
             $bot->sendMessage($chat_id, "❌ Gagal mendeteksi gambar.");
@@ -36,8 +44,8 @@ if (isset($waiting_msg_id)) {
 
             $keyboard_admin = $bot->buildInlineKeyboard([
                 [
-                    ['text' => '✅ Terima', 'callback_data' => 'admin_approve_topup_' . $chat_id],
-                    ['text' => '❌ Tolak', 'callback_data' => 'admin_reject_topup_' . $chat_id]
+                    ['text' => '✅ Terima', 'callback_data' => 'admin_approve_topup_' . $deposit_id],
+                    ['text' => '❌ Tolak', 'callback_data' => 'admin_reject_topup_' . $deposit_id]
                 ]
             ]);
 
@@ -51,14 +59,6 @@ if (isset($waiting_msg_id)) {
             sleep(1);
         }
     }
-
-    // Simpan data deposit ke database
-    db_create('smm_deposits', [
-        'user_id' => $user_id,
-        'proof_image_id' => $file_id,
-        'amount' => 0,
-        'status' => 'pending'
-    ]);
 
     // Update pesan user jadi Final
     $reply_user = "✅ <b>Bukti Terkirim</b>\n\n";

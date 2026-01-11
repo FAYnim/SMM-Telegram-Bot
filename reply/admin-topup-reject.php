@@ -1,8 +1,28 @@
 <?php
 
-// Extract User ID from submenu
+// Extract deposit_id from submenu (format: topup_reject_{deposit_id})
 $parts = explode('_', $submenu);
-$user_chat_id = $parts[2];
+$deposit_id = $parts[2];
+
+// Query deposit data
+$deposit = db_read('smm_deposits', ['id' => $deposit_id]);
+if (!$deposit) {
+    $bot->sendMessage($chat_id, "❌ Data deposit tidak ditemukan.");
+    return;
+}
+
+$deposit_data = $deposit[0];
+$user_id = $deposit_data['user_id'];
+
+// Query user data untuk mendapatkan chat_id
+$user = db_read('smm_users', ['id' => $user_id]);
+if (!$user) {
+    $bot->sendMessage($chat_id, "❌ User tidak ditemukan di database.");
+    return;
+}
+
+$user_chat_id = $user[0]['chatid'];
+$actual_user_id = $user[0]['id'];
 
 // Validasi Alasan Penolakan
 $reason = trim($message);
@@ -13,24 +33,16 @@ if (empty($reason)) {
     return;
 }
 
-// Cari data user
-$user = db_read('smm_users', ['chatid' => $user_chat_id]);
-if (!$user) {
-    $bot->sendMessage($chat_id, "❌ User tidak ditemukan di database.");
-    return;
-}
 
-$actual_user_id = $user[0]['id'];
 
-// Update Status di Tabel Deposits
-// Mengubah status SEMUA pending deposit user ini menjadi rejected
+// Update Status di Tabel Deposits berdasarkan deposit_id
 $deposit_update = [
     'admin_id' => $user_id,
     'admin_notes' => $reason,
     'status' => 'rejected',
     'processed_at' => date('Y-m-d H:i:s')
 ];
-db_update('smm_deposits', $deposit_update, ['user_id' => $actual_user_id, 'status' => 'pending']);
+db_update('smm_deposits', $deposit_update, ['id' => $deposit_id]);
 
 // Reset Posisi Admin
 updateUserPosition($chat_id, 'main', '');

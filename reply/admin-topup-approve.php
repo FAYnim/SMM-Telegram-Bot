@@ -1,8 +1,28 @@
 <?php
 
-// Extract User ID from submenu (format: topup_approve_{chat_id})
+// Extract deposit_id from submenu (format: topup_approve_{deposit_id})
 $parts = explode('_', $submenu);
-$user_chat_id = $parts[2];
+$deposit_id = $parts[2];
+
+// Query deposit data
+$deposit = db_read('smm_deposits', ['id' => $deposit_id]);
+if (!$deposit) {
+    $bot->sendMessage($chat_id, "❌ Data deposit tidak ditemukan.");
+    return;
+}
+
+$deposit_data = $deposit[0];
+$user_id = $deposit_data['user_id'];
+
+// Query user data untuk mendapatkan chat_id
+$user = db_read('smm_users', ['id' => $user_id]);
+if (!$user) {
+    $bot->sendMessage($chat_id, "❌ User tidak ditemukan di database.");
+    return;
+}
+
+$user_chat_id = $user[0]['chatid'];
+$actual_user_id = $user[0]['id'];
 
 // Validasi Input Nominal
 $nominal = trim($message);
@@ -13,14 +33,7 @@ if (!is_numeric($nominal) || $nominal <= 0) {
     return;
 }
 
-// Cari data user
-$user = db_read('smm_users', ['chatid' => $user_chat_id]);
-if (!$user) {
-    $bot->sendMessage($chat_id, "❌ User tidak ditemukan di database.");
-    return;
-}
 
-$actual_user_id = $user[0]['id'];
 $wallet = db_read('smm_wallets', ['user_id' => $actual_user_id]);
 
 // Create wallet if not exists (fail-safe)
@@ -53,15 +66,14 @@ $transaction_data = [
 ];
 db_create('smm_wallet_transactions', $transaction_data);
 
-// Update Status di Tabel Deposits
-// NOTE: Mengupdate SEMUA pending deposit user ini. Idealnya by ID, tapi ID tidak ada di callback state.
+// Update Status di Tabel Deposits berdasarkan deposit_id
 $deposit_update = [
     'amount' => $nominal,
     'admin_id' => $user_id,
     'status' => 'approved',
     'processed_at' => date('Y-m-d H:i:s')
 ];
-db_update('smm_deposits', $deposit_update, ['user_id' => $actual_user_id, 'status' => 'pending']);
+db_update('smm_deposits', $deposit_update, ['id' => $deposit_id]);
 
 // Reset Posisi Admin
 updateUserPosition($chat_id, 'main', '');
