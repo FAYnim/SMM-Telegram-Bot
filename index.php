@@ -256,6 +256,11 @@ if(!$cb_data){
 		require_once 'reply/admin-campaign.php';
 	}
 
+	// task
+	if($cb_data == "verifikasi") {
+		require_once 'reply/task-admin.php';
+	}
+
 	// Close Notification
 	if($cb_data == "close_notif") {
 		require_once 'reply/close-notif.php';
