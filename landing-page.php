@@ -7,6 +7,8 @@
     <meta name="keywords" content="Telegram Bot, SMM, Social Media Marketing, PTC, Engagement">
     <title>SMM Telegram Bot - Social Media Engagement Platform</title>
     
+    <link rel="icon" href="src/img/favicon-SMM-Telegram-Bot.png" type="image/png">
+    
     <!-- Font Awesome from Cloudflare CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
@@ -26,7 +28,7 @@
 
     <nav id="navbar">
         <div class="nav-container">
-            <div class="logo"><i class="fas fa-bolt"></i> SMM Bot</div>
+            <div class="logo"><img src="src/img/logo-SMM-Telegram-Bot.png" alt="SMM Bot"> SMM Bot</div>
             <div class="mobile-toggle" id="mobileToggle">
                 <span></span>
                 <span></span>
@@ -187,7 +189,7 @@
         <div class="cta-section">
             <h2>Ready to Get Started?</h2>
             <p>Join our platform and experience the future of social media engagement management</p>
-            <a href="https://t.me/your_bot_username" class="btn btn-primary">Try Bot</a>
+            <a href="https://t.me/smm_demo1_bot" class="btn btn-primary" rel="noopener noreferrer">Try Bot</a>
         </div>
     </section>
 
@@ -195,7 +197,7 @@
         <h2 class="section-title">Get In Touch</h2>
         <p class="section-subtitle">Have questions? We'd love to hear from you</p>
         <div style="text-align: center; margin-top: 1.5rem;">
-            <a href="https://t.me/your_contact_username" class="btn btn-primary">Contact Us</a>
+            <a href="https://faydev.my.id" class="btn btn-primary">Contact Us</a>
         </div>
         <div style="text-align: center; margin-top: 3rem;">
             <p style="color: var(--text-secondary); font-size: 1.1rem;">
@@ -212,7 +214,7 @@
                 <a href="#features">Features</a>
                 <a href="#roles">Roles</a>
                 <a href="#tech">Technology</a>
-                <a href="https://github.com" target="_blank">GitHub</a>
+                <a href="https://github.com/FAYnim/SMM-Telegram-Bot" target="_blank" rel="noopener noreferrer">GitHub</a>
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2026 SMM Telegram Bot. Licensed under BSD 3-Clause License.</p>

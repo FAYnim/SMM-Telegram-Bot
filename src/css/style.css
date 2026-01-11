@@ -91,11 +91,10 @@ nav.scrolled {
     gap: 0.5rem;
 }
 
-.logo i {
-    background: var(--gradient-2);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+.logo img {
+    height: 40px;
+    width: auto;
+    display: block;
 }
 
 .nav-links {
