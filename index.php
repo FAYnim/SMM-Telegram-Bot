@@ -216,6 +216,11 @@ if(!$cb_data){
 } else {
 	// ADMIN
 	
+	// campaign
+	if($cb_data == "campaign_admin") {
+		require_once 'reply/campaign-admin.php';
+	}
+	
 	// topup
 	if($cb_data == "deposit_admin") {
 		require_once 'reply/deposit-admin.php';
