@@ -3,11 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="SMM Telegram Bot - Connect clients with workers for social media engagement campaigns">
-    <meta name="keywords" content="Telegram Bot, SMM, Social Media Marketing, PTC, Engagement">
-    <title>SMM Telegram Bot - Social Media Engagement Platform</title>
+    <meta name="description" content="SMM Telegram Bot - Open-source social media engagement platform. Connect clients with workers through Telegram for automated campaign management, proof verification, and seamless task completion. Built with PHP Native and Telegram Bot API.">
+    <meta name="keywords" content="Telegram Bot, SMM, Social Media Marketing, PTC, Engagement, Telegram Marketing, Social Media Bot, Campaign Management, Task Verification, Open Source, PHP Bot">
+    <meta name="author" content="Faris AY">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#0088cc">
+    <link rel="canonical" href="https://yourdomain.com/">
+    <title>SMM Telegram Bot - Open Source Social Media Engagement Platform</title>
     
     <link rel="icon" href="src/img/favicon-SMM-Telegram-Bot.png" type="image/png">
+    <link rel="apple-touch-icon" sizes="180x180" href="src/img/favicon-SMM-Telegram-Bot.png">
+    
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="SMM Telegram Bot - Open Source Social Media Engagement Platform">
+    <meta property="og:description" content="Connect clients with workers through Telegram for automated campaign management, proof verification, and seamless task completion.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yourdomain.com/">
+    <meta property="og:image" content="https://yourdomain.com/src/img/logo-SMM-Telegram-Bot.png">
+    <meta property="og:site_name" content="SMM Telegram Bot">
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SMM Telegram Bot - Open Source Social Media Engagement Platform">
+    <meta name="twitter:description" content="Connect clients with workers through Telegram for automated campaign management, proof verification, and seamless task completion.">
+    <meta name="twitter:image" content="https://yourdomain.com/src/img/logo-SMM-Telegram-Bot.png">
+    
+    <!-- Preconnect to CDNs for performance -->
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
     
     <!-- Font Awesome from Cloudflare CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -15,6 +38,47 @@
     <link rel="stylesheet" href="src/css/style.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "SMM Telegram Bot",
+        "description": "Open-source social media engagement platform connecting clients with workers through Telegram for automated campaign management and proof verification.",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web-based",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Person",
+            "name": "Faris AY"
+        },
+        "license": "BSD 3-Clause License",
+        "url": "https://github.com/FAYnim/SMM-Telegram-Bot",
+        "keywords": ["Telegram Bot", "SMM", "Social Media Marketing", "PTC", "Engagement", "Campaign Management", "Task Verification"],
+        "datePublished": "2026-01-11"
+    }
+    </script>
+    
+    <!-- Organization Schema -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "SMM Telegram Bot",
+        "url": "https://github.com/FAYnim/SMM-Telegram-Bot",
+        "logo": "https://yourdomain.com/src/img/logo-SMM-Telegram-Bot.png",
+        "description": "Open-source social media engagement platform",
+        "sameAs": [
+            "https://github.com/FAYnim/SMM-Telegram-Bot",
+            "https://t.me/smm_demo1_bot"
+        ]
+    }
+    </script>
 </head>
 <body>
     <!-- Loading Screen -->
@@ -26,37 +90,38 @@
 
     <div class="bg-animation"></div>
 
-    <nav id="navbar">
+    <nav id="navbar" role="navigation" aria-label="Main navigation">
         <div class="nav-container">
-            <div class="logo"><img src="src/img/logo-SMM-Telegram-Bot.png" alt="SMM Bot"> SMM Bot</div>
-            <div class="mobile-toggle" id="mobileToggle">
+            <a href="#home" class="logo"><img src="src/img/logo-SMM-Telegram-Bot.png" alt="SMM Telegram Bot Logo"> SMM Bot</a>
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle navigation menu" aria-expanded="false">
                 <span></span>
                 <span></span>
                 <span></span>
-            </div>
-            <ul class="nav-links" id="navLinks">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#features">Features</a></li>
-                <li><a href="#roles">Roles</a></li>
-                <li><a href="#tech">Technology</a></li>
-                <li><a href="#contact">Contact</a></li>
+            </button>
+            <ul class="nav-links" id="navLinks" role="menubar">
+                <li role="none"><a href="#home" role="menuitem">Home</a></li>
+                <li role="none"><a href="#features" role="menuitem">Features</a></li>
+                <li role="none"><a href="#roles" role="menuitem">Roles</a></li>
+                <li role="none"><a href="#tech" role="menuitem">Technology</a></li>
+                <li role="none"><a href="#contact" role="menuitem">Contact</a></li>
             </ul>
         </div>
     </nav>
 
-    <section class="hero" id="home">
-        <div class="hero-content">
-            <h1>Social Media Engagement, Reimagined</h1>
-            <p class="subtitle">
-                Connect clients with skilled workers through our intelligent Telegram bot platform. 
-                Streamline your social media campaigns with automated task management and proof verification.
-            </p>
-            <div class="cta-buttons">
-                <a href="#features" class="btn btn-primary">Explore Features</a>
-                <a href="#contact" class="btn btn-secondary">Get Started</a>
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-content">
+                <h1>Social Media Engagement, Reimagined</h1>
+                <p class="subtitle">
+                    Connect clients with skilled workers through our intelligent Telegram bot platform. 
+                    Streamline your social media campaigns with automated task management and proof verification.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#features" class="btn btn-primary">Explore Features</a>
+                    <a href="#contact" class="btn btn-secondary">Get Started</a>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
 
     <section id="features">
         <h2 class="section-title">Powerful Features</h2>
@@ -197,7 +262,7 @@
         <h2 class="section-title">Get In Touch</h2>
         <p class="section-subtitle">Have questions? We'd love to hear from you</p>
         <div style="text-align: center; margin-top: 1.5rem;">
-            <a href="https://faydev.my.id" class="btn btn-primary">Contact Us</a>
+            <a href="https://faydev.my.id" class="btn btn-primary" rel="noopener noreferrer">Contact Us</a>
         </div>
         <div style="text-align: center; margin-top: 3rem;">
             <p style="color: var(--text-secondary); font-size: 1.1rem;">
@@ -206,8 +271,9 @@
             </p>
         </div>
     </section>
+    </main>
 
-    <footer>
+    <footer role="contentinfo">
         <div class="footer-content">
             <div class="footer-links">
                 <a href="#home">Home</a>
