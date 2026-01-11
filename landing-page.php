@@ -10,6 +10,8 @@
     <!-- Font Awesome from Cloudflare CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    
     <style>
         * {
             margin: 0;
@@ -599,13 +601,10 @@
         <div class="loader"></div>
     </div>
 
-    <!-- Scroll Progress Bar -->
     <div class="scroll-progress" id="scrollProgress"></div>
 
-    <!-- Animated Background -->
     <div class="bg-animation"></div>
 
-    <!-- Navigation -->
     <nav id="navbar">
         <div class="nav-container">
             <div class="logo"><i class="fas fa-bolt"></i> SMM Bot</div>
@@ -624,7 +623,6 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
     <section class="hero" id="home">
         <div class="hero-content">
             <h1>Social Media Engagement, Reimagined</h1>
@@ -639,7 +637,6 @@
         </div>
     </section>
 
-    <!-- Features Section -->
     <section id="features">
         <h2 class="section-title">Powerful Features</h2>
         <p class="section-subtitle">Everything you need to manage social media engagement campaigns</p>
@@ -683,7 +680,6 @@
         </div>
     </section>
 
-    <!-- Roles Section -->
     <section id="roles">
         <h2 class="section-title">Three Powerful Roles</h2>
         <p class="section-subtitle">Designed for clients, workers, and administrators</p>
@@ -730,7 +726,6 @@
         </div>
     </section>
 
-    <!-- Stats Section -->
     <section>
         <h2 class="section-title">By The Numbers</h2>
         <div class="stats-grid">
@@ -753,7 +748,6 @@
         </div>
     </section>
 
-    <!-- Technology Section -->
     <section id="tech">
         <h2 class="section-title">Built With Modern Technology</h2>
         <p class="section-subtitle">Robust, scalable, and efficient tech stack</p>
@@ -770,20 +764,21 @@
         </div>
     </section>
 
-    <!-- CTA Section -->
     <section>
         <div class="cta-section">
             <h2>Ready to Get Started?</h2>
             <p>Join our platform and experience the future of social media engagement management</p>
-            <a href="#contact" class="btn btn-secondary">Contact Us</a>
+            <a href="https://t.me/your_bot_username" class="btn btn-primary">Try Bot</a>
         </div>
     </section>
 
-    <!-- Contact Section -->
     <section id="contact">
         <h2 class="section-title">Get In Touch</h2>
         <p class="section-subtitle">Have questions? We'd love to hear from you</p>
-        <div style="text-align: center; margin-top: 2rem;">
+        <div style="text-align: center; margin-top: 1.5rem;">
+            <a href="https://t.me/your_contact_username" class="btn btn-primary">Contact Us</a>
+        </div>
+        <div style="text-align: center; margin-top: 3rem;">
             <p style="color: var(--text-secondary); font-size: 1.1rem;">
                 This is an open-source project licensed under BSD 3-Clause License.<br>
                 Connect with us on Telegram to learn more about deployment and customization.
@@ -791,7 +786,6 @@
         </div>
     </section>
 
-    <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-links">
@@ -803,159 +797,150 @@
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2026 SMM Telegram Bot. Licensed under BSD 3-Clause License.</p>
-                <p>Built with PHP Native & Telegram Bot API</p>
+                <p>Built with ❤ by Faris AY</p>
             </div>
         </div>
     </footer>
 
     <script>
-        // Page Loading
-        window.addEventListener('load', function() {
-            setTimeout(function() {
-                document.getElementById('loading').classList.add('hide');
-            }, 500);
-        });
-
-        // Scroll Progress Bar
-        window.addEventListener('scroll', function() {
-            var winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-            var height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-            var scrolled = (winScroll / height) * 100;
-            document.getElementById('scrollProgress').style.width = scrolled + '%';
-        });
-
-        // Navbar Scroll Effect
-        var navbar = document.getElementById('navbar');
-        window.addEventListener('scroll', function() {
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-
-        // Mobile Navigation Toggle
-        var mobileToggle = document.getElementById('mobileToggle');
-        var navLinks = document.getElementById('navLinks');
-        
-        mobileToggle.addEventListener('click', function() {
-            navLinks.classList.toggle('active');
-        });
-
-        // Close mobile menu when clicking a link
-        var links = document.querySelectorAll('.nav-links a');
-        links.forEach(function(link) {
-            link.addEventListener('click', function() {
-                navLinks.classList.remove('active');
+        $(document).ready(function() {
+            // Page Loading
+            $(window).on('load', function() {
+                setTimeout(function() {
+                    $('#loading').addClass('hide');
+                }, 500);
             });
-        });
 
-        // Smooth Scrolling
-        document.querySelectorAll('a[href^="#"]').forEach(function(anchor) {
-            anchor.addEventListener('click', function(e) {
+            // Scroll Progress Bar
+            $(window).on('scroll', function() {
+                var winScroll = $(window).scrollTop();
+                var height = $(document).height() - $(window).height();
+                var scrolled = (winScroll / height) * 100;
+                $('#scrollProgress').css('width', scrolled + '%');
+            });
+
+            // Navbar Scroll Effect
+            $(window).on('scroll', function() {
+                if ($(window).scrollTop() > 50) {
+                    $('#navbar').addClass('scrolled');
+                } else {
+                    $('#navbar').removeClass('scrolled');
+                }
+            });
+
+            // Mobile Navigation Toggle
+            $('#mobileToggle').on('click', function() {
+                $('#navLinks').toggleClass('active');
+            });
+
+            // Close mobile menu when clicking a link
+            $('.nav-links a').on('click', function() {
+                $('#navLinks').removeClass('active');
+            });
+
+            // Smooth Scrolling
+            $('a[href^="#"]').on('click', function(e) {
                 e.preventDefault();
-                var target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    var offset = 80;
-                    var targetPosition = target.offsetTop - offset;
-                    window.scrollTo({
-                        top: targetPosition,
-                        behavior: 'smooth'
+                var target = $(this.getAttribute('href'));
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 80
+                    }, 800);
+                }
+            });
+
+            // Scroll Animation Observer
+            var observerOptions = {
+                threshold: 0.15,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        $(entry.target).addClass('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all animated elements
+            $('[data-animate]').each(function() {
+                observer.observe(this);
+            });
+
+            // Counter Animation for Stats
+            function animateCounter(element) {
+                var $element = $(element);
+                var target = $element.text();
+                var isPercentage = target.includes('%');
+                var isPlus = target.includes('+');
+                var number = parseInt(target.replace(/\D/g, ''));
+                var duration = 2000;
+                var step = number / (duration / 16);
+                var current = 0;
+                
+                var timer = setInterval(function() {
+                    current += step;
+                    if (current >= number) {
+                        current = number;
+                        clearInterval(timer);
+                    }
+                    
+                    var displayValue = Math.floor(current);
+                    if (isPlus) displayValue += '+';
+                    if (isPercentage) displayValue += '%';
+                    
+                    $element.text(displayValue);
+                }, 16);
+            }
+
+            // Observe stat cards for counter animation
+            var statObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        $(entry.target).addClass('visible');
+                        var counter = $(entry.target).find('.stat-number');
+                        if (counter.length) {
+                            animateCounter(counter[0]);
+                        }
+                        statObserver.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            $('.stat-card').each(function() {
+                statObserver.observe(this);
+            });
+
+            // Parallax effect for hero
+            $(window).on('scroll', function() {
+                var scrolled = $(window).scrollTop();
+                var $hero = $('.hero-content');
+                if ($hero.length && scrolled < $(window).height()) {
+                    $hero.css({
+                        'transform': 'translateY(' + (scrolled * 0.5) + 'px)',
+                        'opacity': 1 - (scrolled / 700)
                     });
                 }
             });
-        });
 
-        // Scroll Animation Observer
-        var observerOptions = {
-            threshold: 0.15,
-            rootMargin: '0px 0px -50px 0px'
-        };
-
-        var observer = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
+            // Add stagger delay to animations
+            $('.features-grid .feature-card').each(function(index) {
+                $(this).css('animation-delay', (index * 0.1) + 's');
             });
-        }, observerOptions);
 
-        // Observe all animated elements
-        var animatedElements = document.querySelectorAll('[data-animate]');
-        animatedElements.forEach(function(element) {
-            observer.observe(element);
-        });
-
-        // Counter Animation for Stats
-        function animateCounter(element) {
-            var target = element.innerText;
-            var isPercentage = target.includes('%');
-            var isPlus = target.includes('+');
-            var number = parseInt(target.replace(/\D/g, ''));
-            var duration = 2000;
-            var step = number / (duration / 16);
-            var current = 0;
-            
-            var timer = setInterval(function() {
-                current += step;
-                if (current >= number) {
-                    current = number;
-                    clearInterval(timer);
-                }
-                
-                var displayValue = Math.floor(current);
-                if (isPlus) displayValue += '+';
-                if (isPercentage) displayValue += '%';
-                
-                element.innerText = displayValue;
-            }, 16);
-        }
-
-        // Observe stat cards for counter animation
-        var statObserver = new IntersectionObserver(function(entries) {
-            entries.forEach(function(entry) {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    var counter = entry.target.querySelector('.stat-number');
-                    if (counter) {
-                        animateCounter(counter);
-                    }
-                    statObserver.unobserve(entry.target);
-                }
+            $('.roles-container .role-card').each(function(index) {
+                $(this).css('animation-delay', (index * 0.15) + 's');
             });
-        }, observerOptions);
 
-        var statCards = document.querySelectorAll('.stat-card');
-        statCards.forEach(function(card) {
-            statObserver.observe(card);
-        });
+            $('.tech-badge').each(function(index) {
+                $(this).css('animation-delay', (index * 0.05) + 's');
+            });
 
-        // Parallax effect for hero
-        window.addEventListener('scroll', function() {
-            var scrolled = window.pageYOffset;
-            var hero = document.querySelector('.hero-content');
-            if (hero && scrolled < window.innerHeight) {
-                hero.style.transform = 'translateY(' + (scrolled * 0.5) + 'px)';
-                hero.style.opacity = 1 - (scrolled / 700);
-            }
-        });
-
-        // Add stagger delay to animations
-        document.querySelectorAll('.features-grid .feature-card').forEach(function(card, index) {
-            card.style.animationDelay = (index * 0.1) + 's';
-        });
-
-        document.querySelectorAll('.roles-container .role-card').forEach(function(card, index) {
-            card.style.animationDelay = (index * 0.15) + 's';
-        });
-
-        document.querySelectorAll('.tech-badge').forEach(function(badge, index) {
-            badge.style.animationDelay = (index * 0.05) + 's';
-        });
-
-        document.querySelectorAll('.stat-card').forEach(function(card, index) {
-            card.style.animationDelay = (index * 0.1) + 's';
+            $('.stat-card').each(function(index) {
+                $(this).css('animation-delay', (index * 0.1) + 's');
+            });
         });
     </script>
 </body>
