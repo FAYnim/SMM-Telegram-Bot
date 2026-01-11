@@ -7,7 +7,7 @@ if (!$update_result) {
     return;
 }
 
-$bot->deleteMessage($chat_id, $msg_id);
+//$bot->deleteMessage($chat_id, $msg_id);
 
 // Cek apakah user adalah admin
 $admin = db_read('smm_admins', ['chatid' => $chat_id]);

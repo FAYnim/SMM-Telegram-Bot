@@ -215,7 +215,11 @@ if(!$cb_data){
 	}
 } else {
 	// ADMIN
+	
 	// topup
+	if($cb_data == "deposit_admin") {
+		require_once 'reply/deposit-admin.php';
+	}
 	if(strpos($cb_data, 'admin_approve_topup_') === 0) {
 		require_once 'reply/admin-topup.php';
 	}

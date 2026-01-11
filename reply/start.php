@@ -36,16 +36,16 @@
             
         $keyboard = $bot->buildInlineKeyboard([
             [
-                ['text' => '✅ Verifikasi Tugas', 'callback_data' => '/verifikasi'],
-                ['text' => '💰 Cek Deposit', 'callback_data' => '/deposit']
+                ['text' => '✅ Verifikasi Tugas', 'callback_data' => 'verifikasi'],
+                ['text' => '💰 Cek Deposit', 'callback_data' => 'deposit_admin']
             ],
             [
-                ['text' => '💸 Proses Withdraw', 'callback_data' => '/withdraw_admin'],
-                ['text' => '👥 Kelola User', 'callback_data' => '/manage_user']
+                ['text' => '💸 Proses Withdraw', 'callback_data' => 'withdraw_admin'],
+                ['text' => '👥 Kelola User', 'callback_data' => 'manage_user']
             ],
             [
-                ['text' => '📊 Statistik', 'callback_data' => '/laporan'],
-                ['text' => '⚙️ Settings', 'callback_data' => '/settings']
+                ['text' => '📊 Statistik', 'callback_data' => 'laporan'],
+                ['text' => '⚙️ Settings', 'callback_data' => 'settings']
             ]
         ]);
     }
