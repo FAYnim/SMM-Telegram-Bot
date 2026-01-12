@@ -15,12 +15,25 @@ if($platform == "dana") $display_platform = "DANA"; // Fix capitalization
 $reply = "💎 <b>Topup via " . $display_platform . "</b>\n\n";
 $reply .= "Silakan transfer dana deposit Anda ke nomor berikut:\n\n";
 
+$payment_settings = db_read('smm_settings', ['category' => 'payment']);
+
+$payment_data = [];
+if(!empty($payment_settings)) {
+	foreach($payment_settings as $setting) {
+		$payment_data[$setting['setting_key']] = $setting['setting_value'];
+	}
+}
+
 if($platform == "dana") {
-	$reply .= "📞 <b>0812-3456-7890</b>\n";
-	$reply .= "A/N: <b>Admin SMM</b>\n";
+	$dana_number = $payment_data['dana_number'] ?? 'Belum diatur';
+	$dana_name = $payment_data['dana_name'] ?? 'Belum diatur';
+	$reply .= "📞 <b>" . $dana_number . "</b>\n";
+	$reply .= "A/N: <b>" . $dana_name . "</b>\n";
 } elseif ($platform == "shopeepay") {
-	$reply .= "📞 <b>0812-3456-7890</b>\n";
-	$reply .= "A/N: <b>Admin SMM</b>\n";
+	$shopeepay_number = $payment_data['shopeepay_number'] ?? 'Belum diatur';
+	$shopeepay_name = $payment_data['shopeepay_name'] ?? 'Belum diatur';
+	$reply .= "📞 <b>" . $shopeepay_number . "</b>\n";
+	$reply .= "A/N: <b>" . $shopeepay_name . "</b>\n";
 }
 
 $reply .= "\n⚠️ <b>Penting:</b>\n";
