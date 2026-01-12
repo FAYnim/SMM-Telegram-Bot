@@ -127,6 +127,9 @@ if(!$cb_data){
 	if ($menu == 'settings_edit_dana' || $menu == 'settings_edit_shopeepay') {
 		require_once 'reply/settings-process-payment.php';
 	}
+	if ($menu == 'settings_edit_min_withdraw' || $menu == 'settings_edit_admin_fee') {
+		require_once 'reply/settings-process-withdraw.php';
+	}
 
 	// Withdraw
 	if ($menu == 'withdraw_amount') {
