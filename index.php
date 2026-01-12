@@ -270,6 +270,9 @@ if(!$cb_data){
 	if($cb_data == "settings") {
 		require_once 'reply/settings.php';
 	}
+	if($cb_data == "settings_payment") {
+		require_once 'reply/settings-payment.php';
+	}
 
 	// Close Notification
 	if($cb_data == "close_notif") {
