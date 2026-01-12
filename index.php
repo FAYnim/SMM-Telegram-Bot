@@ -276,6 +276,9 @@ if(!$cb_data){
 	if($cb_data == "settings_payment") {
 		require_once 'reply/settings-payment.php';
 	}
+	if($cb_data == "settings_withdraw") {
+		require_once 'reply/settings-withdraw.php';
+	}
 	if($cb_data == "settings_edit_dana" || $cb_data == "settings_edit_shopeepay") {
 		require_once 'reply/settings-edit-payment.php';
 	}
