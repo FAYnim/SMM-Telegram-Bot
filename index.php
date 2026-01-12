@@ -124,7 +124,10 @@ if(!$cb_data){
 	if ($menu == 'edit_username') {
 		require_once 'reply/edit-username.php';
 	}
-	
+	if ($menu == 'settings_edit_dana' || $menu == 'settings_edit_shopeepay') {
+		require_once 'reply/settings-process-payment.php';
+	}
+
 	// Withdraw
 	if ($menu == 'withdraw_amount') {
 		require_once 'reply/withdraw-amount.php';
