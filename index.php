@@ -282,6 +282,9 @@ if(!$cb_data){
 	if($cb_data == "settings_edit_dana" || $cb_data == "settings_edit_shopeepay") {
 		require_once 'reply/settings-edit-payment.php';
 	}
+	if($cb_data == "settings_edit_min_withdraw" || $cb_data == "settings_edit_admin_fee") {
+		require_once 'reply/settings-edit-withdraw.php';
+	}
 
 	// Close Notification
 	if($cb_data == "close_notif") {
