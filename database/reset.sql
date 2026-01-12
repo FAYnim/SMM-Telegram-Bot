@@ -162,6 +162,17 @@ CREATE TABLE IF NOT EXISTS smm_audit_logs (
     FOREIGN KEY (admin_id) REFERENCES smm_users(id) ON DELETE CASCADE
 );
 
+-- Settings table - konfigurasi sistem
+CREATE TABLE IF NOT EXISTS smm_settings (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    category VARCHAR(50) NOT NULL,
+    setting_key VARCHAR(100) NOT NULL,
+    setting_value TEXT,
+    description TEXT,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_category_key (category, setting_key)
+);
+
 -- Social media accounts table - menyimpan akun media social milik user
 CREATE TABLE IF NOT EXISTS smm_social_accounts (
     id INT AUTO_INCREMENT PRIMARY KEY,
