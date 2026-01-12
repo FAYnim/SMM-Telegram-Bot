@@ -15,8 +15,18 @@ if (!is_numeric($amount) || $amount <= 0) {
 
 $amount = (int) $amount;
 
-// Cek minimal withdraw (Rp 1.000)
+// Cek minimal withdraw dari settings
+$settings = db_read('smm_settings', ['category' => 'withdraw']);
 $min_withdraw = 1000;
+if(!empty($settings)) {
+	foreach($settings as $setting) {
+		if($setting['setting_key'] == 'min_withdraw') {
+			$min_withdraw = intval($setting['setting_value']);
+			break;
+		}
+	}
+}
+
 if ($amount < $min_withdraw) {
     $reply = "❌ <b>Nominal Terlalu Kecil</b>\n\n"
         . "Nominal: Rp " . number_format($amount, 0, ',', '.') . "\n"
