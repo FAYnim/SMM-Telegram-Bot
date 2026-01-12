@@ -266,6 +266,11 @@ if(!$cb_data){
 		require_once 'reply/withdraw-admin.php';
 	}
 
+	// settings
+	if($cb_data == "settings") {
+		require_once 'reply/settings.php';
+	}
+
 	// Close Notification
 	if($cb_data == "close_notif") {
 		require_once 'reply/close-notif.php';
