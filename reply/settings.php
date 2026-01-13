@@ -11,12 +11,12 @@
 	
 	$keyboard = $bot->buildInlineKeyboard([
 		[
-			['text' => '💳 Pengaturan Pembayaran', 'callback_data' => 'settings_payment'],
-			['text' => '💸 Pengaturan Withdraw', 'callback_data' => 'settings_withdraw']
+			['text' => '💳 Topup', 'callback_data' => 'settings_payment'],
+			['text' => '💸 Withdraw', 'callback_data' => 'settings_withdraw']
 		],
 		[
-			['text' => '📋 Pengaturan Tugas', 'callback_data' => 'settings_task'],
-			['text' => '📢 Pengaturan Campaign', 'callback_data' => 'settings_campaign']
+			['text' => '📋 Tugas', 'callback_data' => 'settings_task'],
+//			['text' => '📢 Pengaturan Campaign', 'callback_data' => 'settings_campaign']
 		],
 		[
 			['text' => '🔙 Kembali', 'callback_data' => '/start']
