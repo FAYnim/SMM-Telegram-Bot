@@ -124,7 +124,16 @@ if(!$cb_data){
 	if ($menu == 'edit_username') {
 		require_once 'reply/edit-username.php';
 	}
-	
+	if ($menu == 'settings_edit_dana' || $menu == 'settings_edit_shopeepay') {
+		require_once 'reply/settings-process-payment.php';
+	}
+	if ($menu == 'settings_edit_min_withdraw' || $menu == 'settings_edit_admin_fee') {
+		require_once 'reply/settings-process-withdraw.php';
+	}
+	if ($menu == 'settings_edit_min_price_per_task') {
+		require_once 'reply/settings-process-campaign.php';
+	}
+
 	// Withdraw
 	if ($menu == 'withdraw_amount') {
 		require_once 'reply/withdraw-amount.php';
@@ -264,6 +273,29 @@ if(!$cb_data){
 	// withdraw
 	if($cb_data == "withdraw_admin") {
 		require_once 'reply/withdraw-admin.php';
+	}
+
+	// settings
+	if($cb_data == "settings") {
+		require_once 'reply/settings.php';
+	}
+	if($cb_data == "settings_payment") {
+		require_once 'reply/settings-payment.php';
+	}
+	if($cb_data == "settings_withdraw") {
+		require_once 'reply/settings-withdraw.php';
+	}
+	if($cb_data == "settings_campaign") {
+		require_once 'reply/settings-campaign.php';
+	}
+	if($cb_data == "settings_edit_dana" || $cb_data == "settings_edit_shopeepay") {
+		require_once 'reply/settings-edit-payment.php';
+	}
+	if($cb_data == "settings_edit_min_withdraw" || $cb_data == "settings_edit_admin_fee") {
+		require_once 'reply/settings-edit-withdraw.php';
+	}
+	if($cb_data == "settings_edit_min_price_per_task") {
+		require_once 'reply/settings-edit-campaign.php';
 	}
 
 	// Close Notification

@@ -32,8 +32,17 @@ if (empty($wallet_result)) {
 
 $current_profit = $wallet_result[0]['profit'];
 
-// Cek minimal withdraw (Rp 1.000)
+// Cek minimal withdraw dari settings
+$settings = db_read('smm_settings', ['category' => 'withdraw']);
 $min_withdraw = 1000;
+if(!empty($settings)) {
+	foreach($settings as $setting) {
+		if($setting['setting_key'] == 'min_withdraw') {
+			$min_withdraw = intval($setting['setting_value']);
+			break;
+		}
+	}
+}
 
 if ($current_profit < $min_withdraw) {
     $reply = "❌ <b>Saldo Tidak Mencukupi</b>\n\n"
