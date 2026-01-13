@@ -20,13 +20,6 @@ if ($msg_id) {
     $bot->deleteMessage($chat_id, $msg_id);
 }
 
-$update_result = updateUserPosition($chat_id, 'buat_campaign_finish');
-
-if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
-    return;
-}
-
 // Ambil semua data campaign yang baru dibuat
 $campaign = db_query("SELECT id, campaign_title, type, link_target, price_per_task, target_total, campaign_balance, created_at "
     ."FROM smm_campaigns "
@@ -36,8 +29,42 @@ $campaign = db_query("SELECT id, campaign_title, type, link_target, price_per_ta
 if (!empty($campaign)) {
     $campaign_data = $campaign[0];
 
-    // Kalkulasi price_per_task
+    $settings = db_read('smm_settings', ['category' => 'campaign']);
+    $min_price_per_task = 100;
+    if(!empty($settings)) {
+        foreach($settings as $setting) {
+            if($setting['setting_key'] == 'min_price_per_task') {
+                $min_price_per_task = intval($setting['setting_value']);
+                break;
+            }
+        }
+    }
+
     $price_per_task = $campaign_data['campaign_balance'] / $target;
+
+    if($price_per_task < $min_price_per_task) {
+        $reply = "❌ <b>Harga Per Task Terlalu Rendah</b>\n\n";
+        $reply .= "Harga per task yang kamu masukkan adalah Rp " . number_format($price_per_task, 0, ',', '.') . "\n";
+        $reply .= "Minimum harga per task adalah Rp " . number_format($min_price_per_task, 0, ',', '.') . "\n\n";
+        $reply .= "<b>Solusi:</b>\n";
+        $reply .= "• Tambah total budget campaign, atau\n";
+        $reply .= "• Kurangi jumlah target task\n\n";
+        $reply .= "Silakan buat campaign baru!";
+
+        $keyboard = $bot->buildInlineKeyboard([
+            [
+                ['text' => '🔙 Kembali', 'callback_data' => '/cek_campaign']
+            ]
+        ]);
+
+        $result = $bot->sendMessageWithKeyboard($chat_id, $reply, $keyboard, null, 'HTML');
+        $new_msg_id = $result['result']['message_id'] ?? null;
+
+        if ($new_msg_id) {
+            db_execute("UPDATE smm_users SET msg_id = ? WHERE chatid = ?", [$new_msg_id, $chat_id]);
+        }
+        return;
+    }
 
     // Update price_per_task di database
     db_execute("UPDATE smm_campaigns SET price_per_task = ? WHERE id = ?", [$price_per_task, $campaign_data['id']]);
@@ -70,6 +97,14 @@ $keyboard = $bot->buildInlineKeyboard([
         ['text' => '❌ Batal', 'callback_data' => '/cek_campaign']
     ]
 ]);
+
+
+$update_result = updateUserPosition($chat_id, 'buat_campaign_finish');
+
+if (!$update_result) {
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+    return;
+}
 
 // Kirim pesan baru dengan keyboard dan dapatkan msg_id baru
 $result = $bot->sendMessageWithKeyboard($chat_id, $reply, $keyboard);
