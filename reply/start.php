@@ -43,10 +43,10 @@
                 ['text' => '💰 Cek Deposit', 'callback_data' => 'deposit_admin'],
                 ['text' => '💸 Proses Withdraw', 'callback_data' => 'withdraw_admin']
             ],
-            [
-                ['text' => '👥 Kelola User', 'callback_data' => 'manage_user'],
-                ['text' => '📊 Statistik', 'callback_data' => 'laporan']
-            ],
+ //           [
+ //               ['text' => '👥 Kelola User', 'callback_data' => 'manage_user'],
+ //               ['text' => '📊 Statistik', 'callback_data' => 'laporan']
+ //           ],
             [
                 ['text' => '⚙️ Settings', 'callback_data' => 'settings']
             ]
