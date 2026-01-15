@@ -10,7 +10,7 @@ INSERT INTO smm_admins (
     permissions,
     msg_id
 ) VALUES (
-    602602159,
+    010101010,
     'admin01',
     'first_name',
     '',
