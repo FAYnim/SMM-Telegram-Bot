@@ -1,14 +1,30 @@
 <?php
+require_once 'helpers/error-handler.php';
+
 // Validasi input target
 $target = trim($message);
 if (empty($target)) {
-    $bot->sendMessage($chat_id, "❌ Target total tidak boleh kosong!\n\nSilakan masukkan target total:");
+    $error_reply = "❌ Target total tidak boleh kosong!\n\nSilakan masukkan target total atau batal untuk membatalkan pembuatan campaign:";
+    sendErrorWithBackButton(
+        $bot, 
+        $chat_id, 
+        $msg_id,
+        $error_reply,
+        "/cek_campaign"
+    );
     return;
 }
 
 // Validasi numeric
 if (!is_numeric($target) || $target <= 0) {
-    $bot->sendMessage($chat_id, "❌ Target total harus berupa angka positif!\n\nSilakan masukkan target total:");
+    $error_reply = "❌ Target total harus berupa angka positif!\n\nSilakan masukkan target total atau batal untuk membatalkan pembuatan campaign:";
+    sendErrorWithBackButton(
+        $bot, 
+        $chat_id, 
+        $msg_id,
+        $error_reply,
+        "/cek_campaign"
+    );
     return;
 }
 
@@ -43,26 +59,21 @@ if (!empty($campaign)) {
     $price_per_task = $campaign_data['campaign_balance'] / $target;
 
     if($price_per_task < $min_price_per_task) {
-        $reply = "❌ <b>Harga Per Task Terlalu Rendah</b>\n\n";
-        $reply .= "Harga per task yang kamu masukkan adalah Rp " . number_format($price_per_task, 0, ',', '.') . "\n";
-        $reply .= "Minimum harga per task adalah Rp " . number_format($min_price_per_task, 0, ',', '.') . "\n\n";
-        $reply .= "<b>Solusi:</b>\n";
-        $reply .= "• Tambah total budget campaign, atau\n";
-        $reply .= "• Kurangi jumlah target task\n\n";
-        $reply .= "Silakan buat campaign baru!";
+        $error_reply = "❌ <b>Harga Per Task Terlalu Rendah</b>\n\n";
+        $error_reply .= "Harga per task yang kamu masukkan adalah Rp " . number_format($price_per_task, 0, ',', '.') . "\n";
+        $error_reply .= "Minimum harga per task adalah Rp " . number_format($min_price_per_task, 0, ',', '.') . "\n\n";
+        $error_reply .= "<b>Solusi:</b>\n";
+        $error_reply .= "• Tambah total budget campaign, atau\n";
+        $error_reply .= "• Kurangi jumlah target task\n\n";
+        $error_reply .= "Silakan buat campaign baru!";
 
-        $keyboard = $bot->buildInlineKeyboard([
-            [
-                ['text' => '🔙 Kembali', 'callback_data' => '/cek_campaign']
-            ]
-        ]);
-
-        $result = $bot->sendMessageWithKeyboard($chat_id, $reply, $keyboard, null, 'HTML');
-        $new_msg_id = $result['result']['message_id'] ?? null;
-
-        if ($new_msg_id) {
-            db_execute("UPDATE smm_users SET msg_id = ? WHERE chatid = ?", [$new_msg_id, $chat_id]);
-        }
+        sendErrorWithBackButton(
+            $bot, 
+            $chat_id, 
+            $msg_id,
+            $error_reply,
+            "/cek_campaign"
+        );
         return;
     }
 

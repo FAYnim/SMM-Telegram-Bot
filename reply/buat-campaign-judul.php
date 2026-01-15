@@ -1,8 +1,17 @@
 <?php
+require_once 'helpers/error-handler.php';
+
 // Validasi input judul
 $judul = trim($message);
 if (empty($judul)) {
-    $bot->sendMessage($chat_id, "❌ Judul campaign tidak boleh kosong!\n\nSilakan masukkan judul campaign:");
+    $error_reply = "❌ Judul campaign tidak boleh kosong!\n\nSilakan masukkan judul campaign atau batal untuk membatalkan pembuatan campaign:";
+    sendErrorWithBackButton(
+        $bot, 
+        $chat_id, 
+        $msg_id,
+        $error_reply,
+        "/cek_campaign"
+    );
     return;
 }
 
