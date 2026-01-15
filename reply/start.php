@@ -1,12 +1,14 @@
 <?php
 
     // Update posisi user ke main
-    $update_result = updateUserPosition($chat_id, 'main');
-    
-    if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
-        return;
-    }
+	if($menu != "main") {
+		$update_result = updateUserPosition($chat_id, 'main');
+		
+		if (!$update_result) {
+			$bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+			return;
+		}
+	}
     
     $full_name = trim($first_name . ' ' . $last_name);
     $reply = "👋 Halo <b>" . $full_name . "</b>!\n\n";
