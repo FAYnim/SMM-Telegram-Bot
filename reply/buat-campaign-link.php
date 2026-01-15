@@ -1,20 +1,17 @@
 <?php
+require_once 'helpers/error-handler.php';
+
 // Validasi input
 $link = trim($message);
 if (empty($link)) {
-    if ($msg_id) {
-        $bot->deleteMessage($chat_id, $msg_id);
-    }
-    $keyboard = $bot->buildInlineKeyboard([
-        [
-            ['text' => '🔙 Kembali', 'callback_data' => '/cek_campaign']
-        ]
-    ]);
-    $result = $bot->sendMessageWithKeyboard($chat_id, "❌ Link tidak boleh kosong!\n\nSilakan masukkan link target atau batal untuk membatalkan pembuatan campaign:", $keyboard);
-    $new_msg_id = $result['result']['message_id'] ?? null;
-    if ($new_msg_id) {
-        db_execute("UPDATE smm_users SET msg_id = ? WHERE chatid = ?", [$new_msg_id, $chat_id]);
-    }
+	$error_reply = "❌ Link tidak boleh kosong!\n\nSilakan masukkan link target atau batal untuk membatalkan pembuatan campaign:";
+    sendErrorWithBackButton(
+        $bot, 
+        $chat_id, 
+        $msg_id,
+		$error_reply,
+		"/cek_campaign"
+    );
     return;
 }
 
@@ -23,19 +20,14 @@ $is_instagram = (strpos($link, 'instagram.com') !== false || strpos($link, 'inst
 $is_tiktok = strpos($link, 'tiktok.com') !== false;
 
 if (!$is_instagram && !$is_tiktok) {
-    if ($msg_id) {
-        $bot->deleteMessage($chat_id, $msg_id);
-    }
-    $keyboard = $bot->buildInlineKeyboard([
-        [
-            ['text' => '🔙 Kembali', 'callback_data' => '/cek_campaign']
-        ]
-    ]);
-    $result = $bot->sendMessageWithKeyboard($chat_id, "❌ Link tidak valid!\n\nHanya link Instagram atau TikTok yang diperbolehkan.\n\nFormat yang benar:\n• Instagram: https://www.instagram.com/p/xxx/\n• TikTok: https://www.tiktok.com/@username/video/xxx\n\nSilakan masukkan link kembali atau batal untuk membatalkan pembuatan campaign:", $keyboard);
-    $new_msg_id = $result['result']['message_id'] ?? null;
-    if ($new_msg_id) {
-        db_execute("UPDATE smm_users SET msg_id = ? WHERE chatid = ?", [$new_msg_id, $chat_id]);
-    }
+    $error_reply = "❌ Link tidak valid!\n\nHanya link Instagram atau TikTok yang diperbolehkan.\n\nFormat yang benar:\n• Instagram: https://www.instagram.com/p/xxx/\n• TikTok: https://www.tiktok.com/@username/video/xxx\n\nSilakan masukkan link kembali atau batal untuk membatalkan pembuatan campaign:";
+    sendErrorWithBackButton(
+        $bot, 
+        $chat_id, 
+        $msg_id,
+		$error_reply,
+		"/cek_campaign"
+    );
     return;
 }
 
