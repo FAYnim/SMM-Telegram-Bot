@@ -1,5 +1,7 @@
 <?php
 
+require_once 'helpers/error-handler.php';
+
 $update_result = updateUserPosition($chat_id, 'take_task');
 
 if (!$update_result) {
@@ -15,17 +17,18 @@ $task = db_query("SELECT campaign_id FROM smm_tasks "
 	."status = 'available'", [$task_id]);
 
 if (empty($task)) {
-    $reply = "❌ <b>Task Tidak Tersedia</b>\n\n";
-    $reply .= "Task ini sudah diambil oleh user lain atau campaign tidak lagi aktif.\n";
-    $reply .= "Silakan coba task lain!";
+    $error_message = "❌ <b>Task Tidak Tersedia</b>\n\n";
+    $error_message .= "Task ini sudah diambil oleh user lain atau campaign tidak lagi aktif.\n";
+    $error_message .= "Silakan coba task lain!";
 
-    $keyboard = $bot->buildInlineKeyboard([
+    $buttons = [
         [
             ['text' => '🔄 Cari Task Lagi', 'callback_data' => '/task_refresh'],
             ['text' => '🔙 Kembali', 'callback_data' => '/start']
         ]
-    ]);
-    $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+    ];
+
+    editErrorWithCustomButtons($bot, $chat_id, $msg_id, $error_message, $buttons);
     return;
 }
 
@@ -37,16 +40,17 @@ $campaign = db_query("SELECT id, campaign_title, type, link_target, price_per_ta
 	."id = ? AND status = 'active'", [$campaign_id]);
 
 if (empty($campaign)) {
-    $reply = "❌ <b>Campaign Tidak Tersedia</b>\n\n";
-    $reply .= "Silakan coba refresh lagi!";
+    $error_message = "❌ <b>Campaign Tidak Tersedia</b>\n\n";
+    $error_message .= "Silakan coba refresh lagi!";
 
-    $keyboard = $bot->buildInlineKeyboard([
+    $buttons = [
         [
             ['text' => '🔄 Cari Task Lagi', 'callback_data' => '/task_refresh'],
             ['text' => '🔙 Kembali', 'callback_data' => '/start']
         ]
-    ]);
-    $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+    ];
+
+    editErrorWithCustomButtons($bot, $chat_id, $msg_id, $error_message, $buttons);
     return;
 }
 
@@ -60,22 +64,22 @@ $campaign_title = $campaign_data['campaign_title'];
 // Cek apakah user sudah pernah ambil task dari campaign ini
 $existing_task = db_query("SELECT COUNT(*) as count "
     ."FROM smm_tasks "
-    ."WHERE worker_id = ? AND campaign_id = ? AND status IN ('taken', 'pending_review', 'approved')", [$user_id, $task['campaign_id']]);
+    ."WHERE worker_id = ? AND campaign_id = ? AND status IN ('taken', 'pending_review', 'approved')", [$user_id, $campaign_id]);
 
 if ($existing_task[0]['count'] > 0) {
-    $reply = "❌ <b>Kamu Sudah Mengerjakan Campaign Ini</b>\n\n";
-    $reply .= "Kamu sudah mengambil task dari campaign \"" . htmlspecialchars($task['campaign_title']) . "\".\n";
-    $reply .= "Setiap campaign hanya bisa dikerjakan sekali per user.\n\n";
-    $reply .= "Silakan coba task lain!";
+    $error_message = "❌ <b>Kamu Sudah Mengerjakan Campaign Ini</b>\n\n";
+    $error_message .= "Kamu sudah mengambil task dari campaign \"" . htmlspecialchars($campaign_title) . "\".\n";
+    $error_message .= "Setiap campaign hanya bisa dikerjakan sekali per user.\n\n";
+    $error_message .= "Silakan coba task lain!";
 
-    $keyboard = $bot->buildInlineKeyboard([
+    $buttons = [
         [
             ['text' => '🔄 Cari Task Lagi', 'callback_data' => '/task_refresh'],
             ['text' => '🔙 Kembali', 'callback_data' => '/start']
         ]
-    ]);
+    ];
 
-    $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+    editErrorWithCustomButtons($bot, $chat_id, $msg_id, $error_message, $buttons);
     return;
 }
 
@@ -89,18 +93,18 @@ $update_data = [
 $task_updated = db_update('smm_tasks', $update_data, ['id' => $task_id]);
 
 if (!$task_updated) {
-    $reply = "❌ <b>Gagal Mengambil Task</b>\n\n";
-    $reply .= "Terjadi kesalahan saat mengambil task.\n";
-    $reply .= "Silakan coba lagi!";
+    $error_message = "❌ <b>Gagal Mengambil Task</b>\n\n";
+    $error_message .= "Terjadi kesalahan saat mengambil task.\n";
+    $error_message .= "Silakan coba lagi!";
 
-    $keyboard = $bot->buildInlineKeyboard([
+    $buttons = [
         [
             ['text' => '🔄 Coba Lagi', 'callback_data' => '/task_refresh'],
             ['text' => '🔙 Kembali', 'callback_data' => '/start']
         ]
-    ]);
+    ];
 
-    $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+    editErrorWithCustomButtons($bot, $chat_id, $msg_id, $error_message, $buttons);
     return;
 }
 
