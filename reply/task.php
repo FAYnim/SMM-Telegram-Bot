@@ -21,9 +21,14 @@ if ($cb_data != '/task_refresh') {
 
 $reply = "📋 <b>Task Tersedia</b>\n\n";
 
+// Cari campaign aktif dan belum pernah dikerjakan user
 $campaign = db_query("SELECT id, campaign_title, type, link_target, price_per_task "
 	."FROM smm_campaigns WHERE status = 'active' AND client_id != ? "
-	."ORDER BY price_per_task DESC LIMIT 0,1", [$user_id]);
+	."AND NOT EXISTS ("
+	."    SELECT 1 FROM smm_tasks WHERE campaign_id = smm_campaigns.id "
+	."    AND worker_id = ? AND status IN ('taken', 'pending_review', 'approved')"
+	.") "
+	."ORDER BY price_per_task DESC LIMIT 0,1", [$user_id, $user_id]);
 
 if (empty($campaign)) {
     $error_message = "📋 <b>Task Tersedia</b>\n\n";
@@ -49,11 +54,17 @@ $campaign_link = $campaign_data['link_target'];
 $campaign_price = $campaign_data['price_per_task'];
 $campaign_title = $campaign_data['campaign_title'];
 
+// Cari slot task available dari campaign id yang aktif
 $task = db_query("SELECT id "
 	."FROM smm_tasks WHERE "
 	."status = 'available' AND "
-	."campaign_id = ? LIMIT 0,1",
-	[$campaign_id]);
+	."campaign_id = ? AND "
+	."NOT EXISTS ("
+	."    SELECT 1 FROM smm_tasks t2 WHERE t2.campaign_id = smm_tasks.campaign_id "
+	."    AND t2.worker_id = ? AND t2.status IN ('taken', 'pending_review', 'approved')"
+	.") "
+	."LIMIT 0,1",
+	[$campaign_id, $user_id]);
 
 if (empty($task)) {
     $error_message = "📋 <b>Task Tersedia</b>\n\n";
