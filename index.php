@@ -408,6 +408,9 @@ if(!$cb_data){
 	if($cb_data == "/edit_campaign") {
 		require_once 'reply/edit-campaign.php';
 	}
+	if($cb_data == "/campaign_topup") {
+		require_once 'reply/campaign-topup-list.php';
+	}
 	if(strpos($cb_data, '/select_campaign_') === 0) {
 		require_once 'reply/select-campaign.php';
 	}
