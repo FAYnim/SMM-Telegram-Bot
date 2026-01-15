@@ -1,5 +1,7 @@
 <?php
 
+require_once 'helpers/error-handler.php';
+
 // Extract Task ID from submenu (format: task_reject_{task_id})
 $parts = explode('_', $submenu);
 $task_id = $parts[2];
@@ -8,9 +10,13 @@ $task_id = $parts[2];
 $reason = trim($message);
 
 if (empty($reason)) {
-    $reply = "❌ <b>Alasan Wajib Diisi</b>\n";
-    $reply .= "Mohon berikan alasan penolakan agar worker mengerti mengapa task ditolak.";
-    $bot->sendMessage($chat_id, $reply, 'HTML');
+    $error_message = "❌ <b>Alasan Wajib Diisi</b>\n\n";
+    $error_message .= "Mohon berikan alasan penolakan agar worker mengerti mengapa task ditolak.\n\n";
+    $error_message .= "💡 <b>Tips:</b>\n";
+    $error_message .= "• Jelaskan apa yang salah dengan bukti screenshot\n";
+    $error_message .= "• Berikan instruksi apa yang perlu diperbaiki\n";
+    $error_message .= "• Gunakan bahasa yang sopan dan konstruktif";
+    sendSimpleError($bot, $chat_id, $error_message);
     return;
 }
 
@@ -23,7 +29,11 @@ $task_detail = db_query("SELECT t.*, c.campaign_title, c.type, u.full_name, u.ch
     ."LIMIT 1", [$task_id]);
 
 if (empty($task_detail)) {
-    $bot->sendMessage($chat_id, "❌ Task tidak ditemukan atau sudah diproses.");
+    $error_message = "❌ <b>Task Tidak Ditemukan</b>\n\n";
+    $error_message .= "Task ID: <code>" . $task_id . "</code>\n\n";
+    $error_message .= "Task ini tidak ditemukan atau sudah diproses oleh admin lain.\n";
+    $error_message .= "Silakan cek daftar task yang pending review.";
+    sendSimpleError($bot, $chat_id, $error_message);
     return;
 }
 

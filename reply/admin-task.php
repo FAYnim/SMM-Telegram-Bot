@@ -1,9 +1,14 @@
 <?php
 
+require_once 'helpers/error-handler.php';
+
 $update_result = updateUserPosition($chat_id, 'main', '');
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Gagal memperbarui status admin (Err: 1).");
+    $error_message = "❌ <b>Gagal Update Position</b>\n\n";
+    $error_message .= "Terjadi kesalahan saat memperbarui status admin.\n";
+    $error_message .= "Silakan coba lagi atau hubungi developer jika masalah berlanjut.";
+    sendSimpleError($bot, $chat_id, $error_message);
     return;
 }
 
@@ -12,13 +17,19 @@ $bot->deleteMessage($chat_id, $msg_id);
 // Cek apakah user adalah admin
 $admin = db_read('smm_admins', ['chatid' => $chat_id]);
 if (empty($admin)) {
-    $bot->sendMessage($chat_id, "❌ Akses ditolak! Anda bukan admin.");
+    $error_message = "❌ <b>Akses Ditolak</b>\n\n";
+    $error_message .= "Anda tidak memiliki akses sebagai admin.\n";
+    $error_message .= "Fitur ini hanya tersedia untuk admin yang terdaftar.";
+    sendSimpleError($bot, $chat_id, $error_message);
     return;
 }
 
 $admin_msg_id = $bot->getCallbackMessageId();
 if(!$admin_msg_id) {
-    $bot->sendMessage($chat_id, "❌ Gagal mengambil ID pesan (Err: 2).");
+    $error_message = "❌ <b>Gagal Ambil Message ID</b>\n\n";
+    $error_message .= "Terjadi kesalahan teknis saat mengambil ID pesan.\n";
+    $error_message .= "Silakan coba lagi atau hubungi developer.";
+    sendSimpleError($bot, $chat_id, $error_message);
     return;
 }
 
@@ -35,7 +46,10 @@ $task_id = end($parts);
 if(strpos($cb_data, "approve") !== false) {
     $update_result = updateUserPosition($chat_id, 'main', 'task_approve_'.$task_id);
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Gagal memperbarui posisi admin.");
+        $error_message = "❌ <b>Gagal Update Position</b>\n\n";
+        $error_message .= "Terjadi kesalahan saat memperbarui posisi admin untuk approve task.\n";
+        $error_message .= "Silakan coba lagi.";
+        sendSimpleError($bot, $chat_id, $error_message);
         return;
     }
 
@@ -48,9 +62,12 @@ if(strpos($cb_data, "approve") !== false) {
         ."LIMIT 1", [$task_id]);
 
     if (empty($task_detail)) {
-        $reply = "❌ <b>Task Tidak Ditemukan</b>\n\n";
-        $reply .= "Task ini tidak ada atau sudah diproses.";
-        $bot->editMessage($chat_id, $admin_msg_id, $reply, 'HTML');
+        $error_message = "❌ <b>Task Tidak Ditemukan</b>\n\n";
+        $error_message .= "Task ID: <code>" . $task_id . "</code>\n\n";
+        $error_message .= "Task ini tidak ada atau sudah diproses oleh admin lain.\n";
+        $error_message .= "Silakan cek daftar task yang pending review.";
+        
+        $bot->editMessage($chat_id, $admin_msg_id, $error_message, 'HTML');
         return;
     }
 
@@ -70,7 +87,10 @@ if(strpos($cb_data, "approve") !== false) {
 } elseif(strpos($cb_data, "reject") !== false) {
     $update_result = updateUserPosition($chat_id, 'main', 'task_reject_'.$task_id);
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Gagal memperbarui posisi admin.");
+        $error_message = "❌ <b>Gagal Update Position</b>\n\n";
+        $error_message .= "Terjadi kesalahan saat memperbarui posisi admin untuk reject task.\n";
+        $error_message .= "Silakan coba lagi.";
+        sendSimpleError($bot, $chat_id, $error_message);
         return;
     }
 
@@ -83,9 +103,12 @@ if(strpos($cb_data, "approve") !== false) {
         ."LIMIT 1", [$task_id]);
 
     if (empty($task_detail)) {
-        $reply = "❌ <b>Task Tidak Ditemukan</b>\n\n";
-        $reply .= "Task ini tidak ada atau sudah diproses.";
-        $bot->editMessage($chat_id, $admin_msg_id, $reply, 'HTML');
+        $error_message = "❌ <b>Task Tidak Ditemukan</b>\n\n";
+        $error_message .= "Task ID: <code>" . $task_id . "</code>\n\n";
+        $error_message .= "Task ini tidak ada atau sudah diproses oleh admin lain.\n";
+        $error_message .= "Silakan cek daftar task yang pending review.";
+        
+        $bot->editMessage($chat_id, $admin_msg_id, $error_message, 'HTML');
         return;
     }
 
@@ -101,6 +124,10 @@ if(strpos($cb_data, "approve") !== false) {
     $bot->editMessage($chat_id, $admin_msg_id, $reply, 'HTML');
 
 } else {
-    $bot->sendMessage($chat_id, "❌ Perintah tidak dikenali.");
+    $error_message = "❌ <b>Perintah Tidak Dikenali</b>\n\n";
+    $error_message .= "Callback data: <code>" . htmlspecialchars($cb_data) . "</code>\n\n";
+    $error_message .= "Perintah yang Anda coba jalankan tidak valid.\n";
+    $error_message .= "Silakan gunakan tombol yang tersedia atau hubungi developer.";
+    sendSimpleError($bot, $chat_id, $error_message);
 }
 ?>
