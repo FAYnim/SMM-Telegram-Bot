@@ -10,9 +10,9 @@ INSERT INTO smm_admins (
     permissions,
     msg_id
 ) VALUES (
-    602602159,
-    'Melly670',
-    'Fiaa',
+    010101010,
+    'admin01',
+    'first_name',
     '',
     'active',
     '{"all": true}',
@@ -28,10 +28,10 @@ INSERT INTO smm_admins (
     permissions,
     msg_id
 ) VALUES (
-    144717380,
-    'firman_sya_h',
-    'Indo',
-    'nesia',
+    123456789,
+    'admin02',
+    'first_name',
+    'last_name',
     'active',
     '{"all": true}',
     NULL

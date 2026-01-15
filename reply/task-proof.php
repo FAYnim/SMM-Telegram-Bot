@@ -1,11 +1,18 @@
 <?php
 
+require_once 'helpers/error-handler.php';
+
 /*$update_result = updateUserPosition($chat_id, 'upload_proof', '');
 
 if (!$update_result) {
     $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem.");
     return;
 }*/
+
+// Ambil file_id dari foto yang dikirim user (variabel sudah diset di index.php)
+if (!isset($file_id)) {
+    $file_id = $bot->getPhotoFileId();
+}
 
 // Hapus pesan instruksi upload sebelumnya agar chat bersih
 $bot->deleteMessage($chat_id, $msg_id);
@@ -22,7 +29,9 @@ if (isset($waiting_msg_id)) {
     $task_id = $submenu;
 
     if (!$task_id) {
-        $bot->sendMessage($chat_id, "❌ Task tidak ditemukan.");
+        $error_message = "❌ <b>Task Tidak Ditemukan</b>\n\n";
+        $error_message .= "Silakan ambil task terlebih dahulu sebelum upload bukti.";
+        sendErrorWithBackButton($bot, $chat_id, $waiting_msg_id, $error_message, '/task', '📋 Ambil Task');
         return;
     }
 
@@ -34,7 +43,10 @@ if (isset($waiting_msg_id)) {
         ."LIMIT 1", [$task_id, $user_id]);
 
     if (empty($task_detail)) {
-        $bot->sendMessage($chat_id, "❌ Task tidak valid atau sudah tidak tersedia.");
+        $error_message = "❌ <b>Task Tidak Valid</b>\n\n";
+        $error_message .= "Task ini tidak tersedia atau sudah kamu selesaikan.\n";
+        $error_message .= "Silakan ambil task baru!";
+        sendErrorWithBackButton($bot, $chat_id, $waiting_msg_id, $error_message, '/task', '📋 Ambil Task');
         return;
     }
 
@@ -44,8 +56,11 @@ if (isset($waiting_msg_id)) {
     $admins = db_read("smm_admins");
 
     if ($admins) {
-        if (!isset($file_id)) {
-            $bot->sendMessage($chat_id, "❌ Gagal mendeteksi gambar.");
+        if (!isset($file_id) || empty($file_id)) {
+            $error_message = "❌ <b>Gagal Mendeteksi Gambar</b>\n\n";
+            $error_message .= "Pastikan kamu mengirim foto (bukan file dokumen).\n";
+            $error_message .= "Silakan upload ulang screenshot bukti task.";
+            sendErrorWithBackButton($bot, $chat_id, $waiting_msg_id, $error_message, '/task', '📋 Kembali ke Task');
             return;
         }
 
@@ -109,7 +124,10 @@ if (isset($waiting_msg_id)) {
     $bot->editMessage($chat_id, $waiting_msg_id, $reply_user, 'HTML', $keyboard_user);
 
 } else {
-    $bot->sendMessage($chat_id, "❌ Gagal memproses permintaan.");
+    $error_message = "❌ <b>Gagal Memproses Permintaan</b>\n\n";
+    $error_message .= "Terjadi kesalahan sistem saat memproses bukti.\n";
+    $error_message .= "Silakan coba lagi atau hubungi admin.";
+    sendErrorWithBackButton($bot, $chat_id, null, $error_message, '/start', '🔙 Kembali');
     return;
 }
 ?>

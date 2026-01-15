@@ -1,5 +1,7 @@
 <?php
 
+require_once 'helpers/error-handler.php';
+
 // Extract Task ID from submenu (format: task_approve_{task_id})
 $parts = explode('_', $submenu);
 $task_id = $parts[2];
@@ -8,9 +10,10 @@ $task_id = $parts[2];
 $confirmation = strtoupper(trim($message));
 
 if ($confirmation !== 'YA') {
-    $reply = "❌ <b>Konfirmasi Dibatalkan</b>\n";
-    $reply .= "Approve task dibatalkan. Ketik <b>YA</b> untuk konfirmasi.";
-    $bot->sendMessage($chat_id, $reply, 'HTML');
+    $error_message = "❌ <b>Konfirmasi Dibatalkan</b>\n\n";
+    $error_message .= "Approve task dibatalkan.\n";
+    $error_message .= "Ketik <b>YA</b> (huruf kapital) untuk mengkonfirmasi approve task.";
+    sendSimpleError($bot, $chat_id, $error_message);
     return;
 }
 
@@ -24,7 +27,11 @@ $task_detail = db_query("SELECT t.*, c.campaign_title, c.type, c.price_per_task,
     ."LIMIT 1", [$task_id]);
 
 if (empty($task_detail)) {
-    $bot->sendMessage($chat_id, "❌ Task tidak ditemukan atau sudah diproses.");
+    $error_message = "❌ <b>Task Tidak Ditemukan</b>\n\n";
+    $error_message .= "Task ID: <code>" . $task_id . "</code>\n\n";
+    $error_message .= "Task ini tidak ditemukan atau sudah diproses oleh admin lain.\n";
+    $error_message .= "Silakan cek daftar task yang pending review.";
+    sendSimpleError($bot, $chat_id, $error_message);
     return;
 }
 
@@ -38,7 +45,14 @@ $client_id = $task['client_id'];
 
 // Validasi campaign_balance masih cukup
 if ($campaign_balance < $reward_amount) {
-    $bot->sendMessage($chat_id, "❌ Campaign balance tidak cukup untuk membayar reward task ini.\n\nBalance campaign: Rp ".number_format($campaign_balance, 0, ',', '.')."\nReward task: Rp ".number_format($reward_amount, 0, ',', '.')."\n");
+    $error_message = "❌ <b>Campaign Balance Tidak Cukup</b>\n\n";
+    $error_message .= "Campaign tidak memiliki balance cukup untuk membayar reward task ini.\n\n";
+    $error_message .= "💰 <b>Detail Balance:</b>\n";
+    $error_message .= "• Balance Campaign: Rp " . number_format($campaign_balance, 0, ',', '.') . "\n";
+    $error_message .= "• Reward Task: Rp " . number_format($reward_amount, 0, ',', '.') . "\n";
+    $error_message .= "• Kekurangan: Rp " . number_format($reward_amount - $campaign_balance, 0, ',', '.') . "\n\n";
+    $error_message .= "⚠️ Task tidak bisa diapprove. Client perlu top-up campaign balance terlebih dahulu.";
+    sendSimpleError($bot, $chat_id, $error_message);
     return;
 }
 
@@ -60,7 +74,14 @@ $profit_after = $profit_before + $reward_amount;
 $update_wallet = db_update('smm_wallets', ['profit' => $profit_after], ['id' => $wallet_id]);
 
 if (!$update_wallet) {
-    $bot->sendMessage($chat_id, "❌ Gagal mengupdate profit worker.");
+    $error_message = "❌ <b>Gagal Update Wallet</b>\n\n";
+    $error_message .= "Terjadi kesalahan database saat mengupdate profit worker.\n\n";
+    $error_message .= "📋 <b>Detail:</b>\n";
+    $error_message .= "• Worker ID: " . $task['worker_id'] . "\n";
+    $error_message .= "• Wallet ID: " . $wallet_id . "\n";
+    $error_message .= "• Reward: Rp " . number_format($reward_amount, 0, ',', '.') . "\n\n";
+    $error_message .= "⚠️ Task belum diapprove. Silakan coba lagi atau hubungi developer.";
+    sendSimpleError($bot, $chat_id, $error_message);
     return;
 }
 

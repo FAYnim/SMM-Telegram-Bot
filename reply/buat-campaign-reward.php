@@ -1,14 +1,30 @@
 <?php
+require_once 'helpers/error-handler.php';
+
 // Validasi input reward
 $reward = trim($message);
 if (empty($reward)) {
-    $bot->sendMessage($chat_id, "❌ Total reward tidak boleh kosong!\n\nSilakan masukkan total reward:");
+    $error_reply = "❌ Total reward tidak boleh kosong!\n\nSilakan masukkan total reward atau batal untuk membatalkan pembuatan campaign:";
+    sendErrorWithBackButton(
+        $bot, 
+        $chat_id, 
+        $msg_id,
+        $error_reply,
+        "/cek_campaign"
+    );
     return;
 }
 
 // Validasi numeric
 if (!is_numeric($reward) || $reward <= 0) {
-    $bot->sendMessage($chat_id, "❌ Total reward harus berupa angka positif!\n\nSilakan masukkan total reward:");
+    $error_reply = "❌ Total reward harus berupa angka positif!\n\nSilakan masukkan total reward atau batal untuk membatalkan pembuatan campaign:";
+    sendErrorWithBackButton(
+        $bot, 
+        $chat_id, 
+        $msg_id,
+        $error_reply,
+        "/cek_campaign"
+    );
     return;
 }
 
@@ -35,9 +51,17 @@ if($balance < $reward) {
 
 // cek minimal reward
 if($reward < 15000) {
-    $bot->sendMessage($chat_id, "❌ Minimal pembuatan campaign adalah Rp 15.000");
+    $error_reply = "❌ <b>Total Budget Terlalu Kecil</b>\n\n";
+    $error_reply .= "Minimal pembuatan campaign adalah Rp 15.000\n\n";
+    $error_reply .= "Silakan masukkan total reward yang lebih besar atau batal untuk membatalkan pembuatan campaign:";
+    sendErrorWithBackButton(
+        $bot, 
+        $chat_id, 
+        $msg_id,
+        $error_reply,
+        "/cek_campaign"
+    );
     return;
-
 }
 
 // Update reward campaign di database

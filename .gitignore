@@ -1,6 +1,8 @@
 config/db-config.php
 config/config.php
 
+database/dummy-admin.sql
+
 .letta
 AGENTS.md
 
