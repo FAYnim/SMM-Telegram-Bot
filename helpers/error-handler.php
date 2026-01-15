@@ -48,6 +48,31 @@ function sendErrorWithBackButton($bot, $chat_id, $msg_id, $error_message, $callb
 }
 
 /**
+ * Edit pesan error dengan keyboard custom (support multiple buttons)
+ * 
+ * Pattern:
+ * 1. Edit pesan yang ada dengan error message + keyboard
+ * 2. Tidak perlu update msg_id karena pesan yang sama
+ * 
+ * @param object $bot Instance TelegramBot
+ * @param int $chat_id Chat ID user
+ * @param int $msg_id Message ID untuk diedit
+ * @param string $error_message Pesan error yang ditampilkan
+ * @param array $buttons Array of buttons [[text, callback_data], ...]
+ * @param string $parse_mode Parse mode untuk message (default: 'HTML')
+ * @return bool True jika berhasil, false jika gagal
+ */
+function editErrorWithCustomButtons($bot, $chat_id, $msg_id, $error_message, $buttons, $parse_mode = 'HTML') {
+    // Buat keyboard dari array buttons
+    $keyboard = $bot->buildInlineKeyboard($buttons);
+    
+    // Edit pesan dengan keyboard
+    $result = $bot->editMessage($chat_id, $msg_id, $error_message, $parse_mode, $keyboard);
+    
+    return $result ? true : false;
+}
+
+/**
  * Kirim pesan error sederhana tanpa keyboard
  * 
  * @param object $bot Instance TelegramBot

@@ -1,5 +1,7 @@
 <?php
 
+require_once 'helpers/error-handler.php';
+
 // Update position hanya untuk /task, bukan /task_refresh
 if ($cb_data != '/task_refresh') {
     $update_result = updateUserPosition($chat_id, 'task');
@@ -24,17 +26,18 @@ $campaign = db_query("SELECT id, campaign_title, type, link_target, price_per_ta
 	."ORDER BY price_per_task DESC LIMIT 0,1", [$user_id]);
 
 if (empty($campaign)) {
-    $reply .= "❌ Tidak ada task yang tersedia saat ini.\n";
-    $reply .= "Silakan coba lagi nanti!";
+    $error_message = "📋 <b>Task Tersedia</b>\n\n";
+    $error_message .= "❌ Tidak ada task yang tersedia saat ini.\n";
+    $error_message .= "Silakan coba lagi nanti!";
 
-    $keyboard = $bot->buildInlineKeyboard([
+    $buttons = [
         [
             ['text' => '🔄 Refresh', 'callback_data' => '/task_refresh'],
             ['text' => '🔙 Kembali', 'callback_data' => '/start']
         ]
-    ]);
+    ];
 
-	$bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+	editErrorWithCustomButtons($bot, $chat_id, $msg_id, $error_message, $buttons);
 	return;
 }
 
@@ -53,34 +56,39 @@ $task = db_query("SELECT id "
 	[$campaign_id]);
 
 if (empty($task)) {
-    $reply .= "❌ Tidak ada task yang tersedia saat ini.\n";
-    $reply .= "Silakan coba lagi nanti!";
+    $error_message = "📋 <b>Task Tersedia</b>\n\n";
+    $error_message .= "❌ Tidak ada task yang tersedia saat ini.\n";
+    $error_message .= "Silakan coba lagi nanti!";
 
-    $keyboard = $bot->buildInlineKeyboard([
+    $buttons = [
         [
             ['text' => '🔄 Refresh', 'callback_data' => '/task_refresh'],
             ['text' => '🔙 Kembali', 'callback_data' => '/start']
         ]
-    ]);
-} else {
-	$task_data = $task[0];
-	$task_id = $task_data["id"];
+    ];
 
-    $reply .= "📌 <b>" . htmlspecialchars($campaign_title) . "</b>\n";
-    $reply .= "🎯 Jenis: " . ucfirst($campaign_type) . "\n";
-    $reply .= "💰 Reward: Rp " . number_format($campaign_price, 0, ',', '.') . "\n\n";
-    $reply .= "Klik tombol di bawah untuk mengambil task ini:";
-
-    $keyboard = $bot->buildInlineKeyboard([
-        [
-            ['text' => '🎯 Ambil Task', 'callback_data' => '/take_task_' . $task_id]
-        ],
-        [
-            ['text' => '🔄 Refresh', 'callback_data' => '/task_refresh'],
-            ['text' => '🔙 Kembali', 'callback_data' => '/start']
-        ]
-    ]);
+    editErrorWithCustomButtons($bot, $chat_id, $msg_id, $error_message, $buttons);
+    return;
 }
+
+// Task tersedia, tampilkan detail
+$task_data = $task[0];
+$task_id = $task_data["id"];
+
+$reply .= "📌 <b>" . htmlspecialchars($campaign_title) . "</b>\n";
+$reply .= "🎯 Jenis: " . ucfirst($campaign_type) . "\n";
+$reply .= "💰 Reward: Rp " . number_format($campaign_price, 0, ',', '.') . "\n\n";
+$reply .= "Klik tombol di bawah untuk mengambil task ini:";
+
+$keyboard = $bot->buildInlineKeyboard([
+    [
+        ['text' => '🎯 Ambil Task', 'callback_data' => '/take_task_' . $task_id]
+    ],
+    [
+        ['text' => '🔄 Refresh', 'callback_data' => '/task_refresh'],
+        ['text' => '🔙 Kembali', 'callback_data' => '/start']
+    ]
+]);
 
 $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
 
