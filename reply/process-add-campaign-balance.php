@@ -135,6 +135,9 @@ if ($message && $user[0]['menu'] == 'add_campaign_balance') {
         ];
         db_create('smm_wallet_transactions', $transaction_data);
 
+        // Reset posisi user ke state yang tidak terdeteksi di index.php
+        updateUserPosition($chat_id, 'add_campaign_balance_success');
+
         if ($msg_id) {
             $bot->deleteMessage($chat_id, $msg_id);
         }
