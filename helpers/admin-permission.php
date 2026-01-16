@@ -329,4 +329,163 @@ function validatePermissions($permissions) {
 
     return array_merge($defaultPermissions, $permissions);
 }
+
+/**
+ * Get list of admin chat IDs who have specific permission
+ * Super admins are always included
+ * @param string $permission Permission key to filter by
+ * @return array Array of admin chat IDs
+ */
+function getAdminChatIdsByPermission($permission) {
+    $admins = db_read('smm_admins', ['status' => 'active']);
+    $chatIds = [];
+
+    if (empty($admins)) {
+        return $chatIds;
+    }
+
+    foreach ($admins as $admin) {
+        $chatId = $admin['chatid'];
+        $permissions = json_decode($admin['permissions'], true);
+
+        if (is_string($permissions)) {
+            $permissions = json_decode($permissions, true);
+        }
+
+        if (isset($permissions['all']) && $permissions['all'] === true) {
+            $chatIds[] = $chatId;
+        } elseif (isset($permissions[$permission]) && $permissions[$permission] === true) {
+            $chatIds[] = $chatId;
+        }
+    }
+
+    logMessage('admin_filter', [
+        'permission' => $permission,
+        'count' => count($chatIds),
+        'chat_ids' => $chatIds
+    ], 'debug');
+
+    return $chatIds;
+}
+
+/**
+ * Get list of admin records who have specific permission
+ * Super admins are always included
+ * @param string $permission Permission key to filter by
+ * @return array Array of admin records
+ */
+function getAdminsByPermission($permission) {
+    $admins = db_read('smm_admins', ['status' => 'active']);
+    $filteredAdmins = [];
+
+    if (empty($admins)) {
+        return $filteredAdmins;
+    }
+
+    foreach ($admins as $admin) {
+        $permissions = json_decode($admin['permissions'], true);
+
+        if (is_string($permissions)) {
+            $permissions = json_decode($permissions, true);
+        }
+
+        if (isset($permissions['all']) && $permissions['all'] === true) {
+            $filteredAdmins[] = $admin;
+        } elseif (isset($permissions[$permission]) && $permissions[$permission] === true) {
+            $filteredAdmins[] = $admin;
+        }
+    }
+
+    return $filteredAdmins;
+}
+
+/**
+ * Send notification to admins with specific permission
+ * @param object $bot TelegramBot instance
+ * @param string $permission Permission key required
+ * @param callable $messageBuilder Callback function that receives (admin_chat_id) and returns message array with 'text', 'keyboard' (optional), 'photo' (optional)
+ */
+function notifyAdminsByPermission($bot, $permission, $messageBuilder) {
+    $admins = getAdminsByPermission($permission);
+
+    if (empty($admins)) {
+        logMessage('admin_notification', [
+            'permission' => $permission,
+            'result' => 'no_admins_found'
+        ], 'debug');
+        return;
+    }
+
+    foreach ($admins as $admin) {
+        $adminChatId = $admin['chatid'];
+
+        $messageData = $messageBuilder($adminChatId);
+
+        if (isset($messageData['photo'])) {
+            $keyboard = $messageData['keyboard'] ?? null;
+            $bot->sendPhoto($adminChatId, $messageData['photo'], $messageData['text'], 'HTML', $keyboard);
+        } else {
+            $keyboard = $messageData['keyboard'] ?? null;
+            $bot->sendMessageWithKeyboard($adminChatId, $messageData['text'], $keyboard, 'HTML');
+        }
+
+        sleep(1);
+    }
+
+    logMessage('admin_notification', [
+        'permission' => $permission,
+        'admin_count' => count($admins),
+        'result' => 'sent'
+    ], 'debug');
+}
+
+/**
+ * Send notification to all active admins (legacy function - sends to everyone)
+ * @param object $bot TelegramBot instance
+ * @param string $text Message text
+ * @param array|null $keyboard Inline keyboard array
+ */
+function notifyAllAdmins($bot, $text, $keyboard = null) {
+    $admins = db_read('smm_admins', ['status' => 'active']);
+
+    if (empty($admins)) {
+        return;
+    }
+
+    foreach ($admins as $admin) {
+        $bot->sendMessageWithKeyboard($admin['chatid'], $text, $keyboard, 'HTML');
+        sleep(1);
+    }
+}
+
+/**
+ * Check if there are any admins with the specified permission
+ * @param string $permission Permission key to check
+ * @return bool True if at least one admin has the permission
+ */
+function hasAnyAdminWithPermission($permission) {
+    $admins = db_read('smm_admins', ['status' => 'active']);
+
+    if (empty($admins)) {
+        return false;
+    }
+
+    foreach ($admins as $admin) {
+        $permissions = json_decode($admin['permissions'], true);
+
+        if (is_string($permissions)) {
+            $permissions = json_decode($permissions, true);
+        }
+
+        if (isset($permissions['all']) && $permissions['all'] === true) {
+            return true;
+        }
+
+        if (isset($permissions[$permission]) && $permissions[$permission] === true) {
+            return true;
+        }
+    }
+
+    return false;
+}
 ?>
