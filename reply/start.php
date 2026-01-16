@@ -32,27 +32,11 @@
                 ['text' => 'ℹ️ Bantuan', 'callback_data' => '/help']
             ]
         ]);
-    } elseif ($role == 'admin') {
+} elseif ($role == 'admin') {
         $reply .= "⚙️ <b>Panel Admin</b>\n\n"
             . "Silakan pilih menu manajemen di bawah ini:";
             
-        $keyboard = $bot->buildInlineKeyboard([
-            [
-                ['text' => '✅ Verifikasi Tugas', 'callback_data' => 'verifikasi'],
-                ['text' => '📢 Verifikasi Campaign', 'callback_data' => 'campaign_admin']
-            ],
-            [
-                ['text' => '💰 Cek Deposit', 'callback_data' => 'deposit_admin'],
-                ['text' => '💸 Proses Withdraw', 'callback_data' => 'withdraw_admin']
-            ],
- //           [
- //               ['text' => '👥 Kelola User', 'callback_data' => 'manage_user'],
- //               ['text' => '📊 Statistik', 'callback_data' => 'laporan']
- //           ],
-            [
-                ['text' => '⚙️ Settings', 'callback_data' => 'settings']
-            ]
-        ]);
+        $keyboard = $bot->buildInlineKeyboard(getAdminMenu($chat_id));
     }
     
     // Check if this is callback or message
