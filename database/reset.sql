@@ -78,6 +78,7 @@ CREATE TABLE IF NOT EXISTS smm_wallet_transactions (
 CREATE TABLE IF NOT EXISTS smm_campaigns (
     id INT AUTO_INCREMENT PRIMARY KEY,
     client_id INT NOT NULL,
+    social_account_id INT NULL,
     campaign_title VARCHAR(255) NOT NULL,
     type ENUM('view', 'like', 'comment', 'share', 'follow') NOT NULL,
     link_target TEXT NOT NULL,
@@ -88,7 +89,8 @@ CREATE TABLE IF NOT EXISTS smm_campaigns (
     status ENUM('creating', 'draft', 'active', 'paused', 'completed', 'deleted') DEFAULT 'creating',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (client_id) REFERENCES smm_users(id) ON DELETE CASCADE
+    FOREIGN KEY (client_id) REFERENCES smm_users(id) ON DELETE CASCADE,
+    FOREIGN KEY (social_account_id) REFERENCES smm_social_accounts(id) ON DELETE SET NULL
 );
 
 -- Tasks table - tugas individual yang bisa diambil worker
@@ -197,6 +199,7 @@ CREATE INDEX idx_admins_msg_id ON smm_admins(msg_id);
 CREATE INDEX idx_wallet_transactions_wallet_id ON smm_wallet_transactions(wallet_id);
 CREATE INDEX idx_wallet_transactions_type ON smm_wallet_transactions(type);
 CREATE INDEX idx_campaigns_client_id ON smm_campaigns(client_id);
+CREATE INDEX idx_campaigns_social_account_id ON smm_campaigns(social_account_id);
 CREATE INDEX idx_campaigns_status ON smm_campaigns(status);
 CREATE INDEX idx_tasks_campaign_id ON smm_tasks(campaign_id);
 CREATE INDEX idx_tasks_worker_id ON smm_tasks(worker_id);
