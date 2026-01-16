@@ -61,7 +61,7 @@ if (!empty($campaign)) {
         }
     }
 
-    $price_per_task = $campaign_data['campaign_balance'] / $target;
+    $price_per_task = floor($campaign_data['campaign_balance'] / $target);
 
     if($price_per_task < $min_price_per_task) {
         $error_reply = "❌ <b>Harga Per Task Terlalu Rendah</b>\n\n";
