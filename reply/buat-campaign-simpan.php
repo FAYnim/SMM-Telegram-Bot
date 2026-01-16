@@ -23,36 +23,35 @@ if (!empty($campaign)) {
     $campaign_data = $campaign[0];
     $campaign_id = $campaign_data['id'];
 
-    // Update status campaign menjadi draft (menunggu verifikasi admin)
+// Update status campaign menjadi draft (menunggu verifikasi admin)
     db_execute("UPDATE smm_campaigns SET status = 'draft' WHERE id = ?", [$campaign_id]);
 
-    // Kirim notifikasi ke semua admin
-    $admins = db_read('smm_admins', ['status' => 'active']);
+    // Kirim notifikasi ke admin dengan permission campaign_verify
+    $admin_chat_ids = getAdminChatIdsByPermission('campaign_verify');
     
-    if (!empty($admins)) {
-        foreach ($admins as $admin) {
-            $admin_chatid = $admin['chatid'];
-            
-            $admin_reply = "🔔 <b>Campaign Baru Menunggu Verifikasi</b>\n\n";
-            $admin_reply .= "<b>📋 Detail Campaign:</b>\n";
-            $admin_reply .= "🆔 ID: #" . $campaign_data['id'] . "\n";
-            $admin_reply .= "👤 Client: " . htmlspecialchars($user[0]['full_name']) . " (@" . $user[0]['username'] . ")\n";
-            $admin_reply .= "📝 Judul: " . htmlspecialchars($campaign_data['campaign_title']) . "\n";
-            $admin_reply .= "🎯 Tipe: " . ucfirst($campaign_data['type']) . "s\n";
-            $admin_reply .= "🔗 Link: " . $campaign_data['link_target'] . "\n";
-            $admin_reply .= "💰 Harga/task: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n";
-            $admin_reply .= "🎯 Target: " . number_format($campaign_data['target_total']) . " tasks\n";
-            $admin_reply .= "💰 Total Budget: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n\n";
-            $admin_reply .= "Silakan verifikasi campaign ini.";
-            
-            $admin_keyboard = $bot->buildInlineKeyboard([
-                [
-                    ['text' => '✅ Approve', 'callback_data' => '/admin_approve_campaign_' . $campaign_id],
-                    ['text' => '❌ Reject', 'callback_data' => '/admin_reject_campaign_' . $campaign_id]
-                ]
-            ]);
-            
-            $bot->sendMessage($admin_chatid, $admin_reply, 'HTML', $admin_keyboard);
+    if ($admin_chat_ids) {
+        $admin_reply = "🔔 <b>Campaign Baru Menunggu Verifikasi</b>\n\n";
+        $admin_reply .= "<b>📋 Detail Campaign:</b>\n";
+        $admin_reply .= "🆔 ID: #" . $campaign_data['id'] . "\n";
+        $admin_reply .= "👤 Client: " . htmlspecialchars($user[0]['full_name']) . " (@" . $user[0]['username'] . ")\n";
+        $admin_reply .= "📝 Judul: " . htmlspecialchars($campaign_data['campaign_title']) . "\n";
+        $admin_reply .= "🎯 Tipe: " . ucfirst($campaign_data['type']) . "s\n";
+        $admin_reply .= "🔗 Link: " . $campaign_data['link_target'] . "\n";
+        $admin_reply .= "💰 Harga/task: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n";
+        $admin_reply .= "🎯 Target: " . number_format($campaign_data['target_total']) . " tasks\n";
+        $admin_reply .= "💰 Total Budget: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n\n";
+        $admin_reply .= "Silakan verifikasi campaign ini.";
+        
+        $admin_keyboard = $bot->buildInlineKeyboard([
+            [
+                ['text' => '✅ Approve', 'callback_data' => '/admin_approve_campaign_' . $campaign_id],
+                ['text' => '❌ Reject', 'callback_data' => '/admin_reject_campaign_' . $campaign_id]
+            ]
+        ]);
+        
+        foreach ($admin_chat_ids as $admin_chatid) {
+            $bot->sendMessageWithKeyboard($admin_chatid, $admin_reply, $admin_keyboard, null, 'HTML');
+            sleep(1);
         }
     }
 
