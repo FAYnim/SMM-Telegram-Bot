@@ -36,11 +36,16 @@ if ($msg_id) {
     $bot->deleteMessage($chat_id, $msg_id);
 }
 
-// Ambil semua data campaign yang baru dibuat
-$campaign = db_query("SELECT id, campaign_title, type, link_target, price_per_task, target_total, campaign_balance, created_at "
-    ."FROM smm_campaigns "
-    ."WHERE client_id = ? AND status = 'creating' "
-    ."ORDER BY created_at DESC LIMIT 1", [$user_id]);
+// Ambil semua data campaign yang baru dibuat dengan data akun medsos
+$campaign = db_query(
+    "SELECT c.id, c.campaign_title, c.type, c.link_target, c.price_per_task, c.target_total, c.campaign_balance, c.created_at, " .
+    "s.platform, s.username, s.account_url " .
+    "FROM smm_campaigns c " .
+    "LEFT JOIN smm_social_accounts s ON c.social_account_id = s.id " .
+    "WHERE c.client_id = ? AND c.status = 'creating' " .
+    "ORDER BY c.created_at DESC LIMIT 1",
+    [$user_id]
+);
 
 if (!empty($campaign)) {
     $campaign_data = $campaign[0];
@@ -82,6 +87,26 @@ if (!empty($campaign)) {
 
     // Update campaign_data dengan nilai baru
     $campaign_data['price_per_task'] = $price_per_task;
+    
+    // Platform icons
+    $platform_icons = [
+        'instagram' => '📷',
+        'tiktok' => '🎵',
+        'youtube' => '▶️',
+        'twitter' => '🐦',
+        'facebook' => '👍'
+    ];
+    
+    $platform_names = [
+        'instagram' => 'Instagram',
+        'tiktok' => 'TikTok',
+        'youtube' => 'YouTube',
+        'twitter' => 'Twitter',
+        'facebook' => 'Facebook'
+    ];
+    
+    $icon = $platform_icons[$campaign_data['platform']] ?? '📱';
+    $platform_name = $platform_names[$campaign_data['platform']] ?? ucfirst($campaign_data['platform']);
 
     $reply = "<b>📋 Konfirmasi Campaign Baru</b>\n\n";
     $reply .= "Silakan periksa detail campaign Anda:\n\n";
@@ -89,7 +114,8 @@ if (!empty($campaign)) {
     $reply .= "🆔 ID: #" . $campaign_data['id'] . "\n";
     $reply .= "📝 Judul: " . htmlspecialchars($campaign_data['campaign_title']) . "\n";
     $reply .= "🎯 Tipe: " . ucfirst($campaign_data['type']) . "s\n";
-    $reply .= "🔗 Link: " . $campaign_data['link_target'] . "\n";
+    $reply .= $icon . " Akun: <b>" . $platform_name . " - @" . $campaign_data['username'] . "</b>\n";
+    $reply .= "🔗 Link: <code>" . $campaign_data['link_target'] . "</code>\n";
     $reply .= "💰 Harga/task: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n";
     $reply .= "🎯 Target: " . number_format($campaign_data['target_total']) . " tasks\n";
     $reply .= "💰 Total Budget: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n";
