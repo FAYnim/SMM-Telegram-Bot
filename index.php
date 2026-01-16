@@ -3,6 +3,7 @@ require_once 'TelegramBot.php';
 require_once 'db.php';
 require_once 'config/config.php';
 require_once 'helpers/index-helper.php';
+require_once 'helpers/admin-permission.php';
 
 // Inisialisasi bot
 $bot = new TelegramBot($bot_token);
@@ -92,27 +93,27 @@ if(!$cb_data){
 	if ($message == "/start") {
 		require_once 'reply/start.php';
 	}
-	// ADMIN
-	if($role == "admin") {
-		if(strpos($submenu, 'topup_approve_') === 0) {
+// ADMIN SUBMENU HANDLERS
+	if(isAdmin($chat_id)) {
+		if(strpos($submenu, 'topup_approve_') === 0 && hasPermission($chat_id, 'deposit_verify')) {
 			require_once 'reply/admin-topup-approve.php';
 		}
-		if(strpos($submenu, 'topup_reject_') === 0) {
+		if(strpos($submenu, 'topup_reject_') === 0 && hasPermission($chat_id, 'deposit_verify')) {
 			require_once 'reply/admin-topup-reject.php';
 		}
-		if(strpos($submenu, 'task_approve_') === 0) {
+		if(strpos($submenu, 'task_approve_') === 0 && hasPermission($chat_id, 'task_verify')) {
 			require_once 'reply/admin-task-approve.php';
 		}
-		if(strpos($submenu, 'task_reject_') === 0) {
+		if(strpos($submenu, 'task_reject_') === 0 && hasPermission($chat_id, 'task_verify')) {
 			require_once 'reply/admin-task-reject.php';
 		}
-		if(strpos($submenu, 'withdraw_approve_') === 0) {
+		if(strpos($submenu, 'withdraw_approve_') === 0 && hasPermission($chat_id, 'withdraw_verify')) {
 			require_once 'reply/admin-withdraw-approve.php';
 		}
-		if(strpos($submenu, 'withdraw_reject_') === 0) {
+		if(strpos($submenu, 'withdraw_reject_') === 0 && hasPermission($chat_id, 'withdraw_verify')) {
 			require_once 'reply/admin-withdraw-reject.php';
 		}
-		if(strpos($submenu, 'campaign_reject_') === 0) {
+		if(strpos($submenu, 'campaign_reject_') === 0 && hasPermission($chat_id, 'campaign_verify')) {
 			require_once 'reply/admin-campaign-reject.php';
 		}
 	}
@@ -223,69 +224,71 @@ if(!$cb_data){
 		$bot->sendMessage($chat_id, $reply);*/
 	}
 } else {
-	// ADMIN
+	// ADMIN CALLBACK HANDLERS WITH PERMISSION CHECK
 	
-	// campaign
-	if($cb_data == "campaign_admin") {
+	// Task Verification
+	if($cb_data == "verifikasi" && hasPermission($chat_id, 'task_verify')) {
+		require_once 'reply/task-admin.php';
+	}
+	
+	// Campaign Verification
+	if($cb_data == "campaign_admin" && hasPermission($chat_id, 'campaign_verify')) {
 		require_once 'reply/campaign-admin.php';
 	}
 	
-	// topup
-	if($cb_data == "deposit_admin") {
+	// Deposit Verification
+	if($cb_data == "deposit_admin" && hasPermission($chat_id, 'deposit_verify')) {
 		require_once 'reply/deposit-admin.php';
 	}
-	if(strpos($cb_data, 'admin_approve_topup_') === 0) {
-		require_once 'reply/admin-topup.php';
-	}
-	if(strpos($cb_data, 'admin_reject_topup_') === 0) {
-		require_once 'reply/admin-topup.php';
-	}
-
-	// withdraw
-	if(strpos($cb_data, 'admin_approve_withdraw_') === 0) {
-		require_once 'reply/admin-withdraw.php';
-	}
-	if(strpos($cb_data, 'admin_reject_withdraw_') === 0) {
-		require_once 'reply/admin-withdraw.php';
-	}
-
-	// task
-	if(strpos($cb_data, 'admin_approve_task_') === 0) {
-		require_once 'reply/admin-task.php';
-	}
-	if(strpos($cb_data, 'admin_reject_task_') === 0) {
-		require_once 'reply/admin-task.php';
-	}
-
-	// campaign
-	if(strpos($cb_data, 'admin_approve_campaign_') === 0) {
-		require_once 'reply/admin-campaign.php';
-	}
-	if(strpos($cb_data, 'admin_reject_campaign_') === 0) {
-		require_once 'reply/admin-campaign.php';
-	}
-
-	// task
-	if($cb_data == "verifikasi") {
-		require_once 'reply/task-admin.php';
-	}
-
-	// withdraw
-	if($cb_data == "withdraw_admin") {
+	
+	// Withdraw Verification
+	if($cb_data == "withdraw_admin" && hasPermission($chat_id, 'withdraw_verify')) {
 		require_once 'reply/withdraw-admin.php';
 	}
 
-	// settings
-	if($cb_data == "settings") {
+	// Topup Actions
+	if(strpos($cb_data, 'admin_approve_topup_') === 0 && hasPermission($chat_id, 'deposit_verify')) {
+		require_once 'reply/admin-topup.php';
+	}
+	if(strpos($cb_data, 'admin_reject_topup_') === 0 && hasPermission($chat_id, 'deposit_verify')) {
+		require_once 'reply/admin-topup.php';
+	}
+
+	// Withdraw Actions
+	if(strpos($cb_data, 'admin_approve_withdraw_') === 0 && hasPermission($chat_id, 'withdraw_verify')) {
+		require_once 'reply/admin-withdraw.php';
+	}
+	if(strpos($cb_data, 'admin_reject_withdraw_') === 0 && hasPermission($chat_id, 'withdraw_verify')) {
+		require_once 'reply/admin-withdraw.php';
+	}
+
+	// Task Actions
+	if(strpos($cb_data, 'admin_approve_task_') === 0 && hasPermission($chat_id, 'task_verify')) {
+		require_once 'reply/admin-task.php';
+	}
+	if(strpos($cb_data, 'admin_reject_task_') === 0 && hasPermission($chat_id, 'task_verify')) {
+		require_once 'reply/admin-task.php';
+	}
+
+	// Campaign Actions
+	if(strpos($cb_data, 'admin_approve_campaign_') === 0 && hasPermission($chat_id, 'campaign_verify')) {
+		require_once 'reply/admin-campaign.php';
+	}
+	if(strpos($cb_data, 'admin_reject_campaign_') === 0 && hasPermission($chat_id, 'campaign_verify')) {
+		require_once 'reply/admin-campaign.php';
+	}
+
+	// Settings
+	if($cb_data == "settings" && hasAnyPermission($chat_id, ['settings_payment', 'settings_withdraw', 'settings_campaign'])) {
 		require_once 'reply/settings.php';
 	}
-	if($cb_data == "settings_payment") {
+	if($cb_data == "settings_payment" && hasPermission($chat_id, 'settings_payment')) {
 		require_once 'reply/settings-payment.php';
 	}
-	if($cb_data == "settings_withdraw") {
+	if($cb_data == "settings_withdraw" && hasPermission($chat_id, 'settings_withdraw')) {
 		require_once 'reply/settings-withdraw.php';
 	}
-	if($cb_data == "settings_campaign") {
+	if($cb_data == "settings_campaign" && hasPermission($chat_id, 'settings_campaign')) {
 		require_once 'reply/settings-campaign.php';
 	}
 	if($cb_data == "settings_edit_dana" || $cb_data == "settings_edit_shopeepay") {
