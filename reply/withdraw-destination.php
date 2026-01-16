@@ -83,14 +83,10 @@ if (!$withdraw_id) {
     return;
 }
 
-// Notifikasi ke Admin
-$admins = db_read("smm_admins");
+// Notifikasi ke Admin dengan permission withdraw_verify
+    $admin_chat_ids = getAdminChatIdsByPermission('withdraw_verify');
 
-if ($admins) {
-    foreach ($admins as $admin) {
-        $admin_id = $admin["chatid"];
-
-        // Siapkan data user untuk display
+    if ($admin_chat_ids) {
         $sender_name = $username ? "@" . $username : $first_name;
 
         $reply_admin = "💸 <b>WITHDRAW BARU!</b>\n\n"
@@ -107,10 +103,11 @@ if ($admins) {
             ]
         ]);
 
-        $bot->sendMessageWithKeyboard($admin_id, $reply_admin, $keyboard_admin);
-        sleep(1); // Mencegah rate limit
+        foreach ($admin_chat_ids as $admin_id) {
+            $bot->sendMessageWithKeyboard($admin_id, $reply_admin, $keyboard_admin);
+            sleep(1);
+        }
     }
-}
 
 // Update pesan user jadi Final
 $reply_user = "✅ <b>Permintaan Withdraw Terkirim</b>\n\n"
