@@ -18,9 +18,6 @@ if (isset($waiting_msg_id)) {
     // Simpan msg_id untuk update nanti
     db_update('smm_users', ['msg_id' => $waiting_msg_id], ['chatid' => $chat_id]);
 
-    // Kirim notifikasi ke Admin
-    $admins = db_read("smm_admins");
-
     // Simpan data deposit ke database dan dapatkan deposit_id
     $deposit_id = db_create('smm_deposits', [
         'user_id' => $user_id,
@@ -29,31 +26,29 @@ if (isset($waiting_msg_id)) {
         'status' => 'pending'
     ]);
 
-    if ($admins) {
-        if (!isset($file_id)) {
-            $bot->sendMessage($chat_id, "❌ Gagal mendeteksi gambar.");
-            return;
-        }
+    if (!isset($file_id)) {
+        $bot->sendMessage($chat_id, "❌ Gagal mendeteksi gambar.");
+        return;
+    }
 
-        foreach ($admins as $admin) {
-            $admin_id = $admin["chatid"];
+    // Siapkan data user untuk display
+    $sender_name = $username ? "@$username" : $first_name;
+    $caption_plain = "🔔 TOPUP BARU!\nUser: $sender_name (ID: $chat_id)\nWaktu: " . date('d M Y, H:i');
 
-            // Siapkan data user untuk display
-            $sender_name = $username ? "@$username" : $first_name;
-            $caption_plain = "🔔 TOPUP BARU!\nUser: $sender_name (ID: $chat_id)\nWaktu: " . date('d M Y, H:i');
+    $keyboard_admin = $bot->buildInlineKeyboard([
+        [
+            ['text' => '✅ Terima', 'callback_data' => 'admin_approve_topup_' . $deposit_id],
+            ['text' => '❌ Tolak', 'callback_data' => 'admin_reject_topup_' . $deposit_id]
+        ]
+    ]);
 
-            $keyboard_admin = $bot->buildInlineKeyboard([
-                [
-                    ['text' => '✅ Terima', 'callback_data' => 'admin_approve_topup_' . $deposit_id],
-                    ['text' => '❌ Tolak', 'callback_data' => 'admin_reject_topup_' . $deposit_id]
-                ]
-            ]);
+    // Kirim notifikasi ke admin dengan permission deposit_verify
+    $admin_chat_ids = getAdminChatIdsByPermission('deposit_verify');
 
-            // Kirim foto bukti ke admin
+    if ($admin_chat_ids) {
+        foreach ($admin_chat_ids as $admin_id) {
             $bot->sendPhoto($admin_id, $file_id, $caption_plain);
-            sleep(1); // Mencegah rate limit
-
-            // Kirim menu aksi
+            
             $reply_admin = "👇 <b>Tindakan Admin</b>\nSilakan cek bukti di atas dari User ID: <code>$chat_id</code>";
             $bot->sendMessageWithKeyboard($admin_id, $reply_admin, $keyboard_admin);
             sleep(1);
