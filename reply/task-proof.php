@@ -50,43 +50,38 @@ if (isset($waiting_msg_id)) {
         return;
     }
 
-    $task = $task_detail[0];
+$task = $task_detail[0];
 
-    // Kirim notifikasi ke Admin
-    $admins = db_read("smm_admins");
+    if (!isset($file_id) || empty($file_id)) {
+        $error_message = "❌ <b>Gagal Mendeteksi Gambar</b>\n\n";
+        $error_message .= "Pastikan kamu mengirim foto (bukan file dokumen).\n";
+        $error_message .= "Silakan upload ulang screenshot bukti task.";
+        sendErrorWithBackButton($bot, $chat_id, $waiting_msg_id, $error_message, '/task', '📋 Kembali ke Task');
+        return;
+    }
 
-    if ($admins) {
-        if (!isset($file_id) || empty($file_id)) {
-            $error_message = "❌ <b>Gagal Mendeteksi Gambar</b>\n\n";
-            $error_message .= "Pastikan kamu mengirim foto (bukan file dokumen).\n";
-            $error_message .= "Silakan upload ulang screenshot bukti task.";
-            sendErrorWithBackButton($bot, $chat_id, $waiting_msg_id, $error_message, '/task', '📋 Kembali ke Task');
-            return;
-        }
+    // Siapkan data user untuk display
+    $sender_name = $username ? "@$username" : $first_name;
+    $caption_plain = "🔔 TASK BARU!\n"
+    	."User: $sender_name (ID: $chat_id)\n"
+    	."Task: " . htmlspecialchars($task['campaign_title']) . "\n"
+    	."Reward: Rp " . number_format($task['price_per_task'], 0, ',', '.') . "\n"
+    	."Waktu: " . date('d M Y, H:i');
 
-        foreach ($admins as $admin) {
-            $admin_id = $admin["chatid"];
+    $keyboard_admin = $bot->buildInlineKeyboard([
+        [
+            ['text' => '✅ Approve', 'callback_data' => 'admin_approve_task_' . $task_id],
+            ['text' => '❌ Reject', 'callback_data' => 'admin_reject_task_' . $task_id]
+        ]
+    ]);
 
-            // Siapkan data user untuk display
-            $sender_name = $username ? "@$username" : $first_name;
-            $caption_plain = "🔔 TASK BARU!\n"
-            	."User: $sender_name (ID: $chat_id)\n"
-            	."Task: " . htmlspecialchars($task['campaign_title']) . "\n"
-            	."Reward: Rp " . number_format($task['price_per_task'], 0, ',', '.') . "\n"
-            	."Waktu: " . date('d M Y, H:i');
+    // Kirim notifikasi ke admin dengan permission task_verify
+    $admin_chat_ids = getAdminChatIdsByPermission('task_verify');
 
-            $keyboard_admin = $bot->buildInlineKeyboard([
-                [
-                    ['text' => '✅ Approve', 'callback_data' => 'admin_approve_task_' . $task_id],
-                    ['text' => '❌ Reject', 'callback_data' => 'admin_reject_task_' . $task_id]
-                ]
-            ]);
-
-            // Kirim foto bukti ke admin
+    if ($admin_chat_ids) {
+        foreach ($admin_chat_ids as $admin_id) {
             $bot->sendPhoto($admin_id, $file_id, $caption_plain);
-            sleep(1);
-
-            // Kirim menu aksi
+            
             $reply_admin = "👇 <b>Tindakan Admin</b>\nSilakan cek bukti di atas dari User ID: <code>$chat_id</code>\nTask ID: <code>$task_id</code>";
             $bot->sendMessageWithKeyboard($admin_id, $reply_admin, $keyboard_admin);
             sleep(1);
