@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../helpers/username-validator.php';
+require_once __DIR__ . '/../helpers/error-handler.php';
 
 if ($cb_data == "/tambah_medsos") {
     $update_result = updateUserPosition($chat_id, 'tambah_medsos');
@@ -73,7 +74,7 @@ if (!$cb_data && $user[0]['menu'] == 'add_instagram') {
     $validation = validateUsername($message, 'instagram');
 
     if (!$validation['valid']) {
-        $bot->sendMessage($chat_id, $validation['message']);
+        sendErrorWithBackButton($bot, $chat_id, $msg_id, $validation['message'], '/add_instagram', '🔙 Kembali');
         return;
     }
 
@@ -91,8 +92,8 @@ if (!$cb_data && $user[0]['menu'] == 'add_instagram') {
     $action_text = "ditambahkan";
 
     if ($result) {
-    	// Success Update
-        $reply = "✅ <b>Instagram berhasil {$action_text}!</b>\n\n📷 Username: @{$username_input}\n\nTerima kasih! Akun Instagram Anda telah {$action_text} ke sistem.";
+    	// Saving notification
+        $reply = "⏳ <b>Sedang menyimpan akun Instagram...</b>\n\n📷 Username: @{$username_input}";
 
         updateUserPosition($chat_id, 'social');
 
@@ -152,7 +153,7 @@ if (!$cb_data && $user[0]['menu'] == 'add_instagram') {
             $bot->editMessage($chat_id, $new_msg_id, $reply, 'HTML', $keyboard);
         }
     } else {
-        $bot->sendMessage($chat_id, "❌ Gagal menambahkan Instagram. Silakan coba lagi.");
+        sendErrorWithBackButton($bot, $chat_id, $msg_id, "❌ Gagal menambahkan Instagram. Silakan coba lagi.", '/tambah_medsos', '🔙 Kembali');
     }
 }
 
@@ -162,7 +163,7 @@ if (!$cb_data && $user[0]['menu'] == 'add_tiktok') {
     $validation = validateUsername($message, 'tiktok');
 
     if (!$validation['valid']) {
-        $bot->sendMessage($chat_id, $validation['message']);
+        sendErrorWithBackButton($bot, $chat_id, $msg_id, $validation['message'], '/add_tiktok', '🔙 Kembali');
         return;
     }
 
@@ -180,8 +181,8 @@ if (!$cb_data && $user[0]['menu'] == 'add_tiktok') {
     $action_text = "ditambahkan";
 
     if ($result) {
-    	// Success Update
-        $reply = "✅ <b>TikTok berhasil {$action_text}!</b>\n\n🎵 Username: @{$username_input}\n\nTerima kasih! Akun TikTok Anda telah {$action_text} ke sistem.";
+    	// Saving notification
+        $reply = "⏳ <b>Sedang menyimpan akun TikTok...</b>\n\n🎵 Username: @{$username_input}";
 
         updateUserPosition($chat_id, 'social');
 
@@ -241,7 +242,7 @@ if (!$cb_data && $user[0]['menu'] == 'add_tiktok') {
             $bot->editMessage($chat_id, $new_msg_id, $reply, 'HTML', $keyboard);
         }
     } else {
-        $bot->sendMessage($chat_id, "❌ Gagal menambahkan TikTok. Silakan coba lagi.");
+        sendErrorWithBackButton($bot, $chat_id, $msg_id, "❌ Gagal menambahkan TikTok. Silakan coba lagi.", '/tambah_medsos', '🔙 Kembali');
     }
 }
 

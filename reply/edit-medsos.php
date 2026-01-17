@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../helpers/username-validator.php';
+require_once __DIR__ . '/../helpers/error-handler.php';
 
 $update_result = updateUserPosition($chat_id, 'edit_medsos');
 
@@ -40,64 +41,8 @@ if($cb_data && strpos($cb_data, '/edit_account_') === 0) {
         $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
     } else {
 		// not found
-        $error_reply = "❌ Akun media sosial tidak ditemukan atau tidak valid.";
-
-        $bot->deleteMessage($chat_id, $msg_id);
-        $send_result = $bot->sendMessage($chat_id, $error_reply);
-
-        // Save msg_id
-        if ($send_result && isset($send_result['result']['message_id'])) {
-            $new_msg_id = $send_result['result']['message_id'];
-            db_update('smm_users', ['msg_id' => $new_msg_id], ['chatid' => $chat_id]);
-
-            sleep(3);
-
-            // Rebuild account list
-            $social_accounts = db_query("SELECT id, platform, username, account_url, status "
-                ."FROM smm_social_accounts "
-                ."WHERE user_id = ? AND status = 'active' "
-                ."ORDER BY platform, created_at", [$user_id]);
-
-            $list_reply = "🎛️ <b>Kelola Akun Media Sosial</b>\n\nSilakan pilih akun yang ingin Anda ubah atau hapus:";
-
-            if (count($social_accounts) > 0) {
-                $platform_icons = [
-                    'instagram' => '📷',
-                    'tiktok' => '🎵'
-                ];
-
-                $keyboard_buttons = [];
-
-                foreach ($social_accounts as $account) {
-                    $icon = $platform_icons[$account['platform']] ?? '🌐';
-                    $display_text = $icon . " " . $account['username'];
-                    $callback_data = '/edit_account_' . $account['id'];
-
-                    $keyboard_buttons[] = [$display_text, $callback_data];
-                }
-
-                // back button
-                $keyboard_buttons[] = ['🔙 Kembali', '/social'];
-
-                $list_keyboard = [];
-                foreach ($keyboard_buttons as $button) {
-                    $list_keyboard[] = [
-                        ['text' => $button[0], 'callback_data' => $button[1]]
-                    ];
-                }
-                $list_keyboard = $bot->buildInlineKeyboard($list_keyboard);
-            } else {
-                $list_reply = "⚠️ <b>Tidak ada akun terhubung.</b>\n\nAnda belum menghubungkan akun media sosial apapun.";
-
-                $list_keyboard = $bot->buildInlineKeyboard([
-                    [
-                        ['text' => '🔙 Kembali', 'callback_data' => '/social']
-                    ]
-                ]);
-            }
-
-            $bot->editMessage($chat_id, $new_msg_id, $list_reply, 'HTML', $list_keyboard);
-        }
+        $error_message = "❌ Akun media sosial tidak ditemukan atau tidak valid.";
+        sendErrorWithBackButton($bot, $chat_id, $msg_id, $error_message, '/edit_medsos', '🔙 Kembali ke Daftar Akun');
     }
 } else {
 
