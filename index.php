@@ -88,95 +88,98 @@ if (!empty($admin)) {
 //	FOR DEBUGGING ONLY:
 //	$reply .= "<pre>".json_encode($user)."</pre>";
 
-// Include reply handlers
+// ============================================
+// MESSAGE HANDLERS (Non-callback)
+// ============================================
 if(!$cb_data){
+	// Command: /start
 	if ($message == "/start") {
 		require_once 'reply/start.php';
 	}
-// ADMIN SUBMENU HANDLERS
-	if(isAdmin($chat_id)) {
-		if(strpos($submenu, 'topup_approve_') === 0 && hasPermission($chat_id, 'deposit_verify')) {
-			require_once 'reply/admin-topup-approve.php';
-		}
-		if(strpos($submenu, 'topup_reject_') === 0 && hasPermission($chat_id, 'deposit_verify')) {
-			require_once 'reply/admin-topup-reject.php';
-		}
-		if(strpos($submenu, 'task_approve_') === 0 && hasPermission($chat_id, 'task_verify')) {
-			require_once 'reply/admin-task-approve.php';
-		}
-		if(strpos($submenu, 'task_reject_') === 0 && hasPermission($chat_id, 'task_verify')) {
-			require_once 'reply/admin-task-reject.php';
-		}
-		if(strpos($submenu, 'withdraw_approve_') === 0 && hasPermission($chat_id, 'withdraw_verify')) {
-			require_once 'reply/admin-withdraw-approve.php';
-		}
-		if(strpos($submenu, 'withdraw_reject_') === 0 && hasPermission($chat_id, 'withdraw_verify')) {
-			require_once 'reply/admin-withdraw-reject.php';
-		}
-		if(strpos($submenu, 'campaign_reject_') === 0 && hasPermission($chat_id, 'campaign_verify')) {
-			require_once 'reply/admin-campaign-reject.php';
-		}
+	// ============================================
+	// ADMIN SUBMENU HANDLERS (State-based)
+	// ============================================
+	elseif(isAdmin($chat_id) && strpos($submenu, 'topup_approve_') === 0 && hasPermission($chat_id, 'deposit_verify')) {
+		require_once 'reply/admin-topup-approve.php';
 	}
-
-	// USER
-	if ($menu == 'add_instagram' || $menu == 'add_tiktok') {
+	elseif(isAdmin($chat_id) && strpos($submenu, 'topup_reject_') === 0 && hasPermission($chat_id, 'deposit_verify')) {
+		require_once 'reply/admin-topup-reject.php';
+	}
+	elseif(isAdmin($chat_id) && strpos($submenu, 'task_approve_') === 0 && hasPermission($chat_id, 'task_verify')) {
+		require_once 'reply/admin-task-approve.php';
+	}
+	elseif(isAdmin($chat_id) && strpos($submenu, 'task_reject_') === 0 && hasPermission($chat_id, 'task_verify')) {
+		require_once 'reply/admin-task-reject.php';
+	}
+	elseif(isAdmin($chat_id) && strpos($submenu, 'withdraw_approve_') === 0 && hasPermission($chat_id, 'withdraw_verify')) {
+		require_once 'reply/admin-withdraw-approve.php';
+	}
+	elseif(isAdmin($chat_id) && strpos($submenu, 'withdraw_reject_') === 0 && hasPermission($chat_id, 'withdraw_verify')) {
+		require_once 'reply/admin-withdraw-reject.php';
+	}
+	elseif(isAdmin($chat_id) && strpos($submenu, 'campaign_reject_') === 0 && hasPermission($chat_id, 'campaign_verify')) {
+		require_once 'reply/admin-campaign-reject.php';
+	}
+	// ============================================
+	// USER MENU HANDLERS (State-based)
+	// ============================================
+	// Social Media Account Management
+	elseif ($menu == 'add_instagram' || $menu == 'add_tiktok') {
 		require_once 'reply/tambah-medsos.php';
 	}
-	if ($menu == 'edit_username') {
+	elseif ($menu == 'edit_username') {
 		require_once 'reply/edit-username.php';
 	}
-	if ($menu == 'settings_edit_dana' || $menu == 'settings_edit_shopeepay') {
+	// Settings
+	elseif ($menu == 'settings_edit_dana' || $menu == 'settings_edit_shopeepay') {
 		require_once 'reply/settings-process-payment.php';
 	}
-	if ($menu == 'settings_edit_min_withdraw' || $menu == 'settings_edit_admin_fee') {
+	elseif ($menu == 'settings_edit_min_withdraw' || $menu == 'settings_edit_admin_fee') {
 		require_once 'reply/settings-process-withdraw.php';
 	}
-	if ($menu == 'settings_edit_min_price_per_task') {
+	elseif ($menu == 'settings_edit_min_price_per_task') {
 		require_once 'reply/settings-process-campaign.php';
 	}
-
 	// Withdraw
-	if ($menu == 'withdraw_amount') {
+	elseif ($menu == 'withdraw_amount') {
 		require_once 'reply/withdraw-amount.php';
 	}
-	if ($menu == 'withdraw_destination') {
+	elseif ($menu == 'withdraw_destination') {
 		require_once 'reply/withdraw-destination.php';
 	}
-	if ($menu == 'withdraw_campaign_amount') {
+	elseif ($menu == 'withdraw_campaign_amount') {
 		require_once 'reply/withdraw-campaign-amount.php';
 	}
-
-	// campaign
-	if ($menu == 'buat_campaign_type') {
+	// Campaign Creation
+	elseif ($menu == 'buat_campaign_type') {
 		require_once 'reply/buat-campaign-judul.php';
 	}
-	if ($menu == 'buat_campaign_akun') {
+	elseif ($menu == 'buat_campaign_akun') {
 		require_once 'reply/buat-campaign-akun.php';
 	}
-	if ($menu == 'buat_campaign_link') {
+	elseif ($menu == 'buat_campaign_link') {
 		require_once 'reply/buat-campaign-link.php';
 	}
-	if ($menu == 'buat_campaign_reward') {
+	elseif ($menu == 'buat_campaign_reward') {
 		require_once 'reply/buat-campaign-reward.php';
 	}
-	if ($menu == 'buat_campaign_target') {
+	elseif ($menu == 'buat_campaign_target') {
 		require_once 'reply/buat-campaign-target.php';
 	}
-
-	// Handle campaign edit inputs
-	if ($menu == 'edit_campaign_title') {
+	// Campaign Editing
+	elseif ($menu == 'edit_campaign_title') {
 		require_once 'reply/process-edit-campaign-title.php';
 	}
-	if ($menu == 'edit_campaign_target') {
+	elseif ($menu == 'edit_campaign_target') {
 		require_once 'reply/process-edit-campaign-target.php';
 	}
-	if ($menu == 'add_campaign_balance') {
+	elseif ($menu == 'add_campaign_balance') {
 		require_once 'reply/process-add-campaign-balance.php';
 	}
-	// edit campaign
-
-
-	if ($photo) {
+	// ============================================
+	// FILE UPLOAD HANDLERS
+	// ============================================
+	elseif ($photo) {
 		// Get File Data
 		$file_id = $bot->getPhotoFileId();
 		$file_info = $bot->getFile($file_id);
@@ -198,9 +201,7 @@ if(!$cb_data){
 
 		if($menu == "confirm_topup") {
 			include "reply/topup-proof.php";
-		}
-
-		if($menu == "upload_proof") {
+		} elseif($menu == "upload_proof") {
 			include "reply/task-proof.php";
 		}
 //		$bot->sendPhoto($chat_id, $file_id);
@@ -216,8 +217,7 @@ if(!$cb_data){
 		$reply .= "\n<pre>".json_encode($file_info, JSON_PRETTY_PRINT)."</pre>";
 		$bot->sendMessage($chat_id, $reply);*/
 	}
-
-	if ($document) {
+	elseif ($document) {
 		// DEBUGGING ONLY:
 /*		$file_id = $bot->getDocumentFileId();
 		$reply = "📄 Dokumen terdeteksi!\nFile ID: " . $file_id;
@@ -227,239 +227,240 @@ if(!$cb_data){
 		$bot->sendMessage($chat_id, $reply);*/
 	}
 } else {
-	// ADMIN CALLBACK HANDLERS WITH PERMISSION CHECK
+	// ============================================
+	// CALLBACK HANDLERS (Pattern ordered by specificity)
+	// ============================================
 	
-	// Task Verification
+	// ============================================
+	// ADMIN VERIFICATION HANDLERS
+	// ============================================
 	if($cb_data == "verifikasi" && hasPermission($chat_id, 'task_verify')) {
 		require_once 'reply/task-admin.php';
 	}
-	
-	// Campaign Verification
-	if($cb_data == "campaign_admin" && hasPermission($chat_id, 'campaign_verify')) {
+	elseif($cb_data == "campaign_admin" && hasPermission($chat_id, 'campaign_verify')) {
 		require_once 'reply/campaign-admin.php';
 	}
-	
-	// Deposit Verification
-	if($cb_data == "deposit_admin" && hasPermission($chat_id, 'deposit_verify')) {
+	elseif($cb_data == "deposit_admin" && hasPermission($chat_id, 'deposit_verify')) {
 		require_once 'reply/deposit-admin.php';
 	}
-	
-	// Withdraw Verification
-	if($cb_data == "withdraw_admin" && hasPermission($chat_id, 'withdraw_verify')) {
+	elseif($cb_data == "withdraw_admin" && hasPermission($chat_id, 'withdraw_verify')) {
 		require_once 'reply/withdraw-admin.php';
 	}
-
+	// ============================================
+	// ADMIN ACTION HANDLERS (Approve/Reject)
+	// ============================================
 	// Topup Actions
-	if(strpos($cb_data, 'admin_approve_topup_') === 0 && hasPermission($chat_id, 'deposit_verify')) {
+	elseif(strpos($cb_data, 'admin_approve_topup_') === 0 && hasPermission($chat_id, 'deposit_verify')) {
 		require_once 'reply/admin-topup.php';
 	}
-	if(strpos($cb_data, 'admin_reject_topup_') === 0 && hasPermission($chat_id, 'deposit_verify')) {
+	elseif(strpos($cb_data, 'admin_reject_topup_') === 0 && hasPermission($chat_id, 'deposit_verify')) {
 		require_once 'reply/admin-topup.php';
 	}
-
 	// Withdraw Actions
-	if(strpos($cb_data, 'admin_approve_withdraw_') === 0 && hasPermission($chat_id, 'withdraw_verify')) {
+	elseif(strpos($cb_data, 'admin_approve_withdraw_') === 0 && hasPermission($chat_id, 'withdraw_verify')) {
 		require_once 'reply/admin-withdraw.php';
 	}
-	if(strpos($cb_data, 'admin_reject_withdraw_') === 0 && hasPermission($chat_id, 'withdraw_verify')) {
+	elseif(strpos($cb_data, 'admin_reject_withdraw_') === 0 && hasPermission($chat_id, 'withdraw_verify')) {
 		require_once 'reply/admin-withdraw.php';
 	}
-
 	// Task Actions
-	if(strpos($cb_data, 'admin_approve_task_') === 0 && hasPermission($chat_id, 'task_verify')) {
+	elseif(strpos($cb_data, 'admin_approve_task_') === 0 && hasPermission($chat_id, 'task_verify')) {
 		require_once 'reply/admin-task.php';
 	}
-	if(strpos($cb_data, 'admin_reject_task_') === 0 && hasPermission($chat_id, 'task_verify')) {
+	elseif(strpos($cb_data, 'admin_reject_task_') === 0 && hasPermission($chat_id, 'task_verify')) {
 		require_once 'reply/admin-task.php';
 	}
-
 	// Campaign Actions
-	if(strpos($cb_data, 'admin_approve_campaign_') === 0 && hasPermission($chat_id, 'campaign_verify')) {
+	elseif(strpos($cb_data, 'admin_approve_campaign_') === 0 && hasPermission($chat_id, 'campaign_verify')) {
 		require_once 'reply/admin-campaign.php';
 	}
-	if(strpos($cb_data, 'admin_reject_campaign_') === 0 && hasPermission($chat_id, 'campaign_verify')) {
+	elseif(strpos($cb_data, 'admin_reject_campaign_') === 0 && hasPermission($chat_id, 'campaign_verify')) {
 		require_once 'reply/admin-campaign.php';
 	}
-
-	// Settings
-	if($cb_data == "settings" && hasAnyPermission($chat_id, ['settings_payment', 'settings_withdraw', 'settings_campaign'])) {
+	// ============================================
+	// SETTINGS HANDLERS
+	// ============================================
+	elseif($cb_data == "settings" && hasAnyPermission($chat_id, ['settings_payment', 'settings_withdraw', 'settings_campaign'])) {
 		require_once 'reply/settings.php';
 	}
-	if($cb_data == "settings_payment" && hasPermission($chat_id, 'settings_payment')) {
+	elseif($cb_data == "settings_payment" && hasPermission($chat_id, 'settings_payment')) {
 		require_once 'reply/settings-payment.php';
 	}
-	if($cb_data == "settings_withdraw" && hasPermission($chat_id, 'settings_withdraw')) {
+	elseif($cb_data == "settings_withdraw" && hasPermission($chat_id, 'settings_withdraw')) {
 		require_once 'reply/settings-withdraw.php';
 	}
-	if($cb_data == "settings_campaign" && hasPermission($chat_id, 'settings_campaign')) {
+	elseif($cb_data == "settings_campaign" && hasPermission($chat_id, 'settings_campaign')) {
 		require_once 'reply/settings-campaign.php';
 	}
-	if($cb_data == "settings_edit_dana" || $cb_data == "settings_edit_shopeepay") {
+	elseif($cb_data == "settings_edit_dana" || $cb_data == "settings_edit_shopeepay") {
 		require_once 'reply/settings-edit-payment.php';
 	}
-	if($cb_data == "settings_edit_min_withdraw" || $cb_data == "settings_edit_admin_fee") {
+	elseif($cb_data == "settings_edit_min_withdraw" || $cb_data == "settings_edit_admin_fee") {
 		require_once 'reply/settings-edit-withdraw.php';
 	}
-	if($cb_data == "settings_edit_min_price_per_task") {
+	elseif($cb_data == "settings_edit_min_price_per_task") {
 		require_once 'reply/settings-edit-campaign.php';
 	}
-
-	// Close Notification
-	if($cb_data == "close_notif") {
+	// ============================================
+	// UTILITY HANDLERS
+	// ============================================
+	elseif($cb_data == "close_notif") {
 		require_once 'reply/close-notif.php';
 	}
-
-	// USER
-	if($cb_data == "/start") {
+	// ============================================
+	// USER NAVIGATION HANDLERS
+	// ============================================
+	elseif($cb_data == "/start") {
 		require_once 'reply/start.php';
 	}
-	if($cb_data == "/help") {
+	// Help Menu
+	elseif($cb_data == "/help") {
 		require_once 'reply/help.php';
 	}
-	if($cb_data == "/help_about") {
+	elseif($cb_data == "/help_about") {
 		require_once 'reply/help-about.php';
 	}
-	if($cb_data == "/help_campaign") {
+	elseif($cb_data == "/help_campaign") {
 		require_once 'reply/help-campaign.php';
 	}
-	if($cb_data == "/help_task") {
+	elseif($cb_data == "/help_task") {
 		require_once 'reply/help-task.php';
 	}
-	if($cb_data == "/help_saldo") {
+	elseif($cb_data == "/help_saldo") {
 		require_once 'reply/help-saldo.php';
 	}
-	if($cb_data == "/help_withdraw") {
+	elseif($cb_data == "/help_withdraw") {
 		require_once 'reply/help-withdraw.php';
 	}
-	if($cb_data == "/help_medsos") {
+	elseif($cb_data == "/help_medsos") {
 		require_once 'reply/help-medsos.php';
 	}
-	if($cb_data == "/social") {
+	elseif($cb_data == "/social") {
 		require_once 'reply/social.php';
 	}
-	// Cek Saldo
-	if($cb_data == "/cek_saldo") {
+	// ============================================
+	// WALLET OPERATIONS
+	// ============================================
+	elseif($cb_data == "/cek_saldo") {
 		require_once 'reply/cek-saldo.php';
 	}
-	if($cb_data == "/riwayat_topup") {
+	elseif($cb_data == "/riwayat_topup") {
 		require_once 'reply/riwayat-topup.php';
 	}
-	// Topup
-	if($cb_data == "/topup") {
+	// Topup (exact match before pattern match)
+	elseif($cb_data == "/topup") {
 		require_once 'reply/topup.php';
 	}
-	if(strpos($cb_data, '/topup_') === 0) {
-		require_once 'reply/opsi-topup.php';
-	}
-	if($cb_data == "/konfirmasi_topup") {
+	elseif($cb_data == "/konfirmasi_topup") {
 		require_once 'reply/konfirmasi-topup.php';
 	}
+	elseif(strpos($cb_data, '/topup_') === 0) {
+		require_once 'reply/opsi-topup.php';
+	}
 	// Withdraw
-	if($cb_data == "/withdraw") {
+	elseif($cb_data == "/withdraw") {
 		require_once 'reply/withdraw.php';
 	}
-	if($cb_data == "/withdraw_wallet") {
+	elseif($cb_data == "/withdraw_wallet") {
 		require_once 'reply/withdraw-wallet.php';
 	}
-	if($cb_data == "/withdraw_campaign") {
+	elseif($cb_data == "/withdraw_campaign") {
 		require_once 'reply/withdraw-campaign.php';
 	}
-
-	// Add New Account
-	if($cb_data == "/tambah_medsos") {
+	// ============================================
+	// SOCIAL MEDIA ACCOUNT MANAGEMENT
+	// ============================================
+	elseif($cb_data == "/tambah_medsos") {
 		require_once 'reply/tambah-medsos.php';
 	}
-	if($cb_data == "/add_instagram") {
+	elseif($cb_data == "/add_instagram") {
 		require_once 'reply/tambah-medsos.php';
 	}
-	if($cb_data == "/add_tiktok") {
+	elseif($cb_data == "/add_tiktok") {
 		require_once 'reply/tambah-medsos.php';
 	}
-
-	// Edit Account
-	if($cb_data == "/edit_medsos") {
+	elseif($cb_data == "/edit_medsos") {
 		require_once 'reply/edit-medsos.php';
 	}
-	if(strpos($cb_data, '/edit_account_') === 0) {
+	elseif(strpos($cb_data, '/edit_account_') === 0) {
 		require_once 'reply/edit-medsos.php';
 	}
-
-	// Delete Account
-	if(strpos($cb_data, '/delete_account_') === 0) {
+	elseif(strpos($cb_data, '/delete_account_') === 0) {
 		require_once 'reply/delete-medsos.php';
 	}
-	if(strpos($cb_data, '/confirm_delete_') === 0) {
+	elseif(strpos($cb_data, '/confirm_delete_') === 0) {
 		require_once 'reply/delete-medsos.php';
 	}
-	// Edit Username
-	if(strpos($cb_data, '/edit_username_') === 0) {
+	elseif(strpos($cb_data, '/edit_username_') === 0) {
 		require_once 'reply/edit-username.php';
 	}
-
-	// Campaign
-	if($cb_data == "/cek_campaign") {
+	// ============================================
+	// CAMPAIGN MANAGEMENT
+	// ============================================
+	elseif($cb_data == "/cek_campaign") {
 		require_once 'reply/cek-campaign.php';
 	}
-	if($cb_data == "/buat_campaign") {
+	// Campaign Creation (exact match before pattern)
+	elseif($cb_data == "/buat_campaign") {
 		require_once 'reply/buat-campaign.php';
 	}
-	if(strpos($cb_data, '/buat_campaign_') === 0) {
-		require_once 'reply/buat-campaign-type.php';
-	}
-	if(strpos($cb_data, '/select_account_') === 0) {
-		require_once 'reply/buat-campaign-select-akun.php';
-	}
-	if($cb_data == "/simpan_campaign") {
+	elseif($cb_data == "/simpan_campaign") {
 		require_once 'reply/buat-campaign-simpan.php';
 	}
-
-	// edit campaign
-	if($cb_data == "/edit_campaign") {
+	elseif(strpos($cb_data, '/buat_campaign_') === 0) {
+		require_once 'reply/buat-campaign-type.php';
+	}
+	elseif(strpos($cb_data, '/select_account_') === 0) {
+		require_once 'reply/buat-campaign-select-akun.php';
+	}
+	// Campaign Editing (exact matches before patterns)
+	elseif($cb_data == "/edit_campaign") {
 		require_once 'reply/edit-campaign.php';
 	}
-	if($cb_data == "/campaign_topup") {
+	elseif($cb_data == "/campaign_topup") {
 		require_once 'reply/campaign-topup-list.php';
 	}
-	if(strpos($cb_data, '/select_campaign_') === 0) {
+	elseif(strpos($cb_data, '/select_campaign_') === 0) {
 		require_once 'reply/select-campaign.php';
 	}
-	if(strpos($cb_data, '/edit_campaign_detail_') === 0) {
+	elseif(strpos($cb_data, '/edit_campaign_detail_') === 0) {
 		require_once 'reply/edit-campaign-detail.php';
 	}
-	if(strpos($cb_data, '/pause_campaign_') === 0) {
-		require_once 'reply/pause-campaign.php';
-	}
-	if(strpos($cb_data, '/resume_campaign_') === 0) {
-		require_once 'reply/resume-campaign.php';
-	}
-	if(strpos($cb_data, '/add_campaign_balance_') === 0) {
-		require_once 'reply/add-campaign-balance.php';
-	}
-	if(strpos($cb_data, '/edit_campaign_title_') === 0) {
+	elseif(strpos($cb_data, '/edit_campaign_title_') === 0) {
 		require_once 'reply/edit-campaign-title.php';
 	}
-	if(strpos($cb_data, '/edit_campaign_target_') === 0) {
+	elseif(strpos($cb_data, '/edit_campaign_target_') === 0) {
 		require_once 'reply/edit-campaign-target.php';
 	}
-
-	// delete campaign
-	if(strpos($cb_data, '/delete_campaign_confirm_') === 0) {
+	elseif(strpos($cb_data, '/pause_campaign_') === 0) {
+		require_once 'reply/pause-campaign.php';
+	}
+	elseif(strpos($cb_data, '/resume_campaign_') === 0) {
+		require_once 'reply/resume-campaign.php';
+	}
+	elseif(strpos($cb_data, '/add_campaign_balance_') === 0) {
+		require_once 'reply/add-campaign-balance.php';
+	}
+	// Campaign Deletion (specific pattern before general)
+	elseif(strpos($cb_data, '/delete_campaign_confirm_') === 0) {
 		require_once 'reply/delete-campaign-confirm.php';
-	} elseif (strpos($cb_data, '/delete_campaign_') === 0) {
+	}
+	elseif(strpos($cb_data, '/delete_campaign_') === 0) {
 		require_once 'reply/delete-campaign.php';
 	}
-
-	// tugas
-	if($cb_data == "/task") {
+	// ============================================
+	// TASK MANAGEMENT
+	// ============================================
+	elseif($cb_data == "/task") {
 		require_once 'reply/task.php';
 	}
-	if($cb_data == "/task_refresh") {
+	elseif($cb_data == "/task_refresh") {
 		require_once 'reply/task.php';
 	}
-	if(strpos($cb_data, '/take_task_') === 0) {
+	elseif(strpos($cb_data, '/take_task_') === 0) {
 		require_once 'reply/take-task.php';
 	}
-	if(strpos($cb_data, '/cancel_task_') === 0) {
+	elseif(strpos($cb_data, '/cancel_task_') === 0) {
 		require_once 'reply/cancel-task.php';
 	}
 }
