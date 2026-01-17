@@ -62,6 +62,9 @@ if (!empty($campaign)) {
     }
 
     $price_per_task = floor($campaign_data['campaign_balance'] / $target);
+    
+    // Recalculate campaign_balance
+    $corrected_balance = $price_per_task * $target;
 
     if($price_per_task < $min_price_per_task) {
         $error_reply = "❌ <b>Harga Per Task Terlalu Rendah</b>\n\n";
@@ -82,11 +85,15 @@ if (!empty($campaign)) {
         return;
     }
 
-    // Update price_per_task di database
-    db_execute("UPDATE smm_campaigns SET price_per_task = ? WHERE id = ?", [$price_per_task, $campaign_data['id']]);
+    // Update price_per_task and campaign_balance di database
+    db_execute(
+        "UPDATE smm_campaigns SET price_per_task = ?, campaign_balance = ? WHERE id = ?", 
+        [$price_per_task, $corrected_balance, $campaign_data['id']]
+    );
 
     // Update campaign_data dengan nilai baru
     $campaign_data['price_per_task'] = $price_per_task;
+    $campaign_data['campaign_balance'] = $corrected_balance;
     
     // Platform icons
     $platform_icons = [
