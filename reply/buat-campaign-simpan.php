@@ -70,8 +70,8 @@ if (!empty($campaign)) {
         
         $admin_keyboard = $bot->buildInlineKeyboard([
             [
-                ['text' => '✅ Approve', 'callback_data' => '/admin_approve_campaign_' . $campaign_id],
-                ['text' => '❌ Reject', 'callback_data' => '/admin_reject_campaign_' . $campaign_id]
+                ['text' => '✅ Approve', 'callback_data' => 'admin_approve_campaign_' . $campaign_id],
+                ['text' => '❌ Reject', 'callback_data' => 'admin_reject_campaign_' . $campaign_id]
             ]
         ]);
         
