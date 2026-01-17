@@ -15,12 +15,50 @@ if (empty($link)) {
     return;
 }
 
-// Validasi link Instagram atau TikTok
-$is_instagram = (strpos($link, 'instagram.com') !== false || strpos($link, 'instagr.am') !== false);
-$is_tiktok = strpos($link, 'tiktok.com') !== false;
+// Get campaign data and social account info
+$campaign = db_query(
+    "SELECT c.id, c.social_account_id, s.platform, s.username " .
+    "FROM smm_campaigns c " .
+    "LEFT JOIN smm_social_accounts s ON c.social_account_id = s.id " .
+    "WHERE c.client_id = ? AND c.status = 'creating' " .
+    "ORDER BY c.id DESC LIMIT 1",
+    [$user_id]
+);
 
-if (!$is_instagram && !$is_tiktok) {
-    $error_reply = "❌ Link tidak valid!\n\nHanya link Instagram atau TikTok yang diperbolehkan.\n\nFormat yang benar:\n• Instagram: https://www.instagram.com/p/xxx/\n• TikTok: https://www.tiktok.com/@username/video/xxx\n\nSilakan masukkan link kembali atau batal untuk membatalkan pembuatan campaign:";
+if (empty($campaign)) {
+    $bot->sendMessage($chat_id, "❌ Campaign tidak ditemukan!");
+    return;
+}
+
+$selected_platform = $campaign[0]['platform'];
+
+// Validasi link sesuai platform yang dipilih
+$platform_checks = [
+    'instagram' => (strpos($link, 'instagram.com') !== false || strpos($link, 'instagr.am') !== false),
+    'tiktok' => (strpos($link, 'tiktok.com') !== false),
+    'youtube' => (strpos($link, 'youtube.com') !== false || strpos($link, 'youtu.be') !== false),
+    'twitter' => (strpos($link, 'twitter.com') !== false || strpos($link, 'x.com') !== false),
+    'facebook' => (strpos($link, 'facebook.com') !== false || strpos($link, 'fb.com') !== false)
+];
+
+$is_valid_platform = $platform_checks[$selected_platform] ?? false;
+
+if (!$is_valid_platform) {
+    $platform_names = [
+        'instagram' => 'Instagram',
+        'tiktok' => 'TikTok',
+        'youtube' => 'YouTube',
+        'twitter' => 'Twitter',
+        'facebook' => 'Facebook'
+    ];
+    
+    $platform_name = $platform_names[$selected_platform] ?? ucfirst($selected_platform);
+    
+    $error_reply = "❌ Link tidak sesuai dengan platform yang dipilih!\n\n";
+    $error_reply .= "Platform akun Anda: <b>" . $platform_name . "</b>\n";
+    $error_reply .= "Pastikan link yang Anda masukkan adalah link " . $platform_name . ".\n\n";
+    $error_reply .= "Silakan masukkan link kembali atau batal untuk membatalkan pembuatan campaign:";
+    
     sendErrorWithBackButton(
         $bot, 
         $chat_id, 
@@ -31,7 +69,7 @@ if (!$is_instagram && !$is_tiktok) {
     return;
 }
 
-// Update judul campaign di database
+// Update link_target campaign di database
 db_execute("UPDATE smm_campaigns SET link_target = ? WHERE client_id = ? AND status = 'creating'", [$link, $user_id]);
 
 // Hapus pesan lama dengan msg_id
@@ -46,7 +84,28 @@ if (!$update_result) {
     return;
 }
 
+// Platform icons
+$platform_icons = [
+    'instagram' => '📷',
+    'tiktok' => '🎵',
+    'youtube' => '▶️',
+    'twitter' => '🐦',
+    'facebook' => '👍'
+];
+
+$icon = $platform_icons[$selected_platform] ?? '📱';
+$platform_names = [
+    'instagram' => 'Instagram',
+    'tiktok' => 'TikTok',
+    'youtube' => 'YouTube',
+    'twitter' => 'Twitter',
+    'facebook' => 'Facebook'
+];
+$platform_name = $platform_names[$selected_platform] ?? ucfirst($selected_platform);
+
 $reply = "<b>📝 Buat Campaign - Reward</b>\n\n";
+$reply .= "Akun: " . $icon . " <b>" . $platform_name . " - @" . $campaign[0]['username'] . "</b>\n";
+$reply .= "Link: <code>" . $link . "</code>\n\n";
 $reply .= "Silakan masukkan total reward untuk campaign ini:\n\n";
 $reply .= "💡 <i>Contoh: 25000</i>\n\n";
 $reply .= "💰 Ketik total reward:";

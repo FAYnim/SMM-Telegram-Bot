@@ -150,6 +150,9 @@ if(!$cb_data){
 	if ($menu == 'buat_campaign_type') {
 		require_once 'reply/buat-campaign-judul.php';
 	}
+	if ($menu == 'buat_campaign_akun') {
+		require_once 'reply/buat-campaign-akun.php';
+	}
 	if ($menu == 'buat_campaign_link') {
 		require_once 'reply/buat-campaign-link.php';
 	}
@@ -402,6 +405,9 @@ if(!$cb_data){
 	}
 	if(strpos($cb_data, '/buat_campaign_') === 0) {
 		require_once 'reply/buat-campaign-type.php';
+	}
+	if(strpos($cb_data, '/select_account_') === 0) {
+		require_once 'reply/buat-campaign-select-akun.php';
 	}
 	if($cb_data == "/simpan_campaign") {
 		require_once 'reply/buat-campaign-simpan.php';
