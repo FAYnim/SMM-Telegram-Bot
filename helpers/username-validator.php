@@ -34,6 +34,15 @@ function validateUsername($username, $platform) {
         ];
     }
 
+    // Check for allowed characters (a-z, 0-9, dot, underscore)
+    if (!preg_match('/^[a-z0-9._]+$/i', $username)) {
+        return [
+            'valid' => false,
+            'username' => $username,
+            'message' => '❌ Username hanya boleh mengandung huruf (a-z), angka (0-9), titik (.), dan underscore (_).'
+        ];
+    }
+
     // Check if username already exists for this platform
     $existing_username = db_read('smm_social_accounts', [
         'platform' => $platform,
