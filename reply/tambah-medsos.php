@@ -74,7 +74,7 @@ if (!$cb_data && $user[0]['menu'] == 'add_instagram') {
     $validation = validateUsername($message, 'instagram');
 
     if (!$validation['valid']) {
-        sendErrorWithBackButton($bot, $chat_id, $msg_id, $validation['message'], '/add_instagram', '🔙 Kembali');
+        sendErrorWithBackButton($bot, $chat_id, $msg_id, $validation['message'], '/social', '🔙 Kembali');
         return;
     }
 
@@ -163,7 +163,7 @@ if (!$cb_data && $user[0]['menu'] == 'add_tiktok') {
     $validation = validateUsername($message, 'tiktok');
 
     if (!$validation['valid']) {
-        sendErrorWithBackButton($bot, $chat_id, $msg_id, $validation['message'], '/add_tiktok', '🔙 Kembali');
+        sendErrorWithBackButton($bot, $chat_id, $msg_id, $validation['message'], '/social', '🔙 Kembali');
         return;
     }
 
