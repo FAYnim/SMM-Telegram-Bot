@@ -58,8 +58,9 @@ if (!empty($campaign)) {
         $admin_reply = "🔔 <b>Campaign Baru Menunggu Verifikasi</b>\n\n";
         $admin_reply .= "<b>📋 Detail Campaign:</b>\n";
         $admin_reply .= "🆔 ID: #" . $campaign_data['id'] . "\n";
-        $admin_reply .= "👤 Client: " . htmlspecialchars($user[0]['full_name']) . " (@" . $user[0]['username'] . ")\n";
-        $admin_reply .= "📝 Judul: " . htmlspecialchars($campaign_data['campaign_title']) . "\n";
+		$admin_reply .= "👤 Client: " . htmlspecialchars($user[0]['full_name']) .
+						(!empty($user[0]['username']) ? " (@" . htmlspecialchars($user[0]['username']) . ")" : "") . "\n";
+		$admin_reply .= "📝 Judul: " . htmlspecialchars($campaign_data['campaign_title']) . "\n";
         $admin_reply .= "🎯 Tipe: " . ucfirst($campaign_data['type']) . "s\n";
         $admin_reply .= $icon . " Platform: <b>" . $platform_name . " - @" . $campaign_data['username'] . "</b>\n";
         $admin_reply .= "🔗 Link: " . $campaign_data['link_target'] . "\n";
