@@ -64,9 +64,8 @@ if (!empty($campaign)) {
         $admin_reply .= "🎯 Tipe: " . ucfirst($campaign_data['type']) . "s\n";
         $admin_reply .= $icon . " Platform: <b>" . $platform_name . " - @" . $campaign_data['username'] . "</b>\n";
         $admin_reply .= "🔗 Link: " . $campaign_data['link_target'] . "\n";
-        $admin_reply .= "💰 Harga/task: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n";
+        $admin_reply .= "💰 Reward: " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n";
         $admin_reply .= "🎯 Target: " . number_format($campaign_data['target_total']) . " tasks\n";
-        $admin_reply .= "💰 Total Budget: Rp " . number_format($campaign_data['campaign_budget'], 0, ',', '.') . "\n\n";
         $admin_reply .= "Silakan verifikasi campaign ini.";
         
         $admin_keyboard = $bot->buildInlineKeyboard([
@@ -121,9 +120,8 @@ if (!empty($campaign)) {
     $reply .= "🎯 Tipe: " . ucfirst($campaign_data['type']) . "s\n";
     $reply .= $icon . " Akun: <b>" . $platform_name . " - @" . $campaign_data['username'] . "</b>\n";
     $reply .= "🔗 Link: <code>" . $campaign_data['link_target'] . "</code>\n";
-    $reply .= "💰 Harga/task: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n";
+    $reply .= "💰 Reward: " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n";
     $reply .= "🎯 Target: " . number_format($campaign_data['target_total']) . " tasks\n";
-    $reply .= "💰 Total Budget: Rp " . number_format($campaign_data['campaign_budget'], 0, ',', '.') . "\n";
     $reply .= "📊 Status: <i>Menunggu Verifikasi Admin</i>\n\n";
     $reply .= "Anda akan mendapat notifikasi setelah campaign diverifikasi.";
 } else {

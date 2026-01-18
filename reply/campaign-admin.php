@@ -69,9 +69,8 @@
 		$reply .= "🎬 Judul: " . htmlspecialchars($campaign_title) . "\n";
 		$reply .= "📊 Jenis: " . $type_label . "\n";
 		$reply .= "🔗 Link: " . htmlspecialchars($link_target) . "\n";
-		$reply .= "💰 Harga/Task: Rp " . number_format($price_per_task, 0, ',', '.') . "\n";
+		$reply .= "💰 Reward: " . number_format($price_per_task, 0, ',', '.') . "\n";
 		$reply .= "🎯 Target: " . number_format($target_total) . " tasks\n";
-		$reply .= "💳 Total Budget: Rp " . number_format($campaign_budget, 0, ',', '.') . "\n";
 		
 		$bot->sendMessage($chat_id, $reply, null, 'HTML');
 		
