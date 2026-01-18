@@ -160,9 +160,14 @@ if(!$cb_data){
 	elseif ($menu == 'buat_campaign_link') {
 		require_once 'reply/buat-campaign-link.php';
 	}
-	elseif ($menu == 'buat_campaign_reward') {
+	elseif ($menu == 'buat_campaign_price') {
+		require_once 'reply/buat-campaign-price.php';
+	}
+	
+	elseif ($menu == 'buat_campaign_reward') { // Catatan, kemungkinan nggak dipakai
 		require_once 'reply/buat-campaign-reward.php';
 	}
+
 	elseif ($menu == 'buat_campaign_target') {
 		require_once 'reply/buat-campaign-target.php';
 	}

@@ -38,7 +38,7 @@ if ($msg_id) {
 
 // Ambil semua data campaign yang baru dibuat dengan data akun medsos
 $campaign = db_query(
-    "SELECT c.id, c.campaign_title, c.type, c.link_target, c.price_per_task, c.target_total, c.campaign_balance, c.created_at, " .
+    "SELECT c.id, c.campaign_title, c.type, c.link_target, c.price_per_task, c.target_total, c.campaign_balance, c.campaign_budget, c.created_at, " .
     "s.platform, s.username, s.account_url " .
     "FROM smm_campaigns c " .
     "LEFT JOIN smm_social_accounts s ON c.social_account_id = s.id " .
@@ -50,7 +50,7 @@ $campaign = db_query(
 if (!empty($campaign)) {
     $campaign_data = $campaign[0];
 
-    $settings = db_read('smm_settings', ['category' => 'campaign']);
+    /*$settings = db_read('smm_settings', ['category' => 'campaign']);
     $min_price_per_task = 100;
     if(!empty($settings)) {
         foreach($settings as $setting) {
@@ -84,16 +84,26 @@ if (!empty($campaign)) {
         );
         return;
     }
-
+*/
+	// Calculate campaign_budget
+	$campaign_price = $campaign_data['price_per_task'];
+	$campaign_target = $campaign_data['target_total'];
+	$campaign_balance = $campaign_data['campaign_balance'];
+	$campaign_title = $campaign_data['title'];
+	$campaign_type = $campaign_data['type'];
+	$campaign_username = $campaign_data['username'];
+	$campaign_link_target = $campaign_data['link_target'];
+	$campaign_created_at = $campaign_data['created_at'];
+	
+	$calc_campaign_budget = $campaign_price * $campaign_target;
+	
     // Update price_per_task and campaign_balance di database
     db_execute(
-        "UPDATE smm_campaigns SET price_per_task = ?, campaign_balance = ? WHERE id = ?", 
-        [$price_per_task, $corrected_balance, $campaign_data['id']]
+        "UPDATE smm_campaigns SET campaign_budget = ? WHERE id = ?", 
+        [$calc_campaign_budget, $campaign_data['id']]
     );
 
     // Update campaign_data dengan nilai baru
-    $campaign_data['price_per_task'] = $price_per_task;
-    $campaign_data['campaign_balance'] = $corrected_balance;
     
     // Platform icons
     $platform_icons = [
@@ -119,14 +129,14 @@ if (!empty($campaign)) {
     $reply .= "Silakan periksa detail campaign Anda:\n\n";
     $reply .= "<b>📋 Detail Campaign:</b>\n";
     $reply .= "🆔 ID: #" . $campaign_data['id'] . "\n";
-    $reply .= "📝 Judul: " . htmlspecialchars($campaign_data['campaign_title']) . "\n";
-    $reply .= "🎯 Tipe: " . ucfirst($campaign_data['type']) . "s\n";
-    $reply .= $icon . " Akun: <b>" . $platform_name . " - @" . $campaign_data['username'] . "</b>\n";
-    $reply .= "🔗 Link: <code>" . $campaign_data['link_target'] . "</code>\n";
-    $reply .= "💰 Harga/task: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n";
-    $reply .= "🎯 Target: " . number_format($campaign_data['target_total']) . " tasks\n";
-    $reply .= "💰 Total Budget: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n";
-    $reply .= "📅 Dibuat: " . date('d/m/Y H:i', strtotime($campaign_data['created_at'])) . "\n\n";
+    $reply .= "📝 Judul: " . htmlspecialchars($campaign_title) . "\n";
+    $reply .= "🎯 Tipe: " . ucfirst($campaign_type) . "s\n";
+    $reply .= $icon . " Akun: <b>" . $platform_name . " - @" . $campaign_username . "</b>\n";
+    $reply .= "🔗 Link: <code>" . $campaign_link_target. "</code>\n";
+    $reply .= "💰 Harga/task: Rp " . number_format($campaign_price, 0, ',', '.') . "\n";
+    $reply .= "🎯 Target: " . number_format($campaign_target) . " tasks\n";
+    $reply .= "💰 Total Budget: Rp " . number_format($calc_campaign_budget, 0, ',', '.') . "\n";
+    $reply .= "📅 Dibuat: " . date('d/m/Y H:i', strtotime($campaign_created_at)) . "\n\n";
     $reply .= "Apakah detail campaign sudah benar?";
 } else {
     $reply = "<b>❓ Konfirmasi Campaign</b>\n\n";

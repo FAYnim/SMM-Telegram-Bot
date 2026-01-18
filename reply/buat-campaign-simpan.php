@@ -15,7 +15,7 @@ $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
 
 // Ambil campaign yang baru dibuat (status 'creating') dengan data akun medsos
 $campaign = db_query(
-    "SELECT c.id, c.campaign_title, c.type, c.link_target, c.target_total, c.campaign_balance, c.price_per_task, " .
+    "SELECT c.id, c.campaign_title, c.type, c.link_target, c.target_total, c.campaign_balance, c.campaign_budget, c.price_per_task, " .
     "s.platform, s.username, s.account_url " .
     "FROM smm_campaigns c " .
     "LEFT JOIN smm_social_accounts s ON c.social_account_id = s.id " .
@@ -65,7 +65,7 @@ if (!empty($campaign)) {
         $admin_reply .= "🔗 Link: " . $campaign_data['link_target'] . "\n";
         $admin_reply .= "💰 Harga/task: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n";
         $admin_reply .= "🎯 Target: " . number_format($campaign_data['target_total']) . " tasks\n";
-        $admin_reply .= "💰 Total Budget: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n\n";
+        $admin_reply .= "💰 Total Budget: Rp " . number_format($campaign_data['campaign_budget'], 0, ',', '.') . "\n\n";
         $admin_reply .= "Silakan verifikasi campaign ini.";
         
         $admin_keyboard = $bot->buildInlineKeyboard([
@@ -122,7 +122,7 @@ if (!empty($campaign)) {
     $reply .= "🔗 Link: <code>" . $campaign_data['link_target'] . "</code>\n";
     $reply .= "💰 Harga/task: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n";
     $reply .= "🎯 Target: " . number_format($campaign_data['target_total']) . " tasks\n";
-    $reply .= "💰 Total Budget: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n";
+    $reply .= "💰 Total Budget: Rp " . number_format($campaign_data['campaign_budget'], 0, ',', '.') . "\n";
     $reply .= "📊 Status: <i>Menunggu Verifikasi Admin</i>\n\n";
     $reply .= "Anda akan mendapat notifikasi setelah campaign diverifikasi.";
 } else {

@@ -17,7 +17,7 @@ if (empty($link)) {
 
 // Get campaign data and social account info
 $campaign = db_query(
-    "SELECT c.id, c.social_account_id, s.platform, s.username " .
+    "SELECT c.id, c.social_account_id, c.type, s.platform, s.username " .
     "FROM smm_campaigns c " .
     "LEFT JOIN smm_social_accounts s ON c.social_account_id = s.id " .
     "WHERE c.client_id = ? AND c.status = 'creating' " .
@@ -30,7 +30,9 @@ if (empty($campaign)) {
     return;
 }
 
-$selected_platform = $campaign[0]['platform'];
+$campaign_data = $campaign[0];
+$campaign_type = $campaign_data['type'];
+$selected_platform = $campaign_data['platform'];
 
 // Validasi link sesuai platform yang dipilih
 $platform_checks = [
@@ -77,7 +79,7 @@ if ($msg_id) {
     $bot->deleteMessage($chat_id, $msg_id);
 }
 
-$update_result = updateUserPosition($chat_id, 'buat_campaign_reward');
+$update_result = updateUserPosition($chat_id, 'buat_campaign_price');
 
 if (!$update_result) {
     $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
@@ -103,12 +105,12 @@ $platform_names = [
 ];
 $platform_name = $platform_names[$selected_platform] ?? ucfirst($selected_platform);
 
-$reply = "<b>📝 Buat Campaign - Reward</b>\n\n";
+$reply = "<b>📝 Buat Campaign - Price</b>\n\n";
 $reply .= "Akun: " . $icon . " <b>" . $platform_name . " - @" . $campaign[0]['username'] . "</b>\n";
 $reply .= "Link: <code>" . $link . "</code>\n\n";
-$reply .= "Silakan masukkan total reward untuk campaign ini:\n\n";
-$reply .= "💡 <i>Contoh: 25000</i>\n\n";
-$reply .= "💰 Ketik total reward:";
+$reply .= "Silakan masukkan price/harga untuk tiap ".$campaign_type.":\n\n";
+$reply .= "💡 <i>Contoh: 500</i>\n\n";
+$reply .= "💰 Ketik price:";
 
 $keyboard = $bot->buildInlineKeyboard([
     [
