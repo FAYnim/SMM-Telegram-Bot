@@ -23,6 +23,7 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
     $client_id = $campaign_data['client_id'];
     $client_chatid = $campaign_data['client_chatid'];
     $campaign_balance = $campaign_data['campaign_balance'];
+	$campaign_budget = $campaign_data['campaign_budget'];
     $target_total = $campaign_data['target_total'];
 
     // Cek apakah campaign masih draft
@@ -46,18 +47,18 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
     $balance_before = $wallet_data['balance'];
     
     // Cek saldo cukup atau tidak
-    if ($balance_before >= $campaign_balance) {
+    if ($balance_before >= $campaign_budget) {
         // SALDO CUKUP - Active campaign
         
         // Kurangi saldo wallet client
-        $balance_after = $balance_before - $campaign_balance;
+        $balance_after = $balance_before - $campaign_budget;
         db_execute("UPDATE smm_wallets SET balance = ? WHERE id = ?", [$balance_after, $wallet_id]);
         
         // Buat record transaksi
         $transaction_data = [
             'wallet_id' => $wallet_id,
             'type' => 'adjustment',
-            'amount' => -$campaign_balance,
+            'amount' => -$campaign_budget,
             'balance_before' => $balance_before,
             'balance_after' => $balance_after,
             'description' => "Pembayaran campaign #".$campaign_id." - ".$campaign_data['campaign_title'],
@@ -81,7 +82,7 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
         }
         
         // Update status campaign menjadi active
-        db_execute("UPDATE smm_campaigns SET status = 'active' WHERE id = ?", [$campaign_id]);
+        db_execute("UPDATE smm_campaigns SET status = 'active', campaign_balance = ? WHERE id = ?", [$campaign_budget, $campaign_id]);
         
         // Notifikasi ke client
         $client_reply = "✅ <b>Campaign Disetujui!</b>\n\n";
@@ -90,9 +91,9 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
         $client_reply .= "🆔 ID: #" . $campaign_id . "\n";
         $client_reply .= "📝 Judul: " . htmlspecialchars($campaign_data['campaign_title']) . "\n";
         $client_reply .= "🎯 Target: " . number_format($target_total) . " tasks\n";
-        $client_reply .= "💰 Total Budget: Rp " . number_format($campaign_balance, 0, ',', '.') . "\n";
+        $client_reply .= "💰 Total Budget: Rp " . number_format($campaign_budget, 0, ',', '.') . "\n";
         $client_reply .= "📊 Tasks Generated: " . $tasks_generated . "\n";
-        $client_reply .= "💳 Saldo Terpotong: Rp " . number_format($campaign_balance, 0, ',', '.') . "\n\n";
+        $client_reply .= "💳 Saldo Terpotong: Rp " . number_format($campaign_budget, 0, ',', '.') . "\n\n";
         $client_reply .= "Campaign Anda sekarang aktif dan siap menerima workers!";
         
         // Keyboard untuk tutup notifikasi
@@ -135,13 +136,14 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
         $client_reply .= "<b>📋 Detail Campaign:</b>\n";
         $client_reply .= "🆔 ID: #" . $campaign_id . "\n";
         $client_reply .= "📝 Judul: " . htmlspecialchars($campaign_data['campaign_title']) . "\n";
-        $client_reply .= "💰 Total Budget: Rp " . number_format($campaign_balance, 0, ',', '.') . "\n";
-        $client_reply .= "💳 Sisa Budget: Rp " . number_format($balance_before, 0, ',', '.') . "\n\n";
+        $client_reply .= "💰 Budget Campaign: Rp " . number_format($campaign_budget, 0, ',', '.') . "\n";
+        //$client_reply .= "💳 Sisa Budget: Rp " . number_format($balance_before, 0, ',', '.') . "\n\n";
 		$client_reply .= "🔴 Status: paused\n\n";
 /*        $client_reply .= "❌ <b>Saldo tidak mencukupi!</b>\n";
         $client_reply .= "Campaign akan di-pause sampai saldo Anda cukup.\n\n";
         $client_reply .= "Silakan top-up minimal Rp " . number_format($campaign_balance - $balance_before, 0, ',', '.') . " untuk mengaktifkan campaign.";
 */
+		$client_reply .= "<i>Saldo kamu kurang dari budget yang dibutuhkan</i>\n\n";
 		$client_reply .= "Status akan menjadi 🟢 Running setelah Budget Campaign memiliki saldo cukup";
         
         // Keyboard untuk tutup notifikasi
@@ -159,7 +161,7 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
         $admin_reply = "⚠️ <b>Campaign Disetujui - Status Paused</b>\n\n";
         $admin_reply .= "Campaign #" . $campaign_id . " diverifikasi.\n";
         $admin_reply .= "💳 Saldo client: Rp " . number_format($balance_before, 0, ',', '.') . "\n";
-        $admin_reply .= "💰 Dibutuhkan: Rp " . number_format($campaign_balance, 0, ',', '.') . "\n";
+        $admin_reply .= "💰 Dibutuhkan: Rp " . number_format($campaign_budget, 0, ',', '.') . "\n";
         $admin_reply .= "❌ Saldo tidak cukup - campaign di-pause.\n\n";
         $admin_reply .= "Client perlu top-up untuk mengaktifkan campaign.";
         

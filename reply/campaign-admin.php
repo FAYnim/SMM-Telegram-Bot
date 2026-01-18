@@ -6,7 +6,7 @@
 		return;
 	}
 	
-	$sql = db_query("SELECT id, client_id, campaign_title, type, link_target, price_per_task, target_total, campaign_balance, created_at FROM smm_campaigns WHERE status = 'draft' ORDER BY id DESC LIMIT 0,1");
+	$sql = db_query("SELECT id, client_id, campaign_title, type, link_target, price_per_task, target_total, campaign_balance, campaign_budget, created_at FROM smm_campaigns WHERE status = 'draft' ORDER BY id DESC LIMIT 0,1");
 		
 	if(count($sql) > 0) {
 		$campaign_data = $sql[0];
@@ -18,6 +18,7 @@
 		$price_per_task = $campaign_data["price_per_task"];
 		$target_total = $campaign_data["target_total"];
 		$campaign_balance = $campaign_data["campaign_balance"];
+		$campaign_budget = $campaign_data["campaign_budget"];
 		$created_at = $campaign_data["created_at"];
 
 		// Get user data
@@ -70,7 +71,7 @@
 		$reply .= "🔗 Link: " . htmlspecialchars($link_target) . "\n";
 		$reply .= "💰 Harga/Task: Rp " . number_format($price_per_task, 0, ',', '.') . "\n";
 		$reply .= "🎯 Target: " . number_format($target_total) . " tasks\n";
-		$reply .= "💳 Total Budget: Rp " . number_format($campaign_balance, 0, ',', '.') . "\n";
+		$reply .= "💳 Total Budget: Rp " . number_format($campaign_budget, 0, ',', '.') . "\n";
 		
 		$bot->sendMessage($chat_id, $reply, null, 'HTML');
 		
