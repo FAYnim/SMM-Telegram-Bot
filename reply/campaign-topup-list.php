@@ -9,7 +9,7 @@ if (!$update_result) {
 // Get user's campaigns
 $campaigns = db_query("SELECT id, campaign_title, status "
     ."FROM smm_campaigns "
-    ."WHERE client_id = ? AND status NOT IN ('deleted', 'creating') "
+    ."WHERE client_id = ? AND status NOT IN ('deleted', 'creating', 'draft') "
     ."ORDER BY created_at DESC LIMIT 0,5", [$user_id]);
 
 if (count($campaigns) > 0) {
