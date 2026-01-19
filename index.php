@@ -137,6 +137,9 @@ if(!$cb_data){
 	elseif ($menu == 'settings_edit_min_withdraw' || $menu == 'settings_edit_admin_fee') {
 		require_once 'reply/settings-process-withdraw.php';
 	}
+	elseif ($menu == 'settings_input_admin_fee_flat' || $menu == 'settings_input_admin_fee_percentage') {
+		require_once 'reply/settings-process-withdraw.php';
+	}
 	elseif ($menu == 'settings_edit_min_price_per_task') {
 		require_once 'reply/settings-process-campaign.php';
 	}
@@ -302,6 +305,9 @@ if(!$cb_data){
 	}
 	elseif($cb_data == "settings_edit_min_withdraw" || $cb_data == "settings_edit_admin_fee") {
 		require_once 'reply/settings-edit-withdraw.php';
+	}
+	elseif($cb_data == "settings_admin_fee_flat" || $cb_data == "settings_admin_fee_percentage") {
+		require_once 'reply/settings-admin-fee-type.php';
 	}
 	elseif($cb_data == "settings_edit_min_price_per_task") {
 		require_once 'reply/settings-edit-campaign.php';
