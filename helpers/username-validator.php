@@ -34,6 +34,24 @@ function validateUsername($username, $platform) {
         ];
     }
 
+    // Check if username is only numbers
+    if (is_numeric($username)) {
+        return [
+            'valid' => false,
+            'username' => $username,
+            'message' => '❌ Username tidak boleh hanya terdiri dari angka!'
+        ];
+    }
+
+    // Check if username starts with a number
+    if (preg_match('/^[0-9]/', $username)) {
+        return [
+            'valid' => false,
+            'username' => $username,
+            'message' => '❌ Username tidak boleh diawali dengan angka!'
+        ];
+    }
+
     // Check for allowed characters (a-z, 0-9, dot, underscore)
     if (!preg_match('/^[a-z0-9._]+$/i', $username)) {
         return [
