@@ -42,9 +42,35 @@ if (empty($wallet_result)) {
 
 $current_profit = $wallet_result[0]['profit'];
 
-if ($amount > $current_profit) {
+// Baca settings untuk admin fee
+$settings = db_read('smm_settings', ['category' => 'withdraw']);
+$admin_fee_type = 'flat'; // default
+$admin_fee_value = 0;
+
+if(!empty($settings)) {
+	foreach($settings as $setting) {
+		if($setting['setting_key'] == 'admin_fee_type') {
+			$admin_fee_type = $setting['setting_value'];
+		}
+		if($setting['setting_key'] == 'admin_fee') {
+			$admin_fee_value = $setting['setting_value'];
+		}
+	}
+}
+
+// Hitung fee berdasarkan tipe
+if($admin_fee_type == 'percentage') {
+	$fee = floor(($amount * $admin_fee_value) / 100);
+} else {
+	$fee = $admin_fee_value;
+}
+
+// Validasi saldo: amount + fee harus <= current_profit
+if (($amount + $fee) > $current_profit) {
     $reply = "❌ <b>Saldo Tidak Mencukupi</b>\n\n"
-        . "Terjadi perubahan saldo saat proses withdraw.\n"
+        . "Nominal withdraw: Rp " . number_format($amount, 0, ',', '.') . "\n"
+        . "Biaya admin: Rp " . number_format($fee, 0, ',', '.') . "\n"
+        . "Total: Rp " . number_format($amount + $fee, 0, ',', '.') . "\n\n"
         . "Saldo Anda saat ini: Rp " . number_format($current_profit, 0, ',', '.') . "\n\n"
         . "Silakan ulangi proses withdraw dengan nominal yang sesuai.";
 
@@ -72,7 +98,7 @@ $withdraw_data = [
     'user_id' => $user_id,
     'amount' => $amount,
     'destination_account' => $destination_account,
-    'fee' => 0, // MVP: no fee
+    'fee' => $fee,
     'status' => 'pending'
 ];
 
@@ -92,8 +118,15 @@ if (!$withdraw_id) {
         $reply_admin = "💸 <b>WITHDRAW BARU!</b>\n\n"
             . "User: " . $sender_name . " (ID: " . $chat_id . ")\n"
             . "💰 Nominal: Rp " . number_format($amount, 0, ',', '.') . "\n"
-            . "💳 Tujuan: <code>" . $destination_account . "</code>\n"
-            . "📅 Waktu: " . date('d M Y, H:i') . "\n\n"
+            . "💳 Tujuan: <code>" . $destination_account . "</code>\n";
+        
+        // Tambahkan info fee jika ada
+        if($fee > 0) {
+            $reply_admin .= "💵 Biaya Admin: Rp " . number_format($fee, 0, ',', '.') . "\n";
+            $reply_admin .= "📊 Total Dipotong: Rp " . number_format($amount + $fee, 0, ',', '.') . "\n";
+        }
+        
+        $reply_admin .= "📅 Waktu: " . date('d M Y, H:i') . "\n\n"
             . "Silakan proses permintaan withdraw ini.";
 
         $keyboard_admin = $bot->buildInlineKeyboard([
@@ -111,8 +144,14 @@ if (!$withdraw_id) {
 
 // Update pesan user jadi Final
 $reply_user = "✅ <b>Permintaan Withdraw Terkirim</b>\n\n"
-    . "💰 Nominal: Rp " . number_format($amount, 0, ',', '.') . "\n"
-    . "💳 Tujuan: " . $destination_account . "\n\n"
+    . "💰 Nominal: Rp " . number_format($amount, 0, ',', '.') . "\n";
+
+// Tambahkan info fee jika ada
+if($fee > 0) {
+    $reply_user .= "💵 Biaya Admin: Rp " . number_format($fee, 0, ',', '.') . "\n";
+}
+
+$reply_user .= "💳 Tujuan: " . $destination_account . "\n\n"
     . "⏳ <b>Status: Menunggu Verifikasi</b>\n"
     . "Admin kami akan memproses permintaan withdraw Anda. Dana akan ditransfer setelah disetujui (Estimasi 1-24 jam).";
 
