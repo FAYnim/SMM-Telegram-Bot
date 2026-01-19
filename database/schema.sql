@@ -159,6 +159,13 @@ CREATE TABLE IF NOT EXISTS smm_settings (
     UNIQUE KEY unique_category_key (category, setting_key)
 );
 
+-- Default withdraw settings
+INSERT INTO smm_settings (category, setting_key, setting_value, description) 
+VALUES 
+('withdraw', 'admin_fee_type', 'flat', 'Tipe biaya admin: flat (nominal) atau percentage (persentase)'),
+('withdraw', 'min_withdraw', '50000', 'Minimum nominal withdraw'),
+('withdraw', 'admin_fee', '5000', 'Biaya admin withdraw (nominal jika flat, persen jika percentage)');
+
 -- Indexes for performance optimization
 CREATE INDEX idx_users_telegram_id ON smm_users(chatid);
 CREATE INDEX idx_users_msg_id ON smm_users(msg_id);
