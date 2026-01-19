@@ -17,7 +17,7 @@ if (count($campaigns) > 0) {
 
     foreach ($campaigns as $campaign) {
         $display_text = "ID " . $campaign['id'] . " | " . $campaign['campaign_title'];
-        $callback_data = '/add_campaign_balance_' . $campaign['id'];
+        $callback_data = '/topup_campaign_balance_' . $campaign['id'];
 
         $keyboard_buttons[] = [$display_text, $callback_data];
     }

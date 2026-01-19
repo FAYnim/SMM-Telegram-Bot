@@ -359,6 +359,9 @@ if(!$cb_data){
 	elseif($cb_data == "/konfirmasi_topup") {
 		require_once 'reply/konfirmasi-topup.php';
 	}
+	elseif(strpos($cb_data, '/topup_campaign_balance_') === 0) {
+		require_once 'reply/topup-campaign-balance.php';
+	}
 	elseif(strpos($cb_data, '/topup_') === 0) {
 		require_once 'reply/opsi-topup.php';
 	}
