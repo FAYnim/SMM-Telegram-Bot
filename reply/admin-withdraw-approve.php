@@ -30,7 +30,11 @@ if ($withdraw_data['status'] !== 'pending') {
 
 $actual_user_id = $withdraw_data['user_id'];
 $amount = $withdraw_data['amount'];
+$fee = $withdraw_data['fee'];
 $destination_account = $withdraw_data['destination_account'];
+
+// Total yang akan dipotong dari saldo = amount + fee
+$total_deduction = $amount + $fee;
 
 // Find data user
 $user = db_read('smm_users', ['id' => $actual_user_id]);
@@ -49,11 +53,11 @@ if (!$wallet) {
 }
 
 $profit_before = $wallet[0]['profit'];
-$profit_after = $profit_before - $amount;
+$profit_after = $profit_before - $total_deduction;
 
 // Validasi saldo cukup
-if ($profit_before < $amount) {
-    $bot->sendMessage($chat_id, "❌ Saldo user tidak mencukupi. Saldo: Rp " . number_format($profit_before, 0, ',', '.') . ", Withdraw: Rp " . number_format($amount, 0, ',', '.'));
+if ($profit_before < $total_deduction) {
+    $bot->sendMessage($chat_id, "❌ Saldo user tidak mencukupi. Saldo: Rp " . number_format($profit_before, 0, ',', '.') . ", Total Withdraw (Amount + Fee): Rp " . number_format($total_deduction, 0, ',', '.'));
     return;
 }
 
@@ -69,10 +73,10 @@ if (!$update_wallet) {
 $transaction_data = [
     'wallet_id' => $wallet[0]['id'],
     'type' => 'withdraw',
-    'amount' => -$amount,
+    'amount' => -$total_deduction,
     'balance_before' => $profit_before,
     'balance_after' => $profit_after,
-    'description' => 'Withdraw disetujui oleh Admin',
+    'description' => 'Withdraw disetujui oleh Admin (Amount: Rp ' . number_format($amount, 0, ',', '.') . ', Fee: Rp ' . number_format($fee, 0, ',', '.') . ')',
     'reference_id' => $withdraw_id,
     'status' => 'approved'
 ];
@@ -95,6 +99,13 @@ $bot->deleteMessage($chat_id, $msg_id);
 // --- NOTIFIKASI KE USER ---
 $user_reply = "✅ <b>Withdraw Berhasil!</b>\n\n";
 $user_reply .= "Dana sebesar <b>Rp " . number_format($amount, 0, ',', '.') . "</b> telah ditransfer ke nomor <b>" . $destination_account . "</b>.\n\n";
+
+// Tampilkan fee jika ada
+if($fee > 0) {
+    $user_reply .= "💵 Biaya Admin: Rp " . number_format($fee, 0, ',', '.') . "\n";
+    $user_reply .= "📊 Total Dipotong: Rp " . number_format($total_deduction, 0, ',', '.') . "\n\n";
+}
+
 $user_reply .= "💰 Saldo Anda sekarang: Rp " . number_format($profit_after, 0, ',', '.') . "\n\n";
 $user_reply .= "Terima kasih telah menggunakan layanan kami!";
 
@@ -113,6 +124,13 @@ $bot->sendMessageWithKeyboard($user_chat_id, $user_reply, $keyboard, null, 'HTML
 $admin_reply = "✅ <b>Withdraw Disetujui</b>\n\n";
 $admin_reply .= "👤 User ID: <code>$user_chat_id</code>\n";
 $admin_reply .= "💰 Nominal: <b>Rp " . number_format($amount, 0, ',', '.') . "</b>\n";
+
+// Tampilkan fee jika ada
+if($fee > 0) {
+    $admin_reply .= "💵 Biaya Admin: Rp " . number_format($fee, 0, ',', '.') . "\n";
+    $admin_reply .= "📊 Total Dipotong: Rp " . number_format($total_deduction, 0, ',', '.') . "\n";
+}
+
 $admin_reply .= "💳 Tujuan: " . $destination_account . "\n";
 $admin_reply .= "📊 Saldo User: Rp " . number_format($profit_before, 0, ',', '.') . " → Rp " . number_format($profit_after, 0, ',', '.') . "\n";
 $admin_reply .= "📢 Status: User telah dinotifikasi.";
