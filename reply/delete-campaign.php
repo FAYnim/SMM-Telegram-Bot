@@ -4,6 +4,9 @@ if($cb_data && strpos($cb_data, '/delete_campaign_') === 0) {
 	// get campaign id
     $campaign_id = str_replace('/delete_campaign_', '', $cb_data);
 
+    // Update position
+    $update_result = updateUserPosition($chat_id, 'delete_campaign');
+
     // Get campaign data from db
     $campaign = db_query("SELECT id, campaign_title, status, completed_count, campaign_balance "
         ."FROM smm_campaigns "
@@ -12,8 +15,27 @@ if($cb_data && strpos($cb_data, '/delete_campaign_') === 0) {
     if (!empty($campaign)) {
         $campaign_data = $campaign[0];
 
-        // Update position
-        $update_result = updateUserPosition($chat_id, 'delete_campaign');
+        // Check if campaign is active - must be paused to delete
+        if ($campaign_data['status'] == 'active') {
+            $error_reply = "❌ <b>Campaign Sedang Aktif</b>\n\n" .
+                          "Campaign harus di-pause terlebih dahulu sebelum bisa dihapus.\n\n" .
+                          "📝 <b>" . $campaign_data['campaign_title'] . "</b>\n" .
+                          "ID: <code>" . $campaign_data['id'] . "</code>\n" .
+                          "Status: ✅ Active\n\n" .
+                          "Silakan pause campaign terlebih dahulu.";
+            
+            $keyboard = $bot->buildInlineKeyboard([
+                // [
+                //     ['text' => '⏸️ Pause Campaign', 'callback_data' => '/pause_campaign_' . $campaign_id]
+                // ],
+                [
+                    ['text' => '🔙 Kembali', 'callback_data' => '/select_campaign_' . $campaign_id]
+                ]
+            ]);
+            
+            $bot->editMessage($chat_id, $msg_id, $error_reply, 'HTML', $keyboard);
+            return;
+        }
 
         if (!$update_result) {
             $bot->sendMessage($chat_id, "❌ Something Error!");
