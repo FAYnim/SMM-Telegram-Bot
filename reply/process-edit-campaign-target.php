@@ -31,7 +31,7 @@ if ($message && $user[0]['menu'] == 'edit_campaign_target') {
     $new_target = intval($message);
 
     // Get current campaign data to check completed count
-    $campaign = db_query("SELECT completed_count, target_total FROM smm_campaigns WHERE id = ? AND client_id = ?", [$campaign_id, $user_id]);
+    $campaign = db_query("SELECT completed_count, target_total, status FROM smm_campaigns WHERE id = ? AND client_id = ?", [$campaign_id, $user_id]);
 
     if (empty($campaign)) {
         // Delete previous message
@@ -45,6 +45,34 @@ if ($message && $user[0]['menu'] == 'edit_campaign_target') {
 
     $completed_count = $campaign[0]['completed_count'];
     $current_target = $campaign[0]['target_total'];
+    $campaign_status = $campaign[0]['status'];
+    
+    // Check if campaign is active - must be paused to edit
+    if ($campaign_status == 'active') {
+        if ($msg_id) {
+            $bot->deleteMessage($chat_id, $msg_id);
+        }
+        
+        $error_reply = "❌ <b>Campaign Sedang Aktif</b>\n\n" .
+                      "Campaign harus di-pause terlebih dahulu sebelum bisa diedit.\n\n" .
+                      "Silakan pause campaign dari menu edit.";
+        
+        $keyboard = $bot->buildInlineKeyboard([
+            [
+                ['text' => '🔙 Kembali ke Menu', 'callback_data' => '/cek_campaign']
+            ]
+        ]);
+        
+        $result = $bot->sendMessageWithKeyboard($chat_id, $error_reply, $keyboard);
+        $new_msg_id = $result['result']['message_id'] ?? null;
+        
+        if ($new_msg_id) {
+            db_execute("UPDATE smm_users SET msg_id = ? WHERE chatid = ?", [$new_msg_id, $chat_id]);
+        }
+        
+        updateUserPosition($chat_id, 'main');
+        return;
+    }
 
     if ($new_target <= $completed_count) {
         // Delete previous message
