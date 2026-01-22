@@ -52,7 +52,7 @@ if($balance < $price) {
 // cek minimal price
 if($price < 150) {
     $error_reply = "❌ <b>Price Terlalu Kecil</b>\n\n";
-    $error_reply .= "Minimal price adalah Rp 150\n\n";
+    $error_reply .= "Minimal price adalah 150\n\n";
     $error_reply .= "Silakan masukkan price yang lebih besar atau batal untuk membatalkan pembuatan campaign:";
     sendErrorWithBackButton(
         $bot, 

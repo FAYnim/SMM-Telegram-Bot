@@ -34,9 +34,9 @@ if (count($campaigns) > 0) {
         $reply .= "<b>" . htmlspecialchars($campaign['campaign_title']) . "</b>\n";
         $reply .= "🆔 ID: #" . $campaign['id'] . "\n";
         $reply .= "🎯 Tipe: " . ucfirst($campaign['type']) . "\n";
-        $reply .= "💰 Harga/task: Rp " . number_format($campaign['price_per_task'], 0, ',', '.') . "\n";
+        $reply .= "💰 Harga/task: " . number_format($campaign['price_per_task'], 0, ',', '.') . "\n";
         $reply .= "📊 Progress: " . $campaign['completed_count'] . "/" . $campaign['target_total'] . " tasks\n";
-        $reply .= "💰 Total Budget: Rp " . number_format($campaign['campaign_balance'], 0, ',', '.') . "\n";
+        $reply .= "💰 Total Budget: " . number_format($campaign['campaign_balance'], 0, ',', '.') . "\n";
         $reply .= $status_icon . " Status: " . ucfirst($campaign['status']) . "\n";
         
         // Tambahan info untuk status tertentu
