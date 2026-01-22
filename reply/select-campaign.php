@@ -46,10 +46,10 @@ if($cb_data && strpos($cb_data, '/select_campaign_') === 0) {
                 "📝 Judul: " . $campaign_data['campaign_title'] . "\n" .
                 $type_icon . " Tipe: " . ucfirst($campaign_data['type']) . "\n" .
                 "🔗 Target: " . substr($campaign_data['link_target'], 0, 30) . (strlen($campaign_data['link_target']) > 30 ? "..." : "") . "\n" .
-                "💰 Harga/Tugas: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n" .
+                "💰 Harga/Tugas: " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n" .
                 "🎯 Target Total: " . number_format($campaign_data['target_total']) . "\n" .
                 "✅ Selesai: " . number_format($campaign_data['completed_count']) . "\n" .
-                "💸 Saldo Campaign: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n" .
+                "💸 Saldo Campaign: " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n" .
                 $status_icon . " Status: " . ucfirst($campaign_data['status']) . "\n\n" .
                 "Apa yang ingin Anda lakukan?";
 

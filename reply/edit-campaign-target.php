@@ -47,8 +47,8 @@ if($cb_data && strpos($cb_data, '/edit_campaign_target_') === 0) {
             "📝 <b>" . $campaign_data['campaign_title'] . "</b>\n" .
             "ID: <code>" . $campaign_data['id'] . "</code>\n" .
             "✅ Selesai: " . number_format($campaign_data['completed_count']) . "/" . number_format($campaign_data['target_total']) . " tugas\n" .
-            "💰 Harga/Tugas: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n" .
-            "💸 Saldo Campaign: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n\n" .
+            "💰 Harga/Tugas: " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n" .
+            "💸 Saldo Campaign: " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n\n" .
             "🎯 <b>Masukkan target total baru:</b>\n\n" .
             "Target saat ini: " . number_format($campaign_data['target_total']) . " tugas\n" .
             "Sudah selesai: " . number_format($campaign_data['completed_count']) . " tugas\n\n" .
