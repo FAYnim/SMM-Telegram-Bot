@@ -35,7 +35,7 @@ if($setting_type == 'min_withdraw') {
 	// Admin fee - show type selection
 	$reply = "💰 <b>Ubah Biaya Admin</b>\n\n";
 	$reply .= "Pilih tipe biaya admin yang ingin digunakan:\n\n";
-	$reply .= "<b>Flat:</b> Biaya tetap (contoh: Rp 5.000)\n";
+	$reply .= "<b>Flat:</b> Biaya tetap (contoh: 5.000)\n";
 	$reply .= "<b>Persentase:</b> Biaya berdasarkan persentase dari nominal withdraw (contoh: 2.5%)\n\n";
 	$reply .= "<i>Pilih tipe biaya admin:</i>";
 	

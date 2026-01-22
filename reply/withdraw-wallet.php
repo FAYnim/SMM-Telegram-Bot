@@ -22,8 +22,8 @@ if(!empty($settings)) {
 
 if ($current_profit < $min_withdraw) {
     $reply = "❌ <b>Saldo Tidak Mencukupi</b>\n\n"
-        . "Saldo Penghasilan: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
-        . "Minimal withdraw: Rp " . number_format($min_withdraw, 0, ',', '.') . "\n\n"
+        . "Saldo Penghasilan: " . number_format($current_profit, 0, ',', '.') . "\n"
+        . "Minimal withdraw: " . number_format($min_withdraw, 0, ',', '.') . "\n\n"
         . "Silakan kerjakan lebih banyak tugas untuk menambah saldo.";
 
     $keyboard = $bot->buildInlineKeyboard([
@@ -38,8 +38,8 @@ if ($current_profit < $min_withdraw) {
 
 // Tampilkan form withdraw E-Wallet
 $reply = "💳 <b>Withdraw ke E-Wallet</b>\n\n"
-    . "Saldo Penghasilan: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
-    . "Minimal withdraw: Rp " . number_format($min_withdraw, 0, ',', '.') . "\n\n"
+    . "Saldo Penghasilan: " . number_format($current_profit, 0, ',', '.') . "\n"
+    . "Minimal withdraw: " . number_format($min_withdraw, 0, ',', '.') . "\n\n"
     . "Silakan masukkan nominal withdraw yang Anda inginkan:\n\n"
     . "💡 <i>Ketik nominal dalam angka (contoh: 50000)</i>";
 

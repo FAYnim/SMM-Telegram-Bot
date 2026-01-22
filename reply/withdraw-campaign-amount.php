@@ -18,9 +18,9 @@ $amount = (int) $amount;
 $min_transfer = 1000;
 if ($amount < $min_transfer) {
     $reply = "❌ <b>Nominal Terlalu Kecil</b>\n\n"
-        . "Nominal: Rp " . number_format($amount, 0, ',', '.') . "\n"
-        . "Minimal transfer: Rp " . number_format($min_transfer, 0, ',', '.') . "\n\n"
-        . "Silakan masukkan nominal minimal Rp " . number_format($min_transfer, 0, ',', '.') . " atau lebih.";
+        . "Nominal: " . number_format($amount, 0, ',', '.') . "\n"
+        . "Minimal transfer: " . number_format($min_transfer, 0, ',', '.') . "\n\n"
+        . "Silakan masukkan nominal minimal " . number_format($min_transfer, 0, ',', '.') . " atau lebih.";
 
     $bot->deleteMessage($chat_id, $msg_id);
     $bot->sendMessage($chat_id, $reply);
@@ -40,9 +40,9 @@ $wallet_id = $wallet_result[0]['id'];
 // Cek apakah saldo cukup
 if ($amount > $current_profit) {
     $reply = "❌ <b>Saldo Tidak Mencukupi</b>\n\n"
-        . "Saldo Penghasilan: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
-        . "Nominal transfer: Rp " . number_format($amount, 0, ',', '.') . "\n"
-        . "Kekurangan: Rp " . number_format($amount - $current_profit, 0, ',', '.') . "\n\n"
+        . "Saldo Penghasilan: " . number_format($current_profit, 0, ',', '.') . "\n"
+        . "Nominal transfer: " . number_format($amount, 0, ',', '.') . "\n"
+        . "Kekurangan: " . number_format($amount - $current_profit, 0, ',', '.') . "\n\n"
         . "Silakan masukkan nominal yang tidak melebihi saldo Anda.";
 
     $bot->deleteMessage($chat_id, $msg_id);
@@ -106,11 +106,11 @@ $bot->deleteMessage($chat_id, $msg_id);
 
 // Tampilkan pesan sukses
 $reply = "✅ <b>Transfer Berhasil!</b>\n\n"
-    . "💰 Nominal: Rp " . number_format($amount, 0, ',', '.') . "\n"
+    . "💰 Nominal: " . number_format($amount, 0, ',', '.') . "\n"
     . "Dari: Saldo Penghasilan\n"
     . "Ke: Saldo Campaign\n\n"
-    . "Saldo Penghasilan: Rp " . number_format($profit_after, 0, ',', '.') . "\n"
-    . "Saldo Campaign: Rp " . number_format($balance_after, 0, ',', '.');
+    . "Saldo Penghasilan: " . number_format($profit_after, 0, ',', '.') . "\n"
+    . "Saldo Campaign: " . number_format($balance_after, 0, ',', '.');
 
 $keyboard = $bot->buildInlineKeyboard([
     [

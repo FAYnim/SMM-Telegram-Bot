@@ -68,10 +68,10 @@ if($admin_fee_type == 'percentage') {
 // Validasi saldo: amount + fee harus <= current_profit
 if (($amount + $fee) > $current_profit) {
     $reply = "❌ <b>Saldo Tidak Mencukupi</b>\n\n"
-        . "Nominal withdraw: Rp " . number_format($amount, 0, ',', '.') . "\n"
-        . "Biaya admin: Rp " . number_format($fee, 0, ',', '.') . "\n"
-        . "Total: Rp " . number_format($amount + $fee, 0, ',', '.') . "\n\n"
-        . "Saldo Anda saat ini: Rp " . number_format($current_profit, 0, ',', '.') . "\n\n"
+        . "Nominal withdraw: " . number_format($amount, 0, ',', '.') . "\n"
+        . "Biaya admin: " . number_format($fee, 0, ',', '.') . "\n"
+        . "Total: " . number_format($amount + $fee, 0, ',', '.') . "\n\n"
+        . "Saldo Anda saat ini: " . number_format($current_profit, 0, ',', '.') . "\n\n"
         . "Silakan ulangi proses withdraw dengan nominal yang sesuai.";
 
     updateUserPosition($chat_id, 'main', '');
@@ -117,13 +117,13 @@ if (!$withdraw_id) {
 
         $reply_admin = "💸 <b>WITHDRAW BARU!</b>\n\n"
             . "User: " . $sender_name . " (ID: " . $chat_id . ")\n"
-            . "💰 Nominal: Rp " . number_format($amount, 0, ',', '.') . "\n"
+            . "💰 Nominal: " . number_format($amount, 0, ',', '.') . "\n"
             . "💳 Tujuan: <code>" . $destination_account . "</code>\n";
         
         // Tambahkan info fee jika ada
         if($fee > 0) {
-            $reply_admin .= "💵 Biaya Admin: Rp " . number_format($fee, 0, ',', '.') . "\n";
-            $reply_admin .= "📊 Total Dipotong: Rp " . number_format($amount + $fee, 0, ',', '.') . "\n";
+            $reply_admin .= "💵 Biaya Admin: " . number_format($fee, 0, ',', '.') . "\n";
+            $reply_admin .= "📊 Total Dipotong: " . number_format($amount + $fee, 0, ',', '.') . "\n";
         }
         
         $reply_admin .= "📅 Waktu: " . date('d M Y, H:i') . "\n\n"
@@ -144,11 +144,11 @@ if (!$withdraw_id) {
 
 // Update pesan user jadi Final
 $reply_user = "✅ <b>Permintaan Withdraw Terkirim</b>\n\n"
-    . "💰 Nominal: Rp " . number_format($amount, 0, ',', '.') . "\n";
+    . "💰 Nominal: " . number_format($amount, 0, ',', '.') . "\n";
 
 // Tambahkan info fee jika ada
 if($fee > 0) {
-    $reply_user .= "💵 Biaya Admin: Rp " . number_format($fee, 0, ',', '.') . "\n";
+    $reply_user .= "💵 Biaya Admin: " . number_format($fee, 0, ',', '.') . "\n";
 }
 
 $reply_user .= "💳 Tujuan: " . $destination_account . "\n\n"
