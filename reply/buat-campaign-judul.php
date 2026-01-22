@@ -15,6 +15,30 @@ if (empty($judul)) {
     return;
 }
 
+if (strlen($judul) < 5) {
+    $error_reply = "❌ Judul campaign minimal 5 karakter.\n\nSilakan masukkan judul campaign atau batal untuk membatalkan pembuatan campaign:";
+    sendErrorWithBackButton(
+        $bot, 
+        $chat_id, 
+        $msg_id,
+        $error_reply,
+        "/cek_campaign"
+    );
+    return;
+}
+
+if (strlen($judul) > 100) {
+    $error_reply = "❌ Judul campaign maksimal 100 karakter.\n\nSilakan masukkan judul campaign atau batal untuk membatalkan pembuatan campaign:";
+    sendErrorWithBackButton(
+        $bot, 
+        $chat_id, 
+        $msg_id,
+        $error_reply,
+        "/cek_campaign"
+    );
+    return;
+}
+
 // Update judul campaign di database
 db_execute("UPDATE smm_campaigns SET campaign_title = ? WHERE client_id = ? AND status = 'creating'", [$judul, $user_id]);
 
