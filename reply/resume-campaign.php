@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../helpers/error-handler.php';
+
 if($cb_data && strpos($cb_data, '/resume_campaign_') === 0) {
     $campaign_id = str_replace('/resume_campaign_', '', $cb_data);
 
@@ -9,56 +11,14 @@ if($cb_data && strpos($cb_data, '/resume_campaign_') === 0) {
 
     if (empty($campaign)) {
         // Campaign tidak ditemukan
-        $error_reply = "❌ Campaign tidak ditemukan atau tidak valid.";
-
-        $bot->deleteMessage($chat_id, $msg_id);
-        $send_result = $bot->sendMessage($chat_id, $error_reply);
-
-        if ($send_result && isset($send_result['result']['message_id'])) {
-            $new_msg_id = $send_result['result']['message_id'];
-            db_update('smm_users', ['msg_id' => $new_msg_id], ['chatid' => $chat_id]);
-
-            sleep(3);
-
-            // Bangun ulang daftar campaign
-            $campaigns = db_query("SELECT id, campaign_title, status "
-                ."FROM smm_campaigns "
-                ."WHERE client_id = ? AND status NOT IN ('deleted', 'creating') "
-                ."ORDER BY created_at DESC LIMIT 0,5", [$user_id]);
-
-            $list_reply = "📋 <b>Kelola Campaign</b>\n\nSilakan pilih campaign yang ingin Anda ubah:";
-
-            if (count($campaigns) > 0) {
-                $keyboard_buttons = [];
-                foreach ($campaigns as $campaign) {
-                    $display_text = "ID: " . $campaign['id'] . " - " . $campaign['campaign_title'];
-                    $callback_data = '/select_campaign_' . $campaign['id'];
-
-                    $keyboard_buttons[] = [$display_text, $callback_data];
-                }
-
-                // Tombol kembali
-                $keyboard_buttons[] = ['🔙 Kembali', '/edit_campaign'];
-
-                $list_keyboard = [];
-                foreach ($keyboard_buttons as $button) {
-                    $list_keyboard[] = [
-                        ['text' => $button[0], 'callback_data' => $button[1]]
-                    ];
-                }
-                $list_keyboard = $bot->buildInlineKeyboard($list_keyboard);
-            } else {
-                $list_reply = "⚠️ <b>Tidak ada campaign.</b>\n\nAnda belum membuat campaign apapun.";
-
-                $list_keyboard = $bot->buildInlineKeyboard([
-                    [
-                        ['text' => '🔙 Kembali', 'callback_data' => '/edit_campaign']
-                    ]
-                ]);
-            }
-
-            $bot->editMessage($chat_id, $new_msg_id, $list_reply, 'HTML', $list_keyboard);
-        }
+        sendErrorWithBackButton(
+            $bot,
+            $chat_id,
+            $msg_id,
+            "❌ <b>Campaign Tidak Ditemukan</b>\n\nCampaign tidak ditemukan atau tidak valid.\n\n<i>Silakan pilih campaign lain dari daftar.</i>",
+            '/edit_campaign',
+            '🔙 Kembali ke Daftar Campaign'
+        );
         return;
     }
 
@@ -69,7 +29,22 @@ if($cb_data && strpos($cb_data, '/resume_campaign_') === 0) {
         $can_create_tasks = floor($campaign_data['campaign_balance'] / $campaign_data['price_per_task']);
 
         if ($can_create_tasks <= $campaign_data['completed_count']) {
-            $bot->editMessage($chat_id, $msg_id, "❌ Saldo campaign tidak mencukupi untuk resume.\n\n💰 Saldo: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n💰 Harga/task: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n\nSilakan tambah saldo campaign terlebih dahulu.", 'HTML');
+            // Saldo tidak cukup - tambahkan tombol shortcut untuk tambah saldo
+            $error_message = "❌ <b>Saldo Campaign Tidak Mencukupi</b>\n\n" .
+                "💰 Saldo Campaign: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n" .
+                "💵 Harga per Task: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n\n" .
+                "<i>Silakan tambah saldo campaign terlebih dahulu untuk melanjutkan.</i>";
+            
+            $buttons = [
+                [
+                    ['text' => '💰 Tambah Saldo', 'callback_data' => '/add_campaign_balance_' . $campaign_id]
+                ],
+                [
+                    ['text' => '🔙 Kembali', 'callback_data' => '/select_campaign_' . $campaign_id]
+                ]
+            ];
+            
+            editErrorWithCustomButtons($bot, $chat_id, $msg_id, $error_message, $buttons);
             return;
         }
 
@@ -105,7 +80,14 @@ if($cb_data && strpos($cb_data, '/resume_campaign_') === 0) {
         $update_result = db_update('smm_campaigns', ['status' => 'active'], ['id' => $campaign_id, 'client_id' => $user_id]);
 
         if (!$update_result) {
-            $bot->sendMessage($chat_id, "❌ Gagal meresume campaign!");
+            sendErrorWithBackButton(
+                $bot,
+                $chat_id,
+                null,
+                "❌ <b>Gagal Resume Campaign</b>\n\nTerjadi kesalahan saat meresume campaign. Silakan coba lagi.",
+                '/select_campaign_' . $campaign_id,
+                '🔙 Kembali'
+            );
             return;
         }
 
