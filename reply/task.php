@@ -88,7 +88,7 @@ $task_id = $task_data["id"];
 
 $reply .= "📌 <b>" . htmlspecialchars($campaign_title) . "</b>\n";
 $reply .= "🎯 Jenis: " . ucfirst($campaign_type) . "\n";
-$reply .= "💰 Reward: Rp " . number_format($campaign_price, 0, ',', '.') . "\n\n";
+$reply .= "💰 Reward: " . number_format($campaign_price, 0, ',', '.') . "\n\n";
 $reply .= "Klik tombol di bawah untuk mengambil task ini:";
 
 $keyboard = $bot->buildInlineKeyboard([
