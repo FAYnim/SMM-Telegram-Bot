@@ -71,7 +71,7 @@ updateUserPosition($chat_id, 'settings_campaign', '');
 
 $reply = "✅ <b>Berhasil Mengubah Pengaturan</b>\n\n";
 $reply .= "<b>$setting_label</b> telah diupdate:\n\n";
-$reply .= "Nilai: Rp " . number_format($value, 0, ',', '.');
+$reply .= "Nilai: " . number_format($value, 0, ',', '.');
 
 $keyboard = $bot->buildInlineKeyboard([
 	[
