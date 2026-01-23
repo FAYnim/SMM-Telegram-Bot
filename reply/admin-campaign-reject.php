@@ -44,7 +44,12 @@ if ($msg_id) {
 }
 
 // Reset user position
-updateUserPosition($chat_id, 'main', '');
+$update_result = updateUserPosition($chat_id, 'main', '');
+
+if (!$update_result) {
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+    return;
+}
 
 // Notifikasi ke client
 $client_reply = "❌ <b>Campaign Ditolak</b>\n\n";

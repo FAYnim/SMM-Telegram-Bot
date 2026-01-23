@@ -2,7 +2,7 @@
 	$update_result = updateUserPosition($chat_id, 'campaign_admin', '');
 	
 	if(!$update_result) {
-		$bot->sendMessage($chat_id, '❌ Terjadi kesalahan sistem');
+		$bot->sendMessage($chat_id, '❌ Terjadi kesalahan sistem!');
 		return;
 	}
 	

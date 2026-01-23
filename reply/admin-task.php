@@ -5,10 +5,7 @@ require_once 'helpers/error-handler.php';
 $update_result = updateUserPosition($chat_id, 'main', '');
 
 if (!$update_result) {
-    $error_message = "❌ <b>Gagal Update Position</b>\n\n";
-    $error_message .= "Terjadi kesalahan saat memperbarui status admin.\n";
-    $error_message .= "Silakan coba lagi atau hubungi developer jika masalah berlanjut.";
-    sendSimpleError($bot, $chat_id, $error_message);
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
     return;
 }
 
@@ -46,10 +43,7 @@ $task_id = end($parts);
 if(strpos($cb_data, "approve") !== false) {
     $update_result = updateUserPosition($chat_id, 'main', 'task_approve_'.$task_id);
     if (!$update_result) {
-        $error_message = "❌ <b>Gagal Update Position</b>\n\n";
-        $error_message .= "Terjadi kesalahan saat memperbarui posisi admin untuk approve task.\n";
-        $error_message .= "Silakan coba lagi.";
-        sendSimpleError($bot, $chat_id, $error_message);
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
         return;
     }
 
@@ -87,10 +81,7 @@ if(strpos($cb_data, "approve") !== false) {
 } elseif(strpos($cb_data, "reject") !== false) {
     $update_result = updateUserPosition($chat_id, 'main', 'task_reject_'.$task_id);
     if (!$update_result) {
-        $error_message = "❌ <b>Gagal Update Position</b>\n\n";
-        $error_message .= "Terjadi kesalahan saat memperbarui posisi admin untuk reject task.\n";
-        $error_message .= "Silakan coba lagi.";
-        sendSimpleError($bot, $chat_id, $error_message);
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
         return;
     }
 

@@ -3,7 +3,7 @@
 $update_result = updateUserPosition($chat_id, 'main', '');
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Gagal memperbarui status admin (Err: 1).");
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
     return;
 }
 
@@ -36,7 +36,7 @@ if(strpos($cb_data, "approve") !== false) {
 
 	$update_result = updateUserPosition($chat_id, 'main', 'withdraw_approve_'.$withdraw_id);
 	if (!$update_result) {
-		$bot->sendMessage($chat_id, "❌ Gagal memperbarui posisi admin.");
+		$bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
 		return;
 	}
 
@@ -50,7 +50,7 @@ if(strpos($cb_data, "approve") !== false) {
 
 	$update_result = updateUserPosition($chat_id, 'main', 'withdraw_reject_'.$withdraw_id);
 	if (!$update_result) {
-		$bot->sendMessage($chat_id, "❌ Gagal memperbarui posisi admin.");
+		$bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
 		return;
 	}
 

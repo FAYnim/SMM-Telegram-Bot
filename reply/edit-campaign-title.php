@@ -38,7 +38,7 @@ if($cb_data && strpos($cb_data, '/edit_campaign_title_') === 0) {
         }
 
         if (!$update_result) {
-            $bot->sendMessage($chat_id, "❌ Something Error!");
+            $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
             return;
         }
 

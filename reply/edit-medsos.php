@@ -47,7 +47,7 @@ if($cb_data && strpos($cb_data, '/edit_account_') === 0) {
 } else {
 
 /*	if (!$update_result) {
-	    $bot->sendMessage($chat_id, "❌ Something Error!");
+	    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
 	    return;
 	}*/
 
