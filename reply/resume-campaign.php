@@ -31,8 +31,8 @@ if($cb_data && strpos($cb_data, '/resume_campaign_') === 0) {
         if ($can_create_tasks <= $campaign_data['completed_count']) {
             // Saldo tidak cukup - tambahkan tombol shortcut untuk tambah saldo
             $error_message = "❌ <b>Saldo Campaign Tidak Mencukupi</b>\n\n" .
-                "💰 Saldo Campaign: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n" .
-                "💵 Harga per Task: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n\n" .
+                "💰 Saldo Campaign: " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n" .
+                "💵 Harga per Task: " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n\n" .
                 "<i>Silakan tambah saldo campaign terlebih dahulu untuk melanjutkan.</i>";
             
             $buttons = [
@@ -115,8 +115,8 @@ if($cb_data && strpos($cb_data, '/resume_campaign_') === 0) {
                 "📝 <b>" . $campaign_data['campaign_title'] . "</b>\n" .
                 "ID: <code>" . $campaign_data['id'] . "</code>\n" .
                 "✅ Selesai: " . number_format($campaign_data['completed_count']) . "/" . number_format($campaign_data['target_total']) . " tugas\n" .
-                "💰 Harga/Tugas: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n" .
-                "💸 Saldo Campaign: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n" .
+                "💰 Harga/Tugas: " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n" .
+                "💸 Saldo Campaign: " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n" .
                 $status_icon . " Status: " . ucfirst($campaign_data['status']) . "\n\n" .
                 "✅ Campaign berhasil di-resume!";
 
