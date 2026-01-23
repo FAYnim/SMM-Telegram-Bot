@@ -48,7 +48,7 @@ if($cb_data && strpos($cb_data, '/delete_campaign_') === 0) {
             "📝 <b>" . $campaign_data['campaign_title'] . "</b>\n" .
             "ID: <code>" . $campaign_data['id'] . "</code>\n" .
             "✅ Selesai: " . number_format($campaign_data['completed_count']) . " tugas\n" .
-            "💰 Saldo: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n\n" .
+            "💰 Saldo: " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n\n" .
             "⚠️ <i>Tindakan ini tidak dapat dibatalkan!</i>";
 
         $keyboard = $bot->buildInlineKeyboard([
