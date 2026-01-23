@@ -79,7 +79,7 @@ if(strpos($cb_data, "approve") !== false) {
     $reply .= "👤 Worker: " . htmlspecialchars($user_name) . " (ID: " . $task['user_chatid'] . ")\n";
     $reply .= "📋 Campaign: " . htmlspecialchars($task['campaign_title']) . "\n";
     $reply .= "🎯 Jenis: " . ucfirst($task['type']) . "\n";
-    $reply .= "💰 Reward: <b>Rp " . number_format($task['price_per_task'], 0, ',', '.') . "</b>\n\n";
+    $reply .= "💰 Reward: <b>" . number_format($task['price_per_task'], 0, ',', '.') . "</b>\n\n";
     $reply .= "Ketik <b>YA</b> untuk konfirmasi approve:";
 
     $bot->editMessage($chat_id, $admin_msg_id, $reply, 'HTML');

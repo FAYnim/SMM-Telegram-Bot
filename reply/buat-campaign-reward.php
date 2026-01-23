@@ -52,7 +52,7 @@ if($balance < $reward) {
 // cek minimal reward
 if($reward < 15000) {
     $error_reply = "❌ <b>Total Budget Terlalu Kecil</b>\n\n";
-    $error_reply .= "Minimal pembuatan campaign adalah Rp 15.000\n\n";
+    $error_reply .= "Minimal pembuatan campaign adalah 15.000\n\n";
     $error_reply .= "Silakan masukkan total reward yang lebih besar atau batal untuk membatalkan pembuatan campaign:";
     sendErrorWithBackButton(
         $bot, 

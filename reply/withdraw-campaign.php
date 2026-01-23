@@ -13,8 +13,8 @@ $min_transfer = 1000;
 
 if ($current_profit < $min_transfer) {
     $reply = "❌ <b>Saldo Tidak Mencukupi</b>\n\n"
-        . "Saldo Penghasilan: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
-        . "Minimal transfer: Rp " . number_format($min_transfer, 0, ',', '.') . "\n\n"
+        . "Saldo Penghasilan: " . number_format($current_profit, 0, ',', '.') . "\n"
+        . "Minimal transfer: " . number_format($min_transfer, 0, ',', '.') . "\n\n"
         . "Silakan kerjakan lebih banyak tugas untuk menambah saldo.";
 
     $keyboard = $bot->buildInlineKeyboard([
@@ -29,8 +29,8 @@ if ($current_profit < $min_transfer) {
 
 // Tampilkan form transfer ke Saldo Campaign
 $reply = "💰 <b>Transfer ke Saldo Campaign</b>\n\n"
-    . "Saldo Penghasilan: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
-    . "Minimal transfer: Rp " . number_format($min_transfer, 0, ',', '.') . "\n\n"
+    . "Saldo Penghasilan: " . number_format($current_profit, 0, ',', '.') . "\n"
+    . "Minimal transfer: " . number_format($min_transfer, 0, ',', '.') . "\n\n"
     . "Silakan masukkan nominal yang ingin ditransfer ke Saldo Campaign:\n\n"
     . "💡 <i>Ketik nominal dalam angka (contoh: 50000)</i>";
 

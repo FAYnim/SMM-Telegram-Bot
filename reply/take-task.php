@@ -121,7 +121,7 @@ $reply = "✅ <b>Task Berhasil Diambil!</b>\n\n";
 $reply .= "<b>📋 Detail Task:</b>\n";
 $reply .= "📝 Campaign: " . htmlspecialchars($campaign_title) . "\n";
 $reply .= "🎯 Jenis: " . ucfirst($campaign_type) . "\n";
-$reply .= "💰 Reward: Rp " . number_format($campaign_price, 0, ',', '.') . "\n\n";
+$reply .= "💰 Reward: " . number_format($campaign_price, 0, ',', '.') . "\n\n";
 
 $reply .= "<b>🔗 Link Target:</b>\n";
 $reply .= "<code>" . htmlspecialchars($campaign_link) . "</code>\n\n";

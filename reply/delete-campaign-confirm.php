@@ -92,7 +92,7 @@ if($cb_data && strpos($cb_data, '/delete_campaign_confirm_') === 0) {
 
             $success_reply = "✅ <b>Campaign Berhasil Dihapus</b>\n\n" .
                             "📝 " . $campaign_data['campaign_title'] . "\n" .
-                            "💰 Saldo dikembalikan: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.');
+                            "💰 Saldo dikembalikan: " . number_format($campaign_data['campaign_balance'], 0, ',', '.');
 
             $keyboard = $bot->buildInlineKeyboard([
                 [

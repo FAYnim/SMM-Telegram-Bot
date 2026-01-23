@@ -9,7 +9,7 @@ if (!empty($pending_result)) {
     $pending_withdraw = $pending_result[0];
     $reply = "⏳ <b>Withdraw Sedang Diproses</b>\n\n"
         . "Anda memiliki permintaan withdraw yang masih pending:\n"
-        . "💰 Nominal: Rp " . number_format($pending_withdraw['amount'], 0, ',', '.') . "\n"
+        . "💰 Nominal: " . number_format($pending_withdraw['amount'], 0, ',', '.') . "\n"
         . "📅 Tanggal: " . date('d M Y H:i', strtotime($pending_withdraw['created_at'])) . "\n\n"
         . "Silakan tunggu hingga permintaan sebelumnya diproses.";
 
@@ -46,8 +46,8 @@ if(!empty($settings)) {
 
 if ($current_profit < $min_withdraw) {
     $reply = "❌ <b>Saldo Tidak Mencukupi</b>\n\n"
-        . "Saldo Penghasilan: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
-        . "Minimal withdraw: Rp " . number_format($min_withdraw, 0, ',', '.') . "\n\n"
+        . "Saldo Penghasilan: " . number_format($current_profit, 0, ',', '.') . "\n"
+        . "Minimal withdraw: " . number_format($min_withdraw, 0, ',', '.') . "\n\n"
         . "Silakan kerjakan lebih banyak tugas untuk menambah saldo.";
 
     $keyboard = $bot->buildInlineKeyboard([
@@ -62,8 +62,8 @@ if ($current_profit < $min_withdraw) {
 
 // Tampilkan pilihan withdraw
 $reply = "💸 <b>Tarik Dana</b>\n\n"
-    . "Saldo Penghasilan: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
-    . "Minimal withdraw: Rp " . number_format($min_withdraw, 0, ',', '.') . "\n\n"
+    . "Saldo Penghasilan: " . number_format($current_profit, 0, ',', '.') . "\n"
+    . "Minimal withdraw: " . number_format($min_withdraw, 0, ',', '.') . "\n\n"
     . "Silakan pilih metode penarikan:";
 
 $keyboard = $bot->buildInlineKeyboard([

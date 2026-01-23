@@ -21,11 +21,11 @@ if (!empty($campaign)) {
 		"📝 <b>" . $campaign_data['campaign_title'] . "</b>\n" .
 		"ID: <code>" . $campaign_data['id'] . "</code>\n" .
 		"✅ Selesai: " . number_format($campaign_data['completed_count']) . "/" . number_format($campaign_data['target_total']) . " tugas\n" .
-		"💰 Harga/Tugas: Rp " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n" .
-		"💸 Saldo Saat Ini: Rp " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n\n" .
+		"💰 Harga/Tugas: " . number_format($campaign_data['price_per_task'], 0, ',', '.') . "\n" .
+		"💸 Saldo Saat Ini: " . number_format($campaign_data['campaign_balance'], 0, ',', '.') . "\n\n" .
 		"💵 <b>Masukkan jumlah saldo yang ingin ditambahkan:</b>\n\n" .
 		"Contoh: <code>50000</code>\n" .
-		"Minimal: Rp 10.000\n\n";
+		"Minimal: 10.000\n\n";
 
 	$keyboard = $bot->buildInlineKeyboard([
 		[

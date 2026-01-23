@@ -18,7 +18,7 @@ if(!empty($settings)) {
 }
 
 $reply .= "<b>💰 Minimum Harga Per Task</b>\n";
-$reply .= "Nilai: Rp " . number_format(($campaign_data['min_price_per_task'] ?? 0), 0, ',', '.') . "\n\n";
+$reply .= "Nilai: " . number_format(($campaign_data['min_price_per_task'] ?? 0), 0, ',', '.') . "\n\n";
 
 $reply .= "<i>Pilih pengaturan yang ingin diubah:</i>";
 

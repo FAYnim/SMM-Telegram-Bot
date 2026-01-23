@@ -57,16 +57,16 @@
 		$reply .= "🕐 Waktu: " . $withdraw_time . "\n";
 		$reply .= "📋 Withdraw ID: <code>" . $withdraw_id . "</code>\n\n";
 		$reply .= "<b>💰 Detail Withdraw:</b>\n";
-		$reply .= "💳 Jumlah Withdraw: Rp " . number_format($amount, 0, ',', '.') . "\n";
+		$reply .= "💳 Jumlah Withdraw: " . number_format($amount, 0, ',', '.') . "\n";
 		if($fee > 0) {
-			$reply .= "📦 Biaya Admin: Rp " . number_format($fee, 0, ',', '.') . "\n";
+			$reply .= "📦 Biaya Admin: " . number_format($fee, 0, ',', '.') . "\n";
 			$net_amount = $amount - $fee;
-			$reply .= "💵 Jumlah Diterima: <b>Rp " . number_format($net_amount, 0, ',', '.') . "</b>\n";
+			$reply .= "💵 Jumlah Diterima: <b>" . number_format($net_amount, 0, ',', '.') . "</b>\n";
 		}
 		$reply .= "🏦 Rekening Tujuan: " . htmlspecialchars($destination_account) . "\n\n";
 		$reply .= "<b>💳 Info Saldo User:</b>\n";
-		$reply .= "💵 Balance: Rp " . number_format($current_balance, 0, ',', '.') . "\n";
-		$reply .= "📊 Profit: Rp " . number_format($current_profit, 0, ',', '.');
+		$reply .= "💵 Balance: " . number_format($current_balance, 0, ',', '.') . "\n";
+		$reply .= "📊 Profit: " . number_format($current_profit, 0, ',', '.');
 		
 		$bot->sendMessage($chat_id, $reply, null, 'HTML');
 		

@@ -16,8 +16,6 @@ if (!$deposits) {
     $reply .= "<i>Untuk melakukan topup, gunakan tombol di bawah.</i>";
 } else {
     $reply = "📋 <b>Riwayat Topup</b>\n\n";
-//  FOR DEBUGGING ONLY:
-// 	$reply .= "<pre>".json_encode($deposits, JSON_PRETTY_PRINT)."</pre>";
 
     foreach ($deposits as $deposit) {
         if ($deposit['status'] == 'approved') {
@@ -51,10 +49,7 @@ $keyboard = $bot->buildInlineKeyboard([
         ['text' => '💰 Topup', 'callback_data' => '/topup']
     ],
     [
-        ['text' => '💳 Cek Saldo', 'callback_data' => '/cek_saldo']
-    ],
-    [
-        ['text' => '🔙 Kembali', 'callback_data' => '/start']
+        ['text' => '🔙 Kembali', 'callback_data' => '/cek_saldo']
     ]
 ]);
 

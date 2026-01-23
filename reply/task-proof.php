@@ -65,7 +65,7 @@ $task = $task_detail[0];
     $caption_plain = "🔔 TASK BARU!\n"
     	."User: $sender_name (ID: $chat_id)\n"
     	."Task: " . htmlspecialchars($task['campaign_title']) . "\n"
-    	."Reward: Rp " . number_format($task['price_per_task'], 0, ',', '.') . "\n"
+    	."Reward: " . number_format($task['price_per_task'], 0, ',', '.') . "\n"
     	."Waktu: " . date('d M Y, H:i');
 
     $keyboard_admin = $bot->buildInlineKeyboard([
@@ -105,7 +105,7 @@ $task = $task_detail[0];
     $reply_user .= "Terima kasih! Bukti task Anda telah kami terima.\n\n";
     $reply_user .= "📋 <b>Detail Task:</b>\n";
     $reply_user .= "• Campaign: " . htmlspecialchars($task['campaign_title']) . "\n";
-    $reply_user .= "• Reward: Rp " . number_format($task['price_per_task'], 0, ',', '.') . "\n\n";
+    $reply_user .= "• Reward: " . number_format($task['price_per_task'], 0, ',', '.') . "\n\n";
     $reply_user .= "⏳ <b>Status: Menunggu Verifikasi</b>\n";
     $reply_user .= "Admin kami akan mengecek bukti task Anda. Reward akan otomatis ditambahkan jika disetujui (Estimasi 5-10 menit).";
 

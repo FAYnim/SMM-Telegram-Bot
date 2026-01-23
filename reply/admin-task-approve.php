@@ -48,9 +48,9 @@ if ($campaign_balance < $reward_amount) {
     $error_message = "❌ <b>Campaign Balance Tidak Cukup</b>\n\n";
     $error_message .= "Campaign tidak memiliki balance cukup untuk membayar reward task ini.\n\n";
     $error_message .= "💰 <b>Detail Balance:</b>\n";
-    $error_message .= "• Balance Campaign: Rp " . number_format($campaign_balance, 0, ',', '.') . "\n";
-    $error_message .= "• Reward Task: Rp " . number_format($reward_amount, 0, ',', '.') . "\n";
-    $error_message .= "• Kekurangan: Rp " . number_format($reward_amount - $campaign_balance, 0, ',', '.') . "\n\n";
+    $error_message .= "• Balance Campaign: " . number_format($campaign_balance, 0, ',', '.') . "\n";
+    $error_message .= "• Reward Task: " . number_format($reward_amount, 0, ',', '.') . "\n";
+    $error_message .= "• Kekurangan: " . number_format($reward_amount - $campaign_balance, 0, ',', '.') . "\n\n";
     $error_message .= "⚠️ Task tidak bisa diapprove. Client perlu top-up campaign balance terlebih dahulu.";
     sendSimpleError($bot, $chat_id, $error_message);
     return;
@@ -79,7 +79,7 @@ if (!$update_wallet) {
     $error_message .= "📋 <b>Detail:</b>\n";
     $error_message .= "• Worker ID: " . $task['worker_id'] . "\n";
     $error_message .= "• Wallet ID: " . $wallet_id . "\n";
-    $error_message .= "• Reward: Rp " . number_format($reward_amount, 0, ',', '.') . "\n\n";
+    $error_message .= "• Reward: " . number_format($reward_amount, 0, ',', '.') . "\n\n";
     $error_message .= "⚠️ Task belum diapprove. Silakan coba lagi atau hubungi developer.";
     sendSimpleError($bot, $chat_id, $error_message);
     return;
@@ -130,7 +130,7 @@ if ($is_target_reached || $is_balance_empty) {
         $client_notification .= "Campaign Anda telah selesai (".$completion_reason.").\n\n";
         $client_notification .= "📋 Campaign: ".htmlspecialchars($task['campaign_title'])."\n";
         $client_notification .= "✅ Completed: ".$new_completed_count."/".$target_total." tasks\n";
-        $client_notification .= "💰 Sisa Balance: Rp ".number_format($new_campaign_balance, 0, ',', '.')."\n\n";
+        $client_notification .= "💰 Sisa Balance: ".number_format($new_campaign_balance, 0, ',', '.')."\n\n";
         $client_notification .= "Terima kasih telah menggunakan layanan kami!";
         
         // Keyboard untuk tutup notifikasi
@@ -157,9 +157,9 @@ $user_reply = "✅ <b>Task Disetujui!</b>\n\n";
 $user_reply .= "Selamat! Task Anda telah disetujui oleh Admin.\n\n";
 $user_reply .= "📋 <b>Detail Task:</b>\n";
 $user_reply .= "• Campaign: " . htmlspecialchars($task['campaign_title']) . "\n";
-$user_reply .= "• Reward: <b>Rp " . number_format($reward_amount, 0, ',', '.') . "</b>\n\n";
+$user_reply .= "• Reward: <b>" . number_format($reward_amount, 0, ',', '.') . "</b>\n\n";
 $user_reply .= "💰 <b>Profit Ditambahkan!</b>\n";
-$user_reply .= "Profit Anda sekarang: <b>Rp " . number_format($profit_after, 0, ',', '.') . "</b>\n\n";
+$user_reply .= "Profit Anda sekarang: <b>" . number_format($profit_after, 0, ',', '.') . "</b>\n\n";
 $user_reply .= "Terima kasih telah mengerjakan task! 🎉";
 
 // Keyboard untuk tutup notifikasi
@@ -178,9 +178,9 @@ $admin_reply = "✅ <b>Task Disetujui</b>\n\n";
 $admin_reply .= "👤 Worker: " . htmlspecialchars($task['full_name']) . " (ID: " . $task['user_chatid'] . ")\n";
 $admin_reply .= "📋 Campaign: " . htmlspecialchars($task['campaign_title']) . "\n";
 $admin_reply .= "🎯 Jenis: " . ucfirst($task['type']) . "\n";
-$admin_reply .= "💰 Reward: <b>Rp " . number_format($reward_amount, 0, ',', '.') . "</b>\n";
+$admin_reply .= "💰 Reward: <b>" . number_format($reward_amount, 0, ',', '.') . "</b>\n";
 $admin_reply .= "📊 Progress: ".$new_completed_count."/".$target_total." tasks\n";
-$admin_reply .= "💳 Campaign Balance: Rp ".number_format($new_campaign_balance, 0, ',', '.')."\n";
+$admin_reply .= "💳 Campaign Balance: ".number_format($new_campaign_balance, 0, ',', '.')."\n";
 
 if ($is_target_reached || $is_balance_empty) {
     $admin_reply .= "\n🎉 <b>Campaign Completed!</b>\n";

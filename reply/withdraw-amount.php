@@ -29,9 +29,9 @@ if(!empty($settings)) {
 
 if ($amount < $min_withdraw) {
     $reply = "❌ <b>Nominal Terlalu Kecil</b>\n\n"
-        . "Nominal: Rp " . number_format($amount, 0, ',', '.') . "\n"
-        . "Minimal withdraw: Rp " . number_format($min_withdraw, 0, ',', '.') . "\n\n"
-        . "Silakan masukkan nominal minimal Rp " . number_format($min_withdraw, 0, ',', '.') . " atau lebih.";
+        . "Nominal: " . number_format($amount, 0, ',', '.') . "\n"
+        . "Minimal withdraw: " . number_format($min_withdraw, 0, ',', '.') . "\n\n"
+        . "Silakan masukkan nominal minimal " . number_format($min_withdraw, 0, ',', '.') . " atau lebih.";
 
     $bot->deleteMessage($chat_id, $msg_id);
     $bot->sendMessage($chat_id, $reply);
@@ -50,9 +50,9 @@ $current_profit = $wallet_result[0]['profit'];
 // Cek apakah saldo cukup
 if ($amount > $current_profit) {
     $reply = "❌ <b>Saldo Tidak Mencukupi</b>\n\n"
-        . "Saldo Anda: Rp " . number_format($current_profit, 0, ',', '.') . "\n"
-        . "Nominal withdraw: Rp " . number_format($amount, 0, ',', '.') . "\n"
-        . "Kekurangan: Rp " . number_format($amount - $current_profit, 0, ',', '.') . "\n\n"
+        . "Saldo Anda: " . number_format($current_profit, 0, ',', '.') . "\n"
+        . "Nominal withdraw: " . number_format($amount, 0, ',', '.') . "\n"
+        . "Kekurangan: " . number_format($amount - $current_profit, 0, ',', '.') . "\n\n"
         . "Silakan masukkan nominal yang tidak melebihi saldo Anda.";
 
     $bot->deleteMessage($chat_id, $msg_id);
@@ -70,7 +70,7 @@ if (!$update_result) {
 
 // Minta nomor tujuan (DANA)
 $reply = "💳 <b>Nomor Tujuan Withdraw</b>\n\n"
-    . "Nominal withdraw: Rp " . number_format($amount, 0, ',', '.') . "\n\n"
+    . "Nominal withdraw: " . number_format($amount, 0, ',', '.') . "\n\n"
     . "Silakan masukkan nomor tujuan withdraw Anda:\n\n"
     . "💡 <i>Contoh: 081234567890 (DANA/OVO/GoPay)</i>";
 

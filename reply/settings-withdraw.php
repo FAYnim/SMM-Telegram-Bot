@@ -18,7 +18,7 @@ if(!empty($settings)) {
 }
 
 $reply .= "<b>📊 Minimum Withdrawal</b>\n";
-$reply .= "Nilai: Rp " . number_format(($withdraw_data['min_withdraw'] ?? 0), 0, ',', '.') . "\n\n";
+$reply .= "Nilai: " . number_format(($withdraw_data['min_withdraw'] ?? 0), 0, ',', '.') . "\n\n";
 
 $reply .= "<b>💰 Biaya Admin</b>\n";
 $admin_fee_type = $withdraw_data['admin_fee_type'] ?? 'flat';
@@ -27,7 +27,7 @@ $admin_fee_value = $withdraw_data['admin_fee'] ?? 0;
 if($admin_fee_type == 'percentage') {
 	$reply .= "Tipe: Persentase | Nilai: " . $admin_fee_value . "%\n\n";
 } else {
-	$reply .= "Tipe: Flat | Nilai: Rp " . number_format($admin_fee_value, 0, ',', '.') . "\n\n";
+	$reply .= "Tipe: Flat | Nilai: " . number_format($admin_fee_value, 0, ',', '.') . "\n\n";
 }
 
 $reply .= "<i>Pilih pengaturan yang ingin diubah:</i>";

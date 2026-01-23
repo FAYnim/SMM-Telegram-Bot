@@ -34,7 +34,7 @@ if ($message && $user[0]['menu'] == 'add_campaign_balance') {
             $bot,
             $chat_id,
             $msg_id,
-            "❌ Minimal tambah saldo Rp 10.000. Silakan coba lagi:",
+            "❌ Minimal tambah saldo 10.000. Silakan coba lagi:",
             "/edit_campaign_detail_" . $campaign_id,
             "Batal"
         );
@@ -76,7 +76,7 @@ if ($message && $user[0]['menu'] == 'add_campaign_balance') {
             $bot,
             $chat_id,
             $msg_id,
-            "❌ Saldo wallet Anda tidak mencukupi.\n💰 Saldo Anda: Rp " . number_format($user_balance, 0, ',', '.') . "\n💰 Yang dibutuhkan: Rp " . number_format($add_amount, 0, ',', '.'),
+            "❌ Saldo wallet Anda tidak mencukupi.\n💰 Saldo Anda: " . number_format($user_balance, 0, ',', '.') . "\n💰 Yang dibutuhkan: " . number_format($add_amount, 0, ',', '.'),
             "/edit_campaign_detail_" . $campaign_id,
             "Batal"
         );
@@ -145,9 +145,9 @@ if ($message && $user[0]['menu'] == 'add_campaign_balance') {
         }
 
         $reply = "✅ <b>Saldo Campaign Berhasil Ditambahkan!</b>\n\n" .
-                "💰 Jumlah yang ditambahkan: Rp " . number_format($add_amount, 0, ',', '.') . "\n" .
-                "💸 Saldo Campaign Baru: Rp " . number_format($new_campaign_balance, 0, ',', '.') . "\n" .
-                "💰 Sisa Saldo Wallet: Rp " . number_format($new_user_balance, 0, ',', '.') . "\n" .
+                "💰 Jumlah yang ditambahkan: " . number_format($add_amount, 0, ',', '.') . "\n" .
+                "💸 Saldo Campaign Baru: " . number_format($new_campaign_balance, 0, ',', '.') . "\n" .
+                "💰 Sisa Saldo Wallet: " . number_format($new_user_balance, 0, ',', '.') . "\n" .
                 "ID Campaign: " . $campaign_id;
 
         if ($tasks_generated > 0) {

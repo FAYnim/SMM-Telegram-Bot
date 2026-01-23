@@ -42,11 +42,11 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
     $client_reply .= "🆔 ID: #" . $campaign_id . "\n";
     $client_reply .= "📝 Judul: " . htmlspecialchars($campaign_data['campaign_title']) . "\n";
     $client_reply .= "🎯 Target: " . number_format($target_total) . " tasks\n";
-    $client_reply .= "💰 Budget Diperlukan: Rp " . number_format($campaign_budget, 0, ',', '.') . "\n";
+    $client_reply .= "💰 Budget Diperlukan: " . number_format($campaign_budget, 0, ',', '.') . "\n";
     $client_reply .= "🔴 Status: Paused\n\n";
     $client_reply .= "⚠️ <b>Campaign masih dalam status pause.</b>\n\n";
     $client_reply .= "💡 <b>Untuk mengaktifkan campaign:</b>\n";
-    $client_reply .= "1. Topup Campaign Balance minimal Rp " . number_format($campaign_budget, 0, ',', '.') . "\n";
+    $client_reply .= "1. Topup Campaign Balance minimal " . number_format($campaign_budget, 0, ',', '.') . "\n";
     $client_reply .= "2. Campaign akan otomatis aktif setelah saldo cukup\n\n";
     $client_reply .= "<i>Gunakan menu Campaign → Edit Campaign → Topup Balance</i>";
     
@@ -65,7 +65,7 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
     $admin_reply = "✅ <b>Campaign Berhasil Disetujui</b>\n\n";
     $admin_reply .= "Campaign #" . $campaign_id . " telah disetujui.\n";
     $admin_reply .= "📊 Status: Paused\n";
-    $admin_reply .= "💰 Budget Campaign: Rp " . number_format($campaign_budget, 0, ',', '.') . "\n\n";
+    $admin_reply .= "💰 Budget Campaign: " . number_format($campaign_budget, 0, ',', '.') . "\n\n";
     $admin_reply .= "Client perlu topup campaign balance untuk mengaktifkan campaign.";
     
     $bot->editMessage($chat_id, $current_msg_id, $admin_reply, 'HTML');

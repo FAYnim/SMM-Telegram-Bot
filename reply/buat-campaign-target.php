@@ -68,8 +68,8 @@ if (!empty($campaign)) {
 
     if($price_per_task < $min_price_per_task) {
         $error_reply = "❌ <b>Harga Per Task Terlalu Rendah</b>\n\n";
-        $error_reply .= "Harga per task yang kamu masukkan adalah Rp " . number_format($price_per_task, 0, ',', '.') . "\n";
-        $error_reply .= "Minimum harga per task adalah Rp " . number_format($min_price_per_task, 0, ',', '.') . "\n\n";
+        $error_reply .= "Harga per task yang kamu masukkan adalah " . number_format($price_per_task, 0, ',', '.') . "\n";
+        $error_reply .= "Minimum harga per task adalah " . number_format($min_price_per_task, 0, ',', '.') . "\n\n";
         $error_reply .= "<b>Solusi:</b>\n";
         $error_reply .= "• Tambah total budget campaign, atau\n";
         $error_reply .= "• Kurangi jumlah target task\n\n";
@@ -133,9 +133,9 @@ if (!empty($campaign)) {
     $reply .= "🎯 Tipe: " . ucfirst($campaign_type) . "s\n";
     $reply .= $icon . " Akun: <b>" . $platform_name . " - @" . $campaign_username . "</b>\n";
     $reply .= "🔗 Link: <code>" . $campaign_link_target. "</code>\n";
-    $reply .= "💰 Harga/task: Rp " . number_format($campaign_price, 0, ',', '.') . "\n";
+    $reply .= "💰 Harga/task: " . number_format($campaign_price, 0, ',', '.') . "\n";
     $reply .= "🎯 Target: " . number_format($campaign_target) . " tasks\n";
-    $reply .= "💰 Total Budget: Rp " . number_format($calc_campaign_budget, 0, ',', '.') . "\n";
+    $reply .= "💰 Total Budget: " . number_format($calc_campaign_budget, 0, ',', '.') . "\n";
     $reply .= "📅 Dibuat: " . date('d/m/Y H:i', strtotime($campaign_created_at)) . "\n\n";
     $reply .= "Apakah detail campaign sudah benar?";
 } else {
