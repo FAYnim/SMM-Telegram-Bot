@@ -159,12 +159,17 @@ CREATE TABLE IF NOT EXISTS smm_settings (
     UNIQUE KEY unique_category_key (category, setting_key)
 );
 
--- Default withdraw settings
+-- Default settings
 INSERT INTO smm_settings (category, setting_key, setting_value, description) 
 VALUES 
-('withdraw', 'admin_fee_type', 'flat', 'Tipe biaya admin: flat (nominal) atau percentage (persentase)'),
-('withdraw', 'min_withdraw', '50000', 'Minimum nominal withdraw'),
-('withdraw', 'admin_fee', '5000', 'Biaya admin withdraw (nominal jika flat, persen jika percentage)');
+('payment', 'dana_number', '0810-0101-01010', 'Nomor DANA untuk topup'),
+('payment', 'dana_name', 'Budi Doremi', 'Nama pemilik akun DANA'),
+('payment', 'shopeepay_number', '0898-7654-2109', 'Nomor ShopeePay untuk topup'),
+('payment', 'shopeepay_name', 'Ahmad Yani', 'Nama pemilik akun ShopeePay'),
+('withdraw', 'min_withdraw', '1000', 'Minimum jumlah withdrawal'),
+('withdraw', 'admin_fee', '2.5', 'Biaya admin withdrawal'),
+('withdraw', 'admin_fee_type', 'percentage', 'Tipe biaya admin: flat (nominal) atau percentage (persentase)'),
+('campaign', 'min_price_per_task', '200', 'Minimum harga per task (Rp)');
 
 -- Indexes for performance optimization
 CREATE INDEX idx_users_telegram_id ON smm_users(chatid);

@@ -9,4 +9,5 @@ DROP TABLE IF EXISTS smm_social_accounts;
 DROP TABLE IF EXISTS smm_wallet_transactions;
 DROP TABLE IF EXISTS smm_wallets;
 DROP TABLE IF EXISTS smm_admins;
+DROP TABLE IF EXISTS smm_settings;
 DROP TABLE IF EXISTS smm_users;
