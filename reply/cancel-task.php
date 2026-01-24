@@ -5,7 +5,7 @@ require_once 'helpers/error-handler.php';
 $update_result = updateUserPosition($chat_id, 'task');
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
     return;
 }
 

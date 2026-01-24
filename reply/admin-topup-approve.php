@@ -76,7 +76,12 @@ $deposit_update = [
 db_update('smm_deposits', $deposit_update, ['id' => $deposit_id]);
 
 // Reset Posisi Admin
-updateUserPosition($chat_id, 'main', '');
+$update_result = updateUserPosition($chat_id, 'main', '');
+
+if (!$update_result) {
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
+    return;
+}
 
 // Hapus pesan prompt input admin sebelumnya
 $bot->deleteMessage($chat_id, $msg_id);

@@ -4,7 +4,7 @@ require_once __DIR__ . '/../helpers/username-validator.php';
 $update_result = updateUserPosition($chat_id, 'social');
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
     return;
 }
 

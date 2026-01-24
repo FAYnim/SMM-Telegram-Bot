@@ -91,7 +91,12 @@ $withdraw_update = [
 db_update('smm_withdrawals', $withdraw_update, ['id' => $withdraw_id]);
 
 // Reset Posisi Admin
-updateUserPosition($chat_id, 'main', '');
+$update_result = updateUserPosition($chat_id, 'main', '');
+
+if (!$update_result) {
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
+    return;
+}
 
 // Hapus pesan prompt input admin sebelumnya
 $bot->deleteMessage($chat_id, $msg_id);

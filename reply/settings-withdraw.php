@@ -2,7 +2,7 @@
 $update_result = updateUserPosition($chat_id, 'settings_withdraw', '');
 
 if(!$update_result) {
-	$bot->sendMessage($chat_id, '❌ Terjadi kesalahan sistem');
+	$bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
 	return;
 }
 

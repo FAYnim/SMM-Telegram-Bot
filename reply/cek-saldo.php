@@ -3,7 +3,7 @@
 $update_result = updateUserPosition($chat_id, 'cek-saldo');
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Something Error!");
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
     return;
 }
 

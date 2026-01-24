@@ -91,7 +91,12 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
     $campaign_id = str_replace('admin_reject_campaign_', '', $cb_data);
     
     // Update user position untuk minta reject reason
-    updateUserPosition($chat_id, 'main', 'campaign_reject_' . $campaign_id);
+    $update_result = updateUserPosition($chat_id, 'main', 'campaign_reject_' . $campaign_id);
+    
+    if (!$update_result) {
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
+        return;
+    }
     
     $reply = "❌ <b>Reject Campaign #" . $campaign_id . "</b>\n\n";
     $reply .= "Silakan masukkan alasan penolakan campaign:";

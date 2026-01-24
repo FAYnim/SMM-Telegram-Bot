@@ -5,7 +5,7 @@ $platform = str_replace('/topup_', '', $cb_data);
 $update_result = updateUserPosition($chat_id, "opsi_topup", $platform);
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Something Error!");
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
     return;
 }
 

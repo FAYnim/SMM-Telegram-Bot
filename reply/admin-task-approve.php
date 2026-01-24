@@ -147,7 +147,12 @@ if ($is_target_reached || $is_balance_empty) {
 }
 
 // Reset Posisi Admin
-updateUserPosition($chat_id, 'main', '');
+$update_result = updateUserPosition($chat_id, 'main', '');
+
+if (!$update_result) {
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
+    return;
+}
 
 // Hapus pesan prompt admin sebelumnya
 $bot->deleteMessage($chat_id, $msg_id);

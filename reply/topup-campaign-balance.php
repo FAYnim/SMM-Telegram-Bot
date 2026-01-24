@@ -13,7 +13,7 @@ if (!empty($campaign)) {
 	$update_result = updateUserPosition($chat_id, 'add_campaign_balance', $campaign_id);
 
 	if (!$update_result) {
-		$bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+		$bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
 		return;
 	}
 

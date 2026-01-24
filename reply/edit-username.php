@@ -23,7 +23,7 @@ if($cb_data && strpos($cb_data, '/edit_username_') === 0) {
         $update_result = updateUserPosition($chat_id, 'edit_username', $account_id);
 
         if (!$update_result) {
-            $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+            $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
             return;
         }
 

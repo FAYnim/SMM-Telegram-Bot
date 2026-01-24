@@ -38,7 +38,7 @@ if($cb_data && strpos($cb_data, '/delete_campaign_confirm_') === 0) {
         }
 
         if (!$update_result) {
-            $bot->sendMessage($chat_id, "❌ Something Error!");
+            $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
             return;
         }
 

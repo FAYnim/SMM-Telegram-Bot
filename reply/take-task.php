@@ -5,7 +5,7 @@ require_once 'helpers/error-handler.php';
 $update_result = updateUserPosition($chat_id, 'take_task');
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
     return;
 }
 
@@ -112,7 +112,9 @@ if (!$task_updated) {
 $update_result = updateUserPosition($chat_id, 'upload_proof', $task_id);
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!
+
+Ketik /start untuk memulai ulang bot.");
     return;
 }
 

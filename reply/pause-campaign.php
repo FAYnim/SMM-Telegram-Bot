@@ -33,7 +33,9 @@ if($cb_data && strpos($cb_data, '/pause_campaign_') === 0) {
 /*        $position_result = updateUserPosition($chat_id, 'edit_campaign_detail');
 
         if (!$position_result) {
-            $bot->sendMessage($chat_id, "❌ Something Error!");
+            $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!
+
+Ketik /start untuk memulai ulang bot.");
             return;
         }*/
 

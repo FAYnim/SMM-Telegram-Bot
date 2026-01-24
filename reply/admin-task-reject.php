@@ -53,7 +53,12 @@ $proof_update = [
 db_update('smm_task_proofs', $proof_update, ['task_id' => $task_id]);
 
 // Reset Posisi Admin
-updateUserPosition($chat_id, 'main', '');
+$update_result = updateUserPosition($chat_id, 'main', '');
+
+if (!$update_result) {
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
+    return;
+}
 
 // Hapus pesan prompt admin
 $bot->deleteMessage($chat_id, $msg_id);

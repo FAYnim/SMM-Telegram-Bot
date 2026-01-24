@@ -7,7 +7,7 @@ if ($cb_data != '/task_refresh') {
     $update_result = updateUserPosition($chat_id, 'task');
 
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nuntuk memulai ulang bot.");
         return;
     }
 } else {

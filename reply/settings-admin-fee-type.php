@@ -13,7 +13,7 @@ if($cb_data == "settings_admin_fee_flat") {
 }
 
 if(!$update_result) {
-	$bot->sendMessage($chat_id, '❌ Terjadi kesalahan sistem');
+	$bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
 	return;
 }
 
