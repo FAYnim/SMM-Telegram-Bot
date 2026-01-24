@@ -2,6 +2,8 @@
 -- This will drop and recreate all tables
 
 -- Drop all tables
+DROP TABLE IF EXISTS smm_referrals;
+DROP TABLE IF EXISTS smm_referral_codes;
 DROP TABLE IF EXISTS smm_audit_logs;
 DROP TABLE IF EXISTS smm_withdrawals;
 DROP TABLE IF EXISTS smm_deposits;
@@ -186,7 +188,9 @@ VALUES
 ('withdraw', 'min_withdraw', '1000', 'Minimum jumlah withdrawal'),
 ('withdraw', 'admin_fee', '2.5', 'Biaya admin withdrawal'),
 ('withdraw', 'admin_fee_type', 'percentage', 'Tipe biaya admin: flat (nominal) atau percentage (persentase)'),
-('campaign', 'min_price_per_task', '200', 'Minimum harga per task (Rp)');
+('campaign', 'min_price_per_task', '200', 'Minimum harga per task (Rp)'),
+('referral', 'mandatory', 'no', 'Apakah kode referral wajib untuk user baru (yes/no)'),
+('referral', 'reward_amount', '5000', 'Jumlah reward referral dalam Rupiah');
 
 -- Social media accounts table - menyimpan akun media social milik user
 CREATE TABLE IF NOT EXISTS smm_social_accounts (
@@ -226,3 +230,33 @@ CREATE INDEX idx_audit_logs_created_at ON smm_audit_logs(created_at);
 CREATE INDEX idx_social_accounts_user_id ON smm_social_accounts(user_id);
 CREATE INDEX idx_social_accounts_platform ON smm_social_accounts(platform);
 CREATE INDEX idx_social_accounts_status ON smm_social_accounts(status);
+
+-- Referral codes table - kode referral user (auto-generated dan custom)
+CREATE TABLE IF NOT EXISTS smm_referral_codes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    code VARCHAR(12) NOT NULL,
+    is_custom TINYINT(1) DEFAULT 0 COMMENT '0 = auto-generated, 1 = custom',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE KEY unique_code (code),
+    INDEX idx_user_id (user_id),
+    INDEX idx_code (code),
+    FOREIGN KEY (user_id) REFERENCES smm_users(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Referrals table - data referral yang berhasil dan reward yang diberikan
+CREATE TABLE IF NOT EXISTS smm_referrals (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    referrer_id INT NOT NULL COMMENT 'User yang membagikan kode referral',
+    referred_user_id INT NOT NULL COMMENT 'User yang menggunakan kode referral',
+    referral_code VARCHAR(12) NOT NULL COMMENT 'Kode referral yang digunakan',
+    reward_amount INT NOT NULL COMMENT 'Jumlah reward dalam Rupiah',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_referrer_id (referrer_id),
+    INDEX idx_referred_user_id (referred_user_id),
+    INDEX idx_referral_code (referral_code),
+    INDEX idx_created_at (created_at),
+    FOREIGN KEY (referrer_id) REFERENCES smm_users(id) ON DELETE CASCADE,
+    FOREIGN KEY (referred_user_id) REFERENCES smm_users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_referred_user (referred_user_id) COMMENT 'Setiap user hanya bisa menggunakan referral sekali'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

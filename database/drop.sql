@@ -1,4 +1,6 @@
 -- Drop all tables - completely remove database structure
+DROP TABLE IF EXISTS smm_referrals;
+DROP TABLE IF EXISTS smm_referral_codes;
 DROP TABLE IF EXISTS smm_audit_logs;
 DROP TABLE IF EXISTS smm_withdrawals;
 DROP TABLE IF EXISTS smm_deposits;
