@@ -349,6 +349,9 @@ if(!$cb_data){
 	elseif($cb_data == "/social") {
 		require_once 'reply/social.php';
 	}
+	elseif($cb_data == "/referral") {
+		require_once 'reply/referral.php';
+	}
 	// ============================================
 	// WALLET OPERATIONS
 	// ============================================
