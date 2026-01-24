@@ -3,7 +3,7 @@
 $update_result = updateUserPosition($chat_id, 'main', '');
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
     return;
 }
 
@@ -57,7 +57,9 @@ if(strpos($cb_data, "approve") !== false) {
 
 	$update_result = updateUserPosition($chat_id, 'main', 'topup_approve_'.$deposit_id);
 	if (!$update_result) {
-		$bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+		$bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!
+
+Ketik /start untuk memulai ulang bot.");
 		return;
 	}
 
@@ -71,7 +73,9 @@ if(strpos($cb_data, "approve") !== false) {
 
 	$update_result = updateUserPosition($chat_id, 'main', 'topup_reject_'.$deposit_id);
 	if (!$update_result) {
-		$bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+		$bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!
+
+Ketik /start untuk memulai ulang bot.");
 		return;
 	}
 

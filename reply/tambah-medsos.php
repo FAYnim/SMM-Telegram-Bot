@@ -6,7 +6,7 @@ if ($cb_data == "/tambah_medsos") {
     $update_result = updateUserPosition($chat_id, 'tambah_medsos');
 
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
         return;
     }
 
@@ -30,7 +30,7 @@ if ($cb_data == "/add_instagram") {
     $update_result = updateUserPosition($chat_id, 'add_instagram');
 
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
         return;
     }
 
@@ -51,7 +51,7 @@ if ($cb_data == "/add_tiktok") {
     $update_result = updateUserPosition($chat_id, 'add_tiktok');
 
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
         return;
     }
 

@@ -94,7 +94,7 @@ if (strpos($cb_data, 'admin_approve_campaign_') === 0) {
     $update_result = updateUserPosition($chat_id, 'main', 'campaign_reject_' . $campaign_id);
     
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
         return;
     }
     

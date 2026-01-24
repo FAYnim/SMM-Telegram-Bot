@@ -47,7 +47,7 @@ if ($msg_id) {
 $update_result = updateUserPosition($chat_id, 'main', '');
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
     return;
 }
 

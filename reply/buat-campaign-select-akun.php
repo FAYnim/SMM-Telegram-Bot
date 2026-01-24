@@ -44,7 +44,7 @@ db_execute(
 $update_result = updateUserPosition($chat_id, 'buat_campaign_link');
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
     return;
 }
 

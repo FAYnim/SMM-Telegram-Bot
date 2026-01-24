@@ -16,7 +16,7 @@ if($cb_data && strpos($cb_data, '/select_campaign_') === 0) {
         $update_result = updateUserPosition($chat_id, 'select_campaign');
 
         if (!$update_result) {
-            $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+            $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
             return;
         }
 

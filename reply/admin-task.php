@@ -5,7 +5,7 @@ require_once 'helpers/error-handler.php';
 $update_result = updateUserPosition($chat_id, 'main', '');
 
 if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
     return;
 }
 
@@ -43,7 +43,9 @@ $task_id = end($parts);
 if(strpos($cb_data, "approve") !== false) {
     $update_result = updateUserPosition($chat_id, 'main', 'task_approve_'.$task_id);
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!
+
+Ketik /start untuk memulai ulang bot.");
         return;
     }
 
@@ -81,7 +83,9 @@ if(strpos($cb_data, "approve") !== false) {
 } elseif(strpos($cb_data, "reject") !== false) {
     $update_result = updateUserPosition($chat_id, 'main', 'task_reject_'.$task_id);
     if (!$update_result) {
-        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!");
+        $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!
+
+Ketik /start untuk memulai ulang bot.");
         return;
     }
 
