@@ -15,6 +15,7 @@ DROP TABLE IF EXISTS smm_wallet_transactions;
 DROP TABLE IF EXISTS smm_wallets;
 DROP TABLE IF EXISTS smm_admins;
 DROP TABLE IF EXISTS smm_users;
+DROP TABLE IF EXISTS smm_settings;
 
 -- Wait 2 seconds (commented for SQL, use in application)
 -- SELECT SLEEP(2);
@@ -74,6 +75,20 @@ CREATE TABLE IF NOT EXISTS smm_wallet_transactions (
     status ENUM('pending', 'approved', 'rejected', 'canceled') DEFAULT 'approved',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (wallet_id) REFERENCES smm_wallets(id) ON DELETE CASCADE
+);
+
+-- Social media accounts table - menyimpan akun media social milik user
+CREATE TABLE IF NOT EXISTS smm_social_accounts (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    platform ENUM('instagram', 'tiktok', 'youtube', 'twitter', 'facebook') NOT NULL,
+    username VARCHAR(255) NOT NULL,
+    account_url TEXT,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES smm_users(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user_platform_username (user_id, platform, username)
 );
 
 -- Campaigns table - campaign yang dibuat oleh client
@@ -191,20 +206,6 @@ VALUES
 ('campaign', 'min_price_per_task', '200', 'Minimum harga per task (Rp)'),
 ('referral', 'mandatory', 'no', 'Apakah kode referral wajib untuk user baru (yes/no)'),
 ('referral', 'reward_amount', '5000', 'Jumlah reward referral dalam Rupiah');
-
--- Social media accounts table - menyimpan akun media social milik user
-CREATE TABLE IF NOT EXISTS smm_social_accounts (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    user_id INT NOT NULL,
-    platform ENUM('instagram', 'tiktok', 'youtube', 'twitter', 'facebook') NOT NULL,
-    username VARCHAR(255) NOT NULL,
-    account_url TEXT,
-    status ENUM('active', 'inactive') DEFAULT 'active',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id) REFERENCES smm_users(id) ON DELETE CASCADE,
-    UNIQUE KEY unique_user_platform_username (user_id, platform, username)
-);
 
 -- Indexes for performance optimization
 CREATE INDEX idx_users_telegram_id ON smm_users(chatid);

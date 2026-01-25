@@ -124,6 +124,9 @@ if(!$cb_data){
 	// USER MENU HANDLERS (State-based)
 	// ============================================
 	// Social Media Account Management
+	elseif (strpos($message, "/start") === 0) {
+		require_once 'reply/referral-checker.php';
+	}
 	elseif ($menu == 'add_instagram' || $menu == 'add_tiktok') {
 		require_once 'reply/tambah-medsos.php';
 	}
