@@ -156,6 +156,10 @@ if(!$cb_data){
 	elseif ($menu == 'withdraw_campaign_amount') {
 		require_once 'reply/withdraw-campaign-amount.php';
 	}
+	// Referral
+	elseif ($menu == 'create_custom_code') {
+		require_once 'reply/process-custom-code.php';
+	}
 	// Campaign Creation
 	elseif ($menu == 'buat_campaign_type') {
 		require_once 'reply/buat-campaign-judul.php';
@@ -354,6 +358,9 @@ if(!$cb_data){
 	}
 	elseif($cb_data == "/referral") {
 		require_once 'reply/referral.php';
+	}
+	elseif($cb_data == "/create_custom_code") {
+		require_once 'reply/create-custom-code.php';
 	}
 	// ============================================
 	// WALLET OPERATIONS
