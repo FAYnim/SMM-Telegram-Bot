@@ -84,6 +84,15 @@ $reply .= "• Total Reward: <b>Rp " . number_format($total_rewards, 0, ',', '.'
 
 $reply .= "👇 Menu Referral:";
 
+// Build share text for Telegram share URL
+$share_text = "🎁 Gabung Bot SMM Panel & Dapat Bonus!\n\n"
+    . "Kerjain task social media simpel, dapat uang!\n\n"
+    . "✅ Gratis daftar\n"
+    . "✅ Task mudah (like, follow, comment)\n"
+    . "✅ Bayaran langsung ke saldo\n"
+    . "✅ Withdraw kapan saja\n\n"
+    . "Daftar sekarang: " . $referral_url;
+
 $keyboard = $bot->buildInlineKeyboard([
     [
         ['text' => '📊 Statistik Referral', 'callback_data' => '/referral_stats'],
@@ -92,7 +101,7 @@ $keyboard = $bot->buildInlineKeyboard([
         ['text' => '➕ Buat Kode Custom', 'callback_data' => '/create_custom_code'],
     ],
     [
-        ['text' => '📤 Bagikan Link', 'callback_data' => '/share_referral'],
+        ['text' => '📤 Bagikan Link', 'url' => 'https://t.me/share/url?text=' . urlencode($share_text)],
     ],
     [
         ['text' => '🔙 Kembali', 'callback_data' => '/start']

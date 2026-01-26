@@ -97,7 +97,7 @@ if (is_string($create_result) && strpos($create_result, 'Error:') === 0) {
 }
 
 // Success - show the new custom code
-$update_result = updateUserPosition($chat_id, 'create_custom_code_finsih');
+$update_result = updateUserPosition($chat_id, 'create_custom_code_finish');
 
 $custom_url = "https://t.me/" . $bot_username . "?start=" . $custom_code;
 
@@ -108,9 +108,18 @@ $reply .= "📋 <b>Link Referral:</b>\n";
 $reply .= $custom_url . "\n\n";
 $reply .= "<i>💡 Anda bisa langsung membagikan link ini kepada teman-teman.</i>";
 
+// Build share text for Telegram share URL
+$share_text = "🎁 Gabung Bot SMM Panel & Dapat Bonus!\n\n"
+    . "Kerjain task social media simpel, dapat uang!\n\n"
+    . "✅ Gratis daftar\n"
+    . "✅ Task mudah (like, follow, comment)\n"
+    . "✅ Bayaran langsung ke saldo\n"
+    . "✅ Withdraw kapan saja\n\n"
+    . "Daftar sekarang: " . $custom_url;
+
 $keyboard = $bot->buildInlineKeyboard([
     [
-        ['text' => '📤 Bagikan Link', 'callback_data' => '/share_referral'],
+        ['text' => '📤 Bagikan Link', 'url' => 'https://t.me/share/url?text=' . urlencode($share_text)],
     ],
     [
         ['text' => '🔙 Kembali ke Menu Referral', 'callback_data' => '/referral']
