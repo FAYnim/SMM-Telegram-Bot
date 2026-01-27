@@ -156,10 +156,7 @@ if(!$cb_data){
 	elseif ($menu == 'withdraw_campaign_amount') {
 		require_once 'reply/withdraw-campaign-amount.php';
 	}
-	// Referral
-	elseif ($menu == 'create_custom_code') {
-		require_once 'reply/process-custom-code.php';
-	}
+	// Referral - no state needed for create_custom_code (auto-generated)
 	// Campaign Creation
 	elseif ($menu == 'buat_campaign_type') {
 		require_once 'reply/buat-campaign-judul.php';

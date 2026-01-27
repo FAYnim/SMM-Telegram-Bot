@@ -1,25 +1,99 @@
 <?php
 
-$update_result = updateUserPosition($chat_id, 'create_custom_code');
+// Fungsi generate kode random 8 karakter
+// Menggunakan karakter A-Z (kecuali I, L, O, S, Z) dan 0-9
+function generate_random_code($length = 8) {
+    // Karakter yang diperbolehkan sesuai rules: A-HJ-NP-RU-Y dan 0-9
+    $chars = 'ABCDEFGHJKMNPQRTUVY0123456789';
+    $code = '';
+    for ($i = 0; $i < $length; $i++) {
+        $code .= $chars[random_int(0, strlen($chars) - 1)];
+    }
+    return $code;
+}
 
-if (!$update_result) {
-    $bot->sendMessage($chat_id, "❌ Terjadi kesalahan sistem!\n\nKetik /start untuk memulai ulang bot.");
+// Generate kode dengan retry mechanism (max 10 attempts)
+$max_attempts = 10;
+$attempt = 0;
+$custom_code = null;
+
+while ($attempt < $max_attempts) {
+    $custom_code = generate_random_code(8);
+    $existing = db_read('smm_referral_codes', ['code' => $custom_code]);
+    
+    if (empty($existing)) {
+        break; // Kode unique, keluar dari loop
+    }
+    $attempt++;
+}
+
+// Jika setelah 10x masih gagal (sangat jarang terjadi)
+if ($attempt >= $max_attempts) {
+    $reply = "❌ <b>Gagal Generate Kode</b>\n\n";
+    $reply .= "Sistem tidak dapat membuat kode unique saat ini.\n\n";
+    $reply .= "<i>Silakan coba lagi dalam beberapa saat.</i>";
+    
+    $keyboard = $bot->buildInlineKeyboard([
+        [
+            ['text' => '🔙 Kembali', 'callback_data' => '/referral']
+        ]
+    ]);
+    
+    $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
     return;
 }
 
-$reply = "<b>➕ Buat Kode Referral Custom</b>\n\n";
-$reply .= "Silakan kirim kode referral custom yang ingin Anda buat.\n\n";
-$reply .= "📝 <b>Ketentuan:</b>\n";
-$reply .= "• Minimal 3 karakter, maksimal 20 karakter\n";
-$reply .= "• Hanya huruf (A-Z) dan angka (0-9)\n";
-$reply .= "• Dilarang menggunakan karakter I L O S Z\n";
-$reply .= "• Tidak boleh menggunakan kode yang sudah ada\n";
-$reply .= "• Akan diubah ke huruf kapital otomatis\n\n";
-$reply .= "<i>💡 Contoh: <code>2026</code>, <code>Reward</code></i>";
+// Create custom referral code
+$create_result = db_create('smm_referral_codes', [
+    'user_id' => $user_id,
+    'code' => $custom_code,
+    'is_custom' => 1
+]);
+
+// Error handling
+if (is_string($create_result) && strpos($create_result, 'Error:') === 0) {
+    $reply = "❌ <b>Gagal Membuat Kode</b>\n\n";
+    $reply .= $create_result . "\n\n";
+    $reply .= "<i>Silakan coba lagi atau hubungi admin.</i>";
+    
+    $keyboard = $bot->buildInlineKeyboard([
+        [
+            ['text' => '🔙 Kembali', 'callback_data' => '/referral']
+        ]
+    ]);
+    
+    $bot->editMessage($chat_id, $msg_id, $reply, 'HTML', $keyboard);
+    return;
+}
+
+// Success - update user position
+$update_result = updateUserPosition($chat_id, 'create_custom_code_finish');
+
+// Show generated code
+$custom_url = "https://t.me/" . $bot_username . "?start=" . $custom_code;
+
+$reply = "✅ <b>Kode Berhasil Dibuat</b>\n\n";
+$reply .= "Kode referral custom Anda:\n";
+$reply .= "<code>" . $custom_code . "</code>\n\n";
+$reply .= "📋 <b>Link Referral:</b>\n";
+$reply .= $custom_url . "\n\n";
+$reply .= "<i>💡 Kode ini dibuat otomatis dan unik untuk Anda.</i>";
+
+// Build share text for Telegram share URL
+$share_text = "🎁 Gabung Bot SMM Panel & Dapat Bonus!\n\n"
+    . "Kerjain task social media simpel, dapat uang!\n\n"
+    . "✅ Gratis daftar\n"
+    . "✅ Task mudah (like, follow, comment)\n"
+    . "✅ Bayaran langsung ke saldo\n"
+    . "✅ Withdraw kapan saja\n\n"
+    . "Daftar sekarang: " . $custom_url;
 
 $keyboard = $bot->buildInlineKeyboard([
     [
-        ['text' => '🔙 Kembali', 'callback_data' => '/referral']
+        ['text' => '📤 Bagikan Link', 'url' => 'https://t.me/share/url?text=' . urlencode($share_text)],
+    ],
+    [
+        ['text' => '🔙 Kembali ke Menu Referral', 'callback_data' => '/referral']
     ]
 ]);
 
