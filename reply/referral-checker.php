@@ -99,6 +99,37 @@ if($referral_return_code == 200) {
 
 }
 
+// Check if referral code has already been used
+if($referral_return_code == 200) {
+    
+    if ($referral_code_param) {
+        // Check if this referral code has been used before
+        $existing_code_usage = db_read('smm_referrals', ['referral_code' => $referral_code_param]);
+        
+        logMessage('referral_code_usage_check', [
+            'chat_id' => $chat_id,
+            'user_id' => $user_id,
+            'referral_code' => $referral_code_param,
+            'already_used' => !empty($existing_code_usage),
+            'usage_count' => count($existing_code_usage)
+        ], 'debug');
+        
+        if (!empty($existing_code_usage)) {
+            // Code has already been used
+            $referral_return_code = 400;
+            
+            logMessage('referral_code_already_used', [
+                'chat_id' => $chat_id,
+                'user_id' => $user_id,
+                'referral_code' => $referral_code_param,
+                'used_by_user_id' => $existing_code_usage[0]['referred_user_id'],
+                'used_at' => $existing_code_usage[0]['created_at']
+            ], 'info');
+        }
+    }
+
+}
+
 // Check Self-referral
 if($referral_return_code == 200) {
 

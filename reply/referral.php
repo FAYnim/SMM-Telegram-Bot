@@ -72,7 +72,12 @@ if (!empty($custom_codes)) {
     $reply .= "🔖 <b>Link Custom:</b>\n";
     foreach ($custom_codes as $custom) {
         $custom_url = "https://t.me/" . $bot_username . "?start=" . $custom['code'];
-        $reply .= $custom_url . "\n";
+        
+        // Check if this custom code has been used
+        $code_usage = db_read('smm_referrals', ['referral_code' => $custom['code']]);
+        $usage_indicator = !empty($code_usage) ? " (used)" : "";
+        
+        $reply .= $custom_url . $usage_indicator . "\n";
     }
     $reply .= "\n";
 }
