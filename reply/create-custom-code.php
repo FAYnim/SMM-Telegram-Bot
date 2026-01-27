@@ -1,5 +1,12 @@
 <?php
 
+// Show loading message first
+$loading_reply = "⏳ <b>Membuat Kode Referral...</b>\n\n";
+$loading_reply .= "Mohon tunggu sebentar.\n\n";
+$loading_reply .= "<i>Sistem sedang generate kode unik untuk Anda.</i>";
+
+$bot->editMessage($chat_id, $msg_id, $loading_reply, 'HTML');
+
 // Fungsi generate kode random 8 karakter
 // Menggunakan karakter A-Z (kecuali I, L, O, S, Z) dan 0-9
 function generate_random_code($length = 8) {
@@ -68,6 +75,9 @@ if (is_string($create_result) && strpos($create_result, 'Error:') === 0) {
 
 // Success - update user position
 $update_result = updateUserPosition($chat_id, 'create_custom_code_finish');
+
+// Wait 1 second before showing result
+sleep(1);
 
 // Show generated code
 $custom_url = "https://t.me/" . $bot_username . "?start=" . $custom_code;
