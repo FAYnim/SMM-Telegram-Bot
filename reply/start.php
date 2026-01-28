@@ -29,6 +29,9 @@
             ],
             [
                 ['text' => '👤 Akun Medsos', 'callback_data' => '/social'],
+                ['text' => '🎁 Referral', 'callback_data' => '/referral']
+            ],
+            [
                 ['text' => 'ℹ️ Bantuan', 'callback_data' => '/help']
             ]
         ]);

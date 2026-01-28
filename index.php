@@ -124,6 +124,9 @@ if(!$cb_data){
 	// USER MENU HANDLERS (State-based)
 	// ============================================
 	// Social Media Account Management
+	elseif (strpos($message, "/start") === 0) {
+		require_once 'reply/referral-checker.php';
+	}
 	elseif ($menu == 'add_instagram' || $menu == 'add_tiktok') {
 		require_once 'reply/tambah-medsos.php';
 	}
@@ -153,6 +156,7 @@ if(!$cb_data){
 	elseif ($menu == 'withdraw_campaign_amount') {
 		require_once 'reply/withdraw-campaign-amount.php';
 	}
+	// Referral - no state needed for create_custom_code (auto-generated)
 	// Campaign Creation
 	elseif ($menu == 'buat_campaign_type') {
 		require_once 'reply/buat-campaign-judul.php';
@@ -348,6 +352,12 @@ if(!$cb_data){
 	}
 	elseif($cb_data == "/social") {
 		require_once 'reply/social.php';
+	}
+	elseif($cb_data == "/referral") {
+		require_once 'reply/referral.php';
+	}
+	elseif($cb_data == "/create_custom_code") {
+		require_once 'reply/create-custom-code.php';
 	}
 	// ============================================
 	// WALLET OPERATIONS

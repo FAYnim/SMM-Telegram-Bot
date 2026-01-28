@@ -1,6 +1,8 @@
 -- Truncate all tables - remove all data but keep structure
 SET FOREIGN_KEY_CHECKS = 0;
 
+TRUNCATE TABLE smm_referrals;
+TRUNCATE TABLE smm_referral_codes;
 TRUNCATE TABLE smm_audit_logs;
 TRUNCATE TABLE smm_withdrawals;
 TRUNCATE TABLE smm_deposits;
