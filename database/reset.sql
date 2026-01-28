@@ -84,7 +84,7 @@ CREATE TABLE IF NOT EXISTS smm_social_accounts (
     platform ENUM('instagram', 'tiktok', 'youtube', 'twitter', 'facebook') NOT NULL,
     username VARCHAR(255) NOT NULL,
     account_url TEXT,
-    status ENUM('active', 'inactive') DEFAULT 'active',
+    status ENUM('active', 'inactive', 'disabled') DEFAULT 'active',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES smm_users(id) ON DELETE CASCADE,

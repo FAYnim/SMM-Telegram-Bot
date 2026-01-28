@@ -73,9 +73,9 @@ if(!$cb_data && $user[0]['menu'] == 'edit_username') {
     $current_data = $current_account[0];
     $platform = $current_data['platform'];
 
-    // Check if new username already exists for this platform (excluding current account)
+    // Check if new username already exists for this platform (excluding current account and disabled accounts)
     $existing_username = db_query("SELECT id FROM smm_social_accounts "
-        ."WHERE platform = ? AND username = ? AND id != ? "
+        ."WHERE platform = ? AND username = ? AND id != ? AND status != 'disabled' "
         ."LIMIT 1", [$platform, $username_input, $account_id]);
 
     if (count($existing_username) > 0) {

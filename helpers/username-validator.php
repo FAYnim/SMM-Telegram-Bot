@@ -61,11 +61,10 @@ function validateUsername($username, $platform) {
         ];
     }
 
-    // Check if username already exists for this platform
-    $existing_username = db_read('smm_social_accounts', [
-        'platform' => $platform,
-        'username' => $username
-    ]);
+    // Check if username already exists for this platform (excluding disabled accounts)
+    $existing_username = db_query("SELECT id FROM smm_social_accounts "
+        ."WHERE platform = ? AND username = ? AND status != 'disabled' "
+        ."LIMIT 1", [$platform, $username]);
 
     if (!empty($existing_username)) {
         return [

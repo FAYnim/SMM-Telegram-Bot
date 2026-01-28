@@ -57,16 +57,12 @@ if($cb_data && strpos($cb_data, '/confirm_delete_') === 0) {
         ];
         $icon = $platform_icons[$account_data['platform']] ?? '🌐';
 
-        // Delete the account from database
-        $delete_result = db_delete('smm_social_accounts', [
-            'id' => $account_id,
-            'user_id' => $user_id
-        ]);
+        $delete_result = db_update('smm_social_accounts', ['status' => 'disabled'], ['id' => $account_id, 'user_id' => $user_id]);
 
         if ($delete_result) {
             $reply = "✅ <b>Akun Berhasil Dihapus!</b>\n\n" .
                     $icon . " " . ucfirst($account_data['platform']) . ": @" . $account_data['username'] . "\n\n" .
-                    "Akun media sosial telah dihapus dari sistem.";
+                    "Akun media sosial telah dihapus.";
 
             $keyboard = $bot->buildInlineKeyboard([
                 [
