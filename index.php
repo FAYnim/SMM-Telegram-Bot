@@ -154,6 +154,9 @@ if(!$cb_data){
 	elseif ($menu == 'settings_edit_min_price_per_task') {
 		require_once 'reply/settings-process-campaign.php';
 	}
+	elseif ($menu == 'settings_edit_referral_reward') {
+		require_once 'reply/settings-process-referral-reward.php';
+	}
 	// Withdraw
 	elseif ($menu == 'withdraw_amount') {
 		require_once 'reply/withdraw-amount.php';
@@ -311,6 +314,15 @@ if(!$cb_data){
 	}
 	elseif($cb_data == "settings_campaign" && hasPermission($chat_id, 'settings_campaign')) {
 		require_once 'reply/settings-campaign.php';
+	}
+	elseif($cb_data == "settings_referral" && hasPermission($chat_id, 'settings_referral')) {
+		require_once 'reply/settings-referral.php';
+	}
+	elseif($cb_data == "settings_edit_referral_mandatory" && hasPermission($chat_id, 'settings_referral')) {
+		require_once 'reply/settings-edit-referral-mandatory.php';
+	}
+	elseif($cb_data == "settings_edit_referral_reward" && hasPermission($chat_id, 'settings_referral')) {
+		require_once 'reply/settings-edit-referral-reward.php';
 	}
 	elseif($cb_data == "settings_edit_dana" || $cb_data == "settings_edit_shopeepay") {
 		require_once 'reply/settings-edit-payment.php';
