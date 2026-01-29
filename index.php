@@ -67,9 +67,17 @@ if (empty($user)) {
         'username' => $username,
         'full_name' => $full_name,
         'role' => 'user', // default role
-        'status' => 'active'
+        'status' => 'unregistered' // akan diubah jadi 'active' setelah proses referral/auto-activation
     ];
     $user_id = db_create('smm_users', $user_data);
+    
+    logMessage('user_creation', [
+        'chat_id' => $chat_id,
+        'username' => $username,
+        'full_name' => $full_name,
+        'status' => 'unregistered',
+        'note' => 'User baru dibuat dengan status unregistered, menunggu aktivasi'
+    ], 'info');
 }
 
 $user = db_read('smm_users', ['chatid' => $chat_id]);
