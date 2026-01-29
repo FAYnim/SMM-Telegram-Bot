@@ -300,7 +300,7 @@ if(!$cb_data){
 	// ============================================
 	// SETTINGS HANDLERS
 	// ============================================
-	elseif($cb_data == "settings" && hasAnyPermission($chat_id, ['settings_payment', 'settings_withdraw', 'settings_campaign'])) {
+	elseif($cb_data == "settings" && hasAnyPermission($chat_id, ['settings_payment', 'settings_withdraw', 'settings_campaign', 'settings_referral'])) {
 		require_once 'reply/settings.php';
 	}
 	elseif($cb_data == "settings_payment" && hasPermission($chat_id, 'settings_payment')) {

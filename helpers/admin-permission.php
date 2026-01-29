@@ -201,7 +201,7 @@ function getAdminMenu($chat_id) {
     }
 
     // Settings - requires any settings permission or super admin
-    $settingsPermissions = ['settings_payment', 'settings_withdraw', 'settings_campaign'];
+    $settingsPermissions = ['settings_payment', 'settings_withdraw', 'settings_campaign', 'settings_referral'];
     $hasSettingsAccess = hasAnyPermission($chat_id, $settingsPermissions) || isSuperAdmin($chat_id);
 
     if ($hasSettingsAccess) {
@@ -253,7 +253,7 @@ function getAdminFeatures($chat_id) {
         ];
     }
 
-    $settingsPermissions = ['settings_payment', 'settings_withdraw', 'settings_campaign'];
+    $settingsPermissions = ['settings_payment', 'settings_withdraw', 'settings_campaign', 'settings_referral'];
     if (hasAnyPermission($chat_id, $settingsPermissions) || isSuperAdmin($chat_id)) {
         $features[] = [
             'label' => 'Settings',
@@ -316,6 +316,7 @@ function validatePermissions($permissions) {
         'settings_payment' => false,
         'settings_withdraw' => false,
         'settings_campaign' => false,
+        'settings_referral' => false,
         'admin_manage' => false
     ];
 
