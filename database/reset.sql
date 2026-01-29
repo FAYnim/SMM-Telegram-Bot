@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS smm_users (
     username VARCHAR(255),
     full_name VARCHAR(255),
     role ENUM('user', 'admin') NOT NULL DEFAULT 'user',
-    status ENUM('active', 'suspended') DEFAULT 'active',
+    status ENUM('unregistered', 'active', 'suspended') DEFAULT 'unregistered',
     menu VARCHAR(50) DEFAULT 'main',
     submenu VARCHAR(50) DEFAULT '',
     msg_id INT DEFAULT NULL,
