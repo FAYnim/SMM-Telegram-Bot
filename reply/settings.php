@@ -15,8 +15,8 @@
 			['text' => '💸 Withdraw', 'callback_data' => 'settings_withdraw']
 		],
 		[
-//			['text' => '📋 Tugas', 'callback_data' => 'settings_task'],
-			['text' => '📢 Pengaturan Campaign', 'callback_data' => 'settings_campaign']
+			['text' => '📢 Campaign', 'callback_data' => 'settings_campaign'],
+			['text' => '🎁 Referral', 'callback_data' => 'settings_referral']
 		],
 		[
 			['text' => '🔙 Kembali', 'callback_data' => '/start']

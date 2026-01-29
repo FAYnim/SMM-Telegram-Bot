@@ -1,5 +1,56 @@
 <?php
 
+    // Check if user needs activation (unregistered + mandatory=no)
+    if ($user[0]['status'] == 'unregistered') {
+        $referral_setting = db_read('smm_settings', [
+            'category' => 'referral',
+            'setting_key' => 'mandatory'
+        ]);
+        
+        $mandatory = $referral_setting[0]['setting_value'] ?? 'no';
+        
+        if ($mandatory == 'no') {
+            // Auto-activate user karena tidak wajib referral
+            $update_result = db_update('smm_users', 
+                ['status' => 'active'], 
+                ['chatid' => $chat_id]
+            );
+            
+            if (!$update_result) {
+                $bot->sendMessage($chat_id, "❌ Terjadi kesalahan saat aktivasi akun!\n\nKetik /start untuk mencoba lagi.");
+                logMessage('user_activation_error', [
+                    'chat_id' => $chat_id,
+                    'username' => $user[0]['username'],
+                    'error' => $update_result
+                ], 'info');
+                return;
+            }
+            
+            logMessage('user_activation', [
+                'chat_id' => $chat_id,
+                'username' => $user[0]['username'],
+                'method' => 'auto_activation',
+                'reason' => 'mandatory_referral_disabled'
+            ], 'info');
+        } else {
+			// double check (referral-checker.php)
+            $error_text = "❌ <b>Kode Referral Diperlukan</b>\n\n";
+            $error_text .= "Untuk menggunakan bot ini, kamu harus memiliki kode referral.\n\n";
+            $error_text .= "<i>Gunakan format:</i>\n";
+            $error_text .= "<code>/start KODE_REFERRAL</code>";
+            
+            $bot->sendMessage($chat_id, $error_text, null, 'HTML');
+            
+            logMessage('referral_enforcement_fallback', [
+                'chat_id' => $chat_id,
+                'username' => $user[0]['username'],
+                'note' => 'User unregistered mencoba akses start tanpa kode, blocked'
+            ], 'info');
+            
+            return;
+        }
+    }
+
     // Update posisi user ke main
 	if($menu != "main") {
 		$update_result = updateUserPosition($chat_id, 'main');

@@ -11,6 +11,44 @@ if ($message && strpos($message, '/start ') === 0) {
     }
 }
 
+// Check if user is unregistered and needs referral
+if ($user[0]['status'] == 'unregistered') {
+    // Read referral mandatory setting
+    $mandatory_setting = db_read('smm_settings', [
+        'category' => 'referral',
+        'setting_key' => 'mandatory'
+    ]);
+    $referral_mandatory = $mandatory_setting[0]['setting_value'] ?? 'no';
+    
+    if ($referral_mandatory == 'yes' && empty($referral_code_param)) {
+		// referral mandatory and referral code doesnt exist
+        $error_text = "❌ <b>Kode Referral Diperlukan</b>\n\n";
+        $error_text .= "Untuk menggunakan bot ini, kamu harus memiliki kode referral dari pengguna lain.\n\n";
+        $error_text .= "<b>Cara Mendapatkan Kode:</b>\n";
+        $error_text .= "1️⃣ Minta teman yang sudah terdaftar untuk share link referral mereka\n";
+        $error_text .= "2️⃣ Klik link tersebut untuk bergabung\n\n";
+        $error_text .= "<i>Jika kamu sudah punya kode, gunakan format:</i>\n";
+        $error_text .= "<code>/start KODE_REFERRAL</code>";
+        
+        $bot->sendMessage($chat_id, $error_text, null, 'HTML');
+        
+        logMessage('referral_enforcement', [
+            'chat_id' => $chat_id,
+            'username' => $user[0]['username'],
+            'status' => 'blocked',
+            'reason' => 'no_referral_code_mandatory_enabled'
+        ], 'info');
+        
+        return;
+    }
+}
+
+// If user already registered (active/suspended), bypass and go to start menu
+if (in_array($user[0]['status'], ['active', 'suspended'])) {
+    include 'reply/start.php';
+    return;
+}
+
 // Get referral settings from database
 $referral_mandatory_setting = db_read('smm_settings', [
     'category' => 'referral',
@@ -102,29 +140,54 @@ if($referral_return_code == 200) {
 // Check if referral code has already been used
 if($referral_return_code == 200) {
     
-    if ($referral_code_param) {
-        // Check if this referral code has been used before
-        $existing_code_usage = db_read('smm_referrals', ['referral_code' => $referral_code_param]);
+    if ($referral_code_param && isset($referral_code_data) && !empty($referral_code_data)) {
+        // Get code info to check is_custom
+        $is_custom = $referral_code_data[0]['is_custom'] ?? 0;
         
-        logMessage('referral_code_usage_check', [
-            'chat_id' => $chat_id,
-            'user_id' => $user_id,
-            'referral_code' => $referral_code_param,
-            'already_used' => !empty($existing_code_usage),
-            'usage_count' => count($existing_code_usage)
-        ], 'debug');
-        
-        if (!empty($existing_code_usage)) {
-            // Code has already been used
-            $referral_return_code = 400;
+        // CUSTOM CODE: Hanya bisa dipakai 1x (check usage)
+        // AUTO-GENERATED CODE: Bisa dipakai unlimited (skip check)
+        if ($is_custom == 1) {
+            // Check if this custom code has been used before
+            $existing_code_usage = db_read('smm_referrals', ['referral_code' => $referral_code_param]);
             
-            logMessage('referral_code_already_used', [
+            logMessage('referral_code_usage_check', [
                 'chat_id' => $chat_id,
                 'user_id' => $user_id,
                 'referral_code' => $referral_code_param,
-                'used_by_user_id' => $existing_code_usage[0]['referred_user_id'],
-                'used_at' => $existing_code_usage[0]['created_at']
-            ], 'info');
+                'is_custom' => true,
+                'already_used' => !empty($existing_code_usage),
+                'usage_count' => count($existing_code_usage)
+            ], 'debug');
+            
+            if (!empty($existing_code_usage)) {
+                // Custom code has already been used
+                $referral_return_code = 400;
+                
+                $error_text = "❌ <b>Kode Tidak Valid</b>\n\n";
+                $error_text .= "Kode custom <code>" . htmlspecialchars($referral_code_param) . "</code> sudah pernah digunakan oleh user lain.\n\n";
+                $error_text .= "<i>Minta kode lain dari teman kamu atau gunakan kode default mereka.</i>";
+                
+                $bot->sendMessage($chat_id, $error_text, null, 'HTML');
+                
+                logMessage('referral_custom_code_already_used', [
+                    'chat_id' => $chat_id,
+                    'user_id' => $user_id,
+                    'referral_code' => $referral_code_param,
+                    'code_type' => 'custom',
+                    'used_by_user_id' => $existing_code_usage[0]['referred_user_id'],
+                    'used_at' => $existing_code_usage[0]['created_at']
+                ], 'info');
+            }
+        } else {
+            // Auto-generated code: unlimited usage, skip check
+            logMessage('referral_code_usage_check', [
+                'chat_id' => $chat_id,
+                'user_id' => $user_id,
+                'referral_code' => $referral_code_param,
+                'is_custom' => false,
+                'check_skipped' => true,
+                'reason' => 'auto_generated_code_unlimited_usage'
+            ], 'debug');
         }
     }
 
@@ -220,6 +283,29 @@ if($referral_return_code == 200 && isset($referrer_id)) {
                 'referral_code' => $referral_code_param,
                 'reward_amount' => $referral_reward_amount
             ], 'info');
+            
+            // Update referred user status to 'active'
+            $update_status = db_update('smm_users', 
+                ['status' => 'active'], 
+                ['chatid' => $chat_id]
+            );
+            
+            if (!$update_status) {
+                logMessage('referral_activation_error', [
+                    'chat_id' => $chat_id,
+                    'user_id' => $user_id,
+                    'error' => 'failed_to_activate_user',
+                    'db_error' => $update_status
+                ], 'info');
+            } else {
+                logMessage('user_activation', [
+                    'chat_id' => $chat_id,
+                    'username' => $user[0]['username'],
+                    'method' => 'referral',
+                    'referrer_id' => $referrer_id,
+                    'referral_code' => $referral_code_param
+                ], 'info');
+            }
             
             // Get referrer data
             $referrer_user = db_read('smm_users', ['id' => $referrer_id]);

@@ -67,9 +67,17 @@ if (empty($user)) {
         'username' => $username,
         'full_name' => $full_name,
         'role' => 'user', // default role
-        'status' => 'active'
+        'status' => 'unregistered' // akan diubah jadi 'active' setelah proses referral/auto-activation
     ];
     $user_id = db_create('smm_users', $user_data);
+    
+    logMessage('user_creation', [
+        'chat_id' => $chat_id,
+        'username' => $username,
+        'full_name' => $full_name,
+        'status' => 'unregistered',
+        'note' => 'User baru dibuat dengan status unregistered, menunggu aktivasi'
+    ], 'info');
 }
 
 $user = db_read('smm_users', ['chatid' => $chat_id]);
@@ -145,6 +153,9 @@ if(!$cb_data){
 	}
 	elseif ($menu == 'settings_edit_min_price_per_task') {
 		require_once 'reply/settings-process-campaign.php';
+	}
+	elseif ($menu == 'settings_edit_referral_reward') {
+		require_once 'reply/settings-process-referral-reward.php';
 	}
 	// Withdraw
 	elseif ($menu == 'withdraw_amount') {
@@ -292,7 +303,7 @@ if(!$cb_data){
 	// ============================================
 	// SETTINGS HANDLERS
 	// ============================================
-	elseif($cb_data == "settings" && hasAnyPermission($chat_id, ['settings_payment', 'settings_withdraw', 'settings_campaign'])) {
+	elseif($cb_data == "settings" && hasAnyPermission($chat_id, ['settings_payment', 'settings_withdraw', 'settings_campaign', 'settings_referral'])) {
 		require_once 'reply/settings.php';
 	}
 	elseif($cb_data == "settings_payment" && hasPermission($chat_id, 'settings_payment')) {
@@ -303,6 +314,15 @@ if(!$cb_data){
 	}
 	elseif($cb_data == "settings_campaign" && hasPermission($chat_id, 'settings_campaign')) {
 		require_once 'reply/settings-campaign.php';
+	}
+	elseif($cb_data == "settings_referral" && hasPermission($chat_id, 'settings_referral')) {
+		require_once 'reply/settings-referral.php';
+	}
+	elseif($cb_data == "settings_edit_referral_mandatory" && hasPermission($chat_id, 'settings_referral')) {
+		require_once 'reply/settings-edit-referral-mandatory.php';
+	}
+	elseif($cb_data == "settings_edit_referral_reward" && hasPermission($chat_id, 'settings_referral')) {
+		require_once 'reply/settings-edit-referral-reward.php';
 	}
 	elseif($cb_data == "settings_edit_dana" || $cb_data == "settings_edit_shopeepay") {
 		require_once 'reply/settings-edit-payment.php';
